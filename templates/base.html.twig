@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Schol - Gestion Scolaire{% endblock %}</title>
+
+        {% block stylesheets %}
+            <!-- Tailwind CSS -->
+            <script src="https://cdn.tailwindcss.com"></script>
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+            <!-- Custom CSS -->
+            <style>
+                [x-cloak] { display: none !important; }
+            </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            <!-- Alpine.js -->
+            <script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
+        {% endblock %}
+    </head>
+    <body class="bg-gray-100">
+        <div x-data="{ sidebarOpen: false }">
+            <!-- Sidebar Mobile Overlay -->
+            <div x-show="sidebarOpen" 
+                 class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 transition-opacity lg:hidden" 
+                 @click="sidebarOpen = false"
+                 x-cloak></div>
+
+            <!-- Sidebar for mobile -->
+            <div x-show="sidebarOpen" 
+                 class="fixed inset-y-0 left-0 z-50 w-64 transform overflow-y-auto bg-white transition lg:hidden"
+                 x-cloak>
+                {% include 'components/_sidebar.html.twig' %}
+            </div>
+
+            <!-- Sidebar for desktop -->
+            <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+                {% include 'components/_sidebar.html.twig' %}
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:pl-72">
+                <!-- Top Navigation -->
+                <div class="sticky top-0 z-40 bg-white shadow">
+                    {% include 'components/_navbar.html.twig' %}
+                </div>
+
+                <!-- Main Content Area -->
+                <main class="py-6">
+                    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <!-- Flash Messages -->
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="mb-4 rounded-md p-4 {{ label == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <!-- Page Content -->
+                        {% block body %}{% endblock %}
+                    </div>
+                </main>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button type="button"
+                    @click="sidebarOpen = !sidebarOpen"
+                    class="fixed bottom-4 right-4 h-14 w-14 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 lg:hidden">
+                <i class="fas" :class="{ 'fa-bars': !sidebarOpen, 'fa-times': sidebarOpen }"></i>
+            </button>
+        </div>
+    </body>
+</html>

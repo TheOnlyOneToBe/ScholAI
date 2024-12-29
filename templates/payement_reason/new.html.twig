@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PayementReason{% endblock %}
+
+{% block body %}
+    <h1>Create new PayementReason</h1>
+
+    {{ include('payement_reason/_form.html.twig') }}
+
+    <a href="{{ path('app_payement_reason_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,10 @@
+welcome: 'Welcome'
+app:
+  title: 'My Application'
+  menu:
+    home: 'Home'
+    about: 'About'
+    contact: 'Contact'
+  form:
+    submit: 'Submit'
+    cancel: 'Cancel'

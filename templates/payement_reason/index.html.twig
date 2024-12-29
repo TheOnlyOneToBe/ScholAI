@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PayementReason index{% endblock %}
+
+{% block body %}
+    <h1>PayementReason index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>LibelleRaison</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payement_reason in payement_reasons %}
+            <tr>
+                <td>{{ payement_reason.id }}</td>
+                <td>{{ payement_reason.libelleRaison }}</td>
+                <td>
+                    <a href="{{ path('app_payement_reason_show', {'id': payement_reason.id}) }}">show</a>
+                    <a href="{{ path('app_payement_reason_edit', {'id': payement_reason.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payement_reason_new') }}">Create new</a>
+{% endblock %}

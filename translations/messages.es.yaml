@@ -1,0 +1,10 @@
+welcome: 'Bienvenido'
+app:
+  title: 'Mi Aplicación'
+  menu:
+    home: 'Inicio'
+    about: 'Acerca de'
+    contact: 'Contacto'
+  form:
+    submit: 'Enviar'
+    cancel: 'Cancelar'

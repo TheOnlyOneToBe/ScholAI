@@ -1,0 +1,210 @@
+// Variables
+$primary-color: #4f46e5; // indigo-600
+$secondary-color: #6b7280; // gray-500
+$success-color: #059669; // green-600
+$danger-color: #dc2626; // red-600
+$warning-color: #d97706; // amber-600
+$info-color: #0891b2; // cyan-600
+
+// Base styles
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-gray-50;
+}
+
+// Custom components
+.btn {
+    @apply px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+    
+    &-primary {
+        @apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500;
+    }
+    
+    &-secondary {
+        @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-indigo-500;
+    }
+    
+    &-danger {
+        @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    }
+}
+
+// Table styles
+.table-container {
+    @apply shadow overflow-hidden border-b border-gray-200 sm:rounded-lg;
+}
+
+.table {
+    @apply min-w-full divide-y divide-gray-200;
+    
+    thead {
+        @apply bg-gray-50;
+        
+        th {
+            @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+        }
+    }
+    
+    tbody {
+        @apply bg-white divide-y divide-gray-200;
+        
+        td {
+            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-500;
+        }
+    }
+}
+
+// Form styles
+.form-group {
+    @apply space-y-1;
+    
+    label {
+        @apply block text-sm font-medium text-gray-700;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="date"],
+    input[type="tel"],
+    select,
+    textarea {
+        @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+    }
+}
+
+// Card styles
+.card {
+    @apply bg-white shadow rounded-lg;
+    
+    &-header {
+        @apply px-4 py-5 border-b border-gray-200 sm:px-6;
+        
+        h3 {
+            @apply text-lg leading-6 font-medium text-gray-900;
+        }
+    }
+    
+    &-body {
+        @apply px-4 py-5 sm:p-6;
+    }
+    
+    &-footer {
+        @apply px-4 py-4 sm:px-6 border-t border-gray-200;
+    }
+}
+
+// Badge styles
+.badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    
+    &-success {
+        @apply bg-green-100 text-green-800;
+    }
+    
+    &-warning {
+        @apply bg-yellow-100 text-yellow-800;
+    }
+    
+    &-danger {
+        @apply bg-red-100 text-red-800;
+    }
+    
+    &-info {
+        @apply bg-blue-100 text-blue-800;
+    }
+}
+
+// Alert styles
+.alert {
+    @apply rounded-md p-4 mb-4;
+    
+    &-success {
+        @apply bg-green-50 text-green-800;
+        
+        .alert-icon {
+            @apply text-green-400;
+        }
+    }
+    
+    &-error {
+        @apply bg-red-50 text-red-800;
+        
+        .alert-icon {
+            @apply text-red-400;
+        }
+    }
+    
+    &-warning {
+        @apply bg-yellow-50 text-yellow-800;
+        
+        .alert-icon {
+            @apply text-yellow-400;
+        }
+    }
+    
+    &-info {
+        @apply bg-blue-50 text-blue-800;
+        
+        .alert-icon {
+            @apply text-blue-400;
+        }
+    }
+}
+
+// Navigation styles
+.nav-link {
+    @apply text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium;
+    
+    &.active {
+        @apply bg-gray-900 text-white;
+    }
+}
+
+// Dropdown styles
+.dropdown-menu {
+    @apply origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none;
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100;
+}
+
+// Animation utilities
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transition: opacity 300ms ease-in;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+
+.fade-exit-active {
+    opacity: 0;
+    transition: opacity 300ms ease-in;
+}
+
+// Print styles
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-only {
+        display: block !important;
+    }
+    
+    body {
+        background: white;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #eee;
+    }
+}
