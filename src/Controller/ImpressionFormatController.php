@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/impression/format')]
+#[Route('/formatimpression')]
 class ImpressionFormatController extends AbstractController
 {
     #[Route('/', name: 'app_impression_format_index', methods: ['GET'])]

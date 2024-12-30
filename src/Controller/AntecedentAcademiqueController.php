@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/antecedent/academique')]
+#[Route('/antecedent')]
 class AntecedentAcademiqueController extends AbstractController
 {
     #[Route('/', name: 'app_antecedent_academique_index', methods: ['GET'])]

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/tuteur/etudiant')]
+#[Route('/tuteuretudiant')]
 class TuteurEtudiantController extends AbstractController
 {
     #[Route('/', name: 'app_tuteur_etudiant_index', methods: ['GET'])]
