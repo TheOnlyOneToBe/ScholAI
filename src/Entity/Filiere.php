@@ -6,11 +6,8 @@ use App\Repository\FiliereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: FiliereRepository::class)]
-#[UniqueEntity(fields: ['libellefiliere'], message: 'filiere.libelle.unique')]
 class Filiere
 {
     #[ORM\Id]
@@ -18,20 +15,13 @@ class Filiere
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    #[Assert\NotBlank(message: 'filiere.libelle.not_blank')]
-    #[Assert\Length(
-        min: 2,
-        max: 100,
-        minMessage: 'filiere.libelle.min_length',
-        maxMessage: 'filiere.libelle.max_length'
-    )]
-    private ?string $libellefiliere = null;
+    #[ORM\Column(length: 150)]
+    private ?string $nomFiliere = null;
 
     /**
      * @var Collection<int, FiliereCycle>
      */
-    #[ORM\OneToMany(targetEntity: FiliereCycle::class, mappedBy: 'filiere')]
+    #[ORM\OneToMany(targetEntity: FiliereCycle::class, mappedBy: 'filiere', orphanRemoval: true)]
     private Collection $filiereCycles;
 
     public function __construct()
@@ -44,14 +34,14 @@ class Filiere
         return $this->id;
     }
 
-    public function getLibellefiliere(): ?string
+    public function getNomFiliere(): ?string
     {
-        return $this->libellefiliere;
+        return $this->nomFiliere;
     }
 
-    public function setLibellefiliere(string $libellefiliere): static
+    public function setNomFiliere(string $nomFiliere): static
     {
-        $this->libellefiliere = $libellefiliere;
+        $this->nomFiliere = $nomFiliere;
 
         return $this;
     }

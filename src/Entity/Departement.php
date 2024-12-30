@@ -5,12 +5,10 @@ namespace App\Entity;
 use App\Repository\DepartementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
-#[UniqueEntity(fields: ['nomDepartement'], message: 'departement.nomDepartement.unique')]
 class Departement
 {
     #[ORM\Id]
@@ -18,18 +16,11 @@ class Departement
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    #[Assert\NotBlank(message: 'departement.nomDepartement.not_blank')]
-    #[Assert\Length(
-        min: 3,
-        max: 100,
-        minMessage: 'departement.nomDepartement.min_length',
-        maxMessage: 'departement.nomDepartement.max_length'
-    )]
+    #[ORM\Column(length: 255)]
     private ?string $nomDepartement = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
-    private ?string $description = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
 
     /**
      * @var Collection<int, Professeur>
@@ -37,9 +28,16 @@ class Departement
     #[ORM\OneToMany(targetEntity: Professeur::class, mappedBy: 'departement')]
     private Collection $professeurs;
 
+    /**
+     * @var Collection<int, ChefDepartement>
+     */
+    #[ORM\OneToMany(targetEntity: ChefDepartement::class, mappedBy: 'departement', orphanRemoval: true)]
+    private Collection $chefDepartements;
+
     public function __construct()
     {
         $this->professeurs = new ArrayCollection();
+        $this->chefDepartements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,14 +57,14 @@ class Departement
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDateCreation(): ?\DateTimeInterface
     {
-        return $this->description;
+        return $this->dateCreation;
     }
 
-    public function setDescription(?string $description): static
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
     {
-        $this->description = $description;
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }
@@ -95,6 +93,36 @@ class Departement
             // set the owning side to null (unless already changed)
             if ($professeur->getDepartement() === $this) {
                 $professeur->setDepartement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChefDepartement>
+     */
+    public function getChefDepartements(): Collection
+    {
+        return $this->chefDepartements;
+    }
+
+    public function addChefDepartement(ChefDepartement $chefDepartement): static
+    {
+        if (!$this->chefDepartements->contains($chefDepartement)) {
+            $this->chefDepartements->add($chefDepartement);
+            $chefDepartement->setDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChefDepartement(ChefDepartement $chefDepartement): static
+    {
+        if ($this->chefDepartements->removeElement($chefDepartement)) {
+            // set the owning side to null (unless already changed)
+            if ($chefDepartement->getDepartement() === $this) {
+                $chefDepartement->setDepartement(null);
             }
         }
 

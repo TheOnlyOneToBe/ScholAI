@@ -144,225 +144,71 @@ Error: Erreur
 'Please select a valid range.': 'Veuillez sélectionner une plage valide.'
 'Please enter a valid week.': 'Veuillez entrer une semaine valide.'
 
-# Custom validation messages
-student:
-    noms:
-        not_blank: 'Le nom est obligatoire'
-        min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
-    prenoms:
-        not_blank: 'Le prénom est obligatoire'
-        min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le prénom ne peut pas dépasser {{ limit }} caractères'
-    date_naissance:
-        not_blank: 'La date de naissance est obligatoire'
-        valid_date: 'La date de naissance doit être une date valide'
-        min_age: 'L''étudiant doit avoir au moins {{ limit }} ans'
-        max_age: 'L''étudiant ne peut pas avoir plus de {{ limit }} ans'
-    email:
-        not_blank: 'L''email est obligatoire'
-        invalid: 'L''email n''est pas valide'
-        unique: 'Cet email est déjà utilisé'
-    telephone:
-        not_blank: 'Le numéro de téléphone est obligatoire'
-        invalid: 'Le numéro de téléphone n''est pas valide'
-        unique: 'Ce numéro de téléphone est déjà utilisé'
-    matricule:
-        unique: 'Ce matricule est déjà utilisé'
+# Validations générales
+validation:
+  not_blank: 'Ce champ ne peut pas être vide'
+  unique: 'Cette valeur est déjà utilisée'
+  min_length: 'Ce champ doit contenir au moins {{ limit }} caractères'
+  max_length: 'Ce champ ne peut pas contenir plus de {{ limit }} caractères'
+  email: 'Cette adresse email n''est pas valide'
+  date:
+    invalid: 'Cette date n''est pas valide'
+    future: 'Cette date doit être dans le futur'
+    past: 'Cette date doit être dans le passé'
+    range: 'Cette date doit être comprise entre {{ min }} et {{ max }}'
+  number:
+    positive: 'Ce nombre doit être positif'
+    min: 'Ce nombre doit être supérieur ou égal à {{ limit }}'
+    max: 'Ce nombre doit être inférieur ou égal à {{ limit }}'
 
-professor:
-    noms:
-        not_blank: 'Le nom est obligatoire'
-        min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
-    prenoms:
-        not_blank: 'Le prénom est obligatoire'
-        min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
-    email:
-        not_blank: 'L''email est obligatoire'
-        invalid: 'L''email n''est pas valide'
-        unique: 'Cet email est déjà utilisé'
-    telephone:
-        not_blank: 'Le numéro de téléphone est obligatoire'
-        invalid: 'Le numéro de téléphone n''est pas valide'
-
-filiere:
-    libelle:
-        not_blank: 'Le libellé est obligatoire'
-        min_length: 'Le libellé doit contenir au moins {{ limit }} caractères'
-        unique: 'Ce libellé est déjà utilisé'
-    code:
-        not_blank: 'Le code est obligatoire'
-        unique: 'Ce code est déjà utilisé'
-
-cycle:
-    libelle:
-        not_blank: 'Le libellé du cycle est obligatoire'
-        min_length: 'Le libellé doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le libellé ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Un cycle avec ce libellé existe déjà'
-    duree:
-        not_blank: 'La durée du cycle est obligatoire'
-        not_in_range: 'La durée doit être comprise entre {{ min }} et {{ max }} ans'
-
-matiere:
-    libelle:
-        not_blank: 'Le libellé de la matière est obligatoire'
-        min_length: 'Le libellé doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le libellé ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Une matière avec ce libellé existe déjà'
-    code:
-        not_blank: 'Le code de la matière est obligatoire'
-        min_length: 'Le code doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le code ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Une matière avec ce code existe déjà'
-        format: 'Le code doit être en majuscules et peut contenir des chiffres'
-    coefficient:
-        not_blank: 'Le coefficient est obligatoire'
-        min: 'Le coefficient doit être supérieur à {{ limit }}'
-        max: 'Le coefficient ne peut pas dépasser {{ limit }}'
-
-note:
-    valeur:
-        not_blank: 'La note est obligatoire'
-        min: 'La note ne peut pas être inférieure à {{ limit }}'
-        max: 'La note ne peut pas être supérieure à {{ limit }}'
-
+# Validations spécifiques aux entités
+# translations/validator.fr.yaml
 evaluation:
-    date:
-        not_blank: 'La date est obligatoire'
-        valid_date: 'La date doit être une date valide'
-    coefficient:
-        not_blank: 'Le coefficient est obligatoire'
-        min: 'Le coefficient doit être supérieur à {{ limit }}'
-
-inscription:
-    numero:
-        unique: 'Ce numéro d''inscription est déjà utilisé'
-    date:
-        not_blank: 'La date d''inscription est obligatoire'
-        valid_date: 'La date d''inscription doit être une date valide'
-
-annee:
-    dates:
-        not_blank: 'Les dates de début et de fin sont obligatoires'
-        valid_range: 'La date de fin doit être postérieure à la date de début'
-        overlap: 'Cette période chevauche une année scolaire existante'
-
-emploi_temps:
-    date:
-        not_blank: 'La date est obligatoire'
-        valid_date: 'La date doit être une date valide'
-    heure_debut:
-        not_blank: 'L''heure de début est obligatoire'
-        valid_time: 'L''heure de début doit être une heure valide'
-    heure_fin:
-        not_blank: 'L''heure de fin est obligatoire'
-        valid_time: 'L''heure de fin doit être une heure valide'
-        after_start: 'L''heure de fin doit être postérieure à l''heure de début'
-    salle:
-        not_blank: 'La salle est obligatoire'
-    programme:
-        not_blank: 'Le programme est obligatoire'
-    jour:
-        not_blank: 'Le jour est obligatoire'
-        valid_choice: 'Le jour sélectionné n''est pas valide'
-    overlap: 'Il y a déjà un cours programmé dans cette salle à ce moment'
-    professor_busy: 'Le professeur a déjà un cours à ce moment'
-
-departement:
-    libelle:
-        not_blank: 'Le libellé du département est obligatoire'
-        min_length: 'Le libellé doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le libellé ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Un département avec ce libellé existe déjà'
-    code:
-        not_blank: 'Le code du département est obligatoire'
-        min_length: 'Le code doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le code ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Un département avec ce code existe déjà'
-        format: 'Le code doit être en majuscules et peut contenir des chiffres'
-    campus:
-        not_blank: 'Le campus est obligatoire'
-
-campus:
-    nom:
-        not_blank: 'Le nom du campus est obligatoire'
-        min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Un campus avec ce nom existe déjà'
-    adresse:
-        not_blank: 'L''adresse du campus est obligatoire'
-    telephone:
-        not_blank: 'Le numéro de téléphone est obligatoire'
-        invalid: 'Le numéro de téléphone n''est pas valide'
-    email:
-        not_blank: 'L''email est obligatoire'
-        invalid: 'L''email n''est pas valide'
-        unique: 'Cet email est déjà utilisé'
-
+  status:
+    pending: 'En attente'
+    open: 'Ouverte'
+    closed: 'Fermée'
+tuteur:
+  type:
+    pere: 'Père'
+    mere: 'Mère'
+    legal: 'Légal'
+genre:
+  homme: 'Homme'
+  femme: 'Femme'
+  autre: 'Autre'
 semestre:
-    libelle:
-        not_blank: 'Le libellé du semestre est obligatoire'
-        min_length: 'Le libellé doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le libellé ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Un semestre avec ce libellé existe déjà'
-    numero:
-        not_blank: 'Le numéro du semestre est obligatoire'
-        invalid: 'Le numéro doit être entre 1 et 2'
-    dates:
-        not_blank: 'Les dates de début et de fin sont obligatoires'
-        valid_range: 'La date de fin doit être postérieure à la date de début'
-        overlap: 'Cette période chevauche un autre semestre de la même année'
-
-salle_cours:
-    numero:
-        not_blank: 'Le numéro de la salle est obligatoire'
-        unique: 'Une salle avec ce numéro existe déjà'
-    capacite:
-        not_blank: 'La capacité de la salle est obligatoire'
-        min: 'La capacité minimale est de {{ limit }} places'
-        max: 'La capacité maximale est de {{ limit }} places'
-    type:
-        not_blank: 'Le type de salle est obligatoire'
-        invalid: 'Type de salle invalide'
-
-programme:
-    professeur:
-        not_blank: 'Le professeur est obligatoire'
-    matiere:
-        not_blank: 'La matière est obligatoire'
-    semestre:
-        not_blank: 'Le semestre est obligatoire'
-    filiere_cycle:
-        not_blank: 'La filière et le cycle sont obligatoires'
-    volume_horaire:
-        not_blank: 'Le volume horaire est obligatoire'
-        min: 'Le volume horaire minimum est de {{ limit }} heures'
-        max: 'Le volume horaire maximum est de {{ limit }} heures'
-    unique_combination: 'Ce programme existe déjà pour cette matière, ce semestre et cette filière'
-
+  type:
+    regular: 'Régulier'
+    summer: 'Été'
+cours:
+  type:
+    jour: 'Jour'
+    soir: 'Soir'
 inscription:
-    etudiant:
-        not_blank: 'L''étudiant est obligatoire'
-    filiere_cycle:
-        not_blank: 'La filière et le cycle sont obligatoires'
-    annee:
-        not_blank: 'L''année scolaire est obligatoire'
-    date:
-        not_blank: 'La date d''inscription est obligatoire'
-        valid: 'La date d''inscription doit être une date valide'
-        in_year: 'La date d''inscription doit être dans l''année scolaire sélectionnée'
-    unique_combination: 'Cet étudiant est déjà inscrit dans cette filière pour cette année'
+  statut:
+    pending: 'En attente'
+    valide: 'Validé'
+    rejete: 'Rejeté'
+    termine: 'Terminé'
+incident:
+  gravite:
+    faible: 'Faible'
+    moyenne: 'Moyenne'
+    elevee: 'Élevée'
+avertissement:
+  type:
+    disciplinaire: 'Disciplinaire'
+    academique: 'Académique'
+    autre: 'Autre'
+presence:
+  statut:
+    present: 'Présent'
+    absent: 'Absent'
+    justifie: 'Justifié'
+impression:
+  statut:
+    pending: 'En attente'
+    imprime: 'Imprimé'
+    annule: 'Annulé'
 
-user:
-    email:
-        not_blank: 'L''email est obligatoire'
-        invalid: 'L''email n''est pas valide'
-        unique: 'Cet email est déjà utilisé'
-    password:
-        not_blank: 'Le mot de passe est obligatoire'
-        min_length: 'Le mot de passe doit contenir au moins {{ limit }} caractères'
-        complexity: 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial'
-    roles:
-        not_blank: 'Au moins un rôle doit être sélectionné'
-        invalid: 'Le rôle sélectionné n''est pas valide'

@@ -6,11 +6,8 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
-#[UniqueEntity(fields: ['nomCampus'], message: 'campus.nomCampus.unique')]
 class Campus
 {
     #[ORM\Id]
@@ -18,29 +15,21 @@ class Campus
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100, unique: true)]
-    #[Assert\NotBlank(message: 'campus.nomCampus.not_blank')]
-    #[Assert\Length(
-        min: 3,
-        max: 100,
-        minMessage: 'campus.nomCampus.min_length',
-        maxMessage: 'campus.nomCampus.max_length'
-    )]
+    #[ORM\Column(length: 150)]
     private ?string $nomCampus = null;
 
-    #[ORM\Column(length: 200)]
-    #[Assert\NotBlank(message: 'campus.adresse.not_blank')]
-    private ?string $adresse = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $adresseCampus = null;
 
     /**
      * @var Collection<int, SalleCours>
      */
-    #[ORM\OneToMany(targetEntity: SalleCours::class, mappedBy: 'campus', orphanRemoval: true)]
-    private Collection $salles;
+    #[ORM\OneToMany(targetEntity: SalleCours::class, mappedBy: 'campus')]
+    private Collection $salleCours;
 
     public function __construct()
     {
-        $this->salles = new ArrayCollection();
+        $this->salleCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -60,14 +49,14 @@ class Campus
         return $this;
     }
 
-    public function getAdresse(): ?string
+    public function getAdresseCampus(): ?string
     {
-        return $this->adresse;
+        return $this->adresseCampus;
     }
 
-    public function setAdresse(string $adresse): static
+    public function setAdresseCampus(?string $adresseCampus): static
     {
-        $this->adresse = $adresse;
+        $this->adresseCampus = $adresseCampus;
 
         return $this;
     }
@@ -75,35 +64,30 @@ class Campus
     /**
      * @return Collection<int, SalleCours>
      */
-    public function getSalles(): Collection
+    public function getSalleCours(): Collection
     {
-        return $this->salles;
+        return $this->salleCours;
     }
 
-    public function addSalle(SalleCours $salle): static
+    public function addSalleCour(SalleCours $salleCour): static
     {
-        if (!$this->salles->contains($salle)) {
-            $this->salles->add($salle);
-            $salle->setCampus($this);
+        if (!$this->salleCours->contains($salleCour)) {
+            $this->salleCours->add($salleCour);
+            $salleCour->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeSalle(SalleCours $salle): static
+    public function removeSalleCour(SalleCours $salleCour): static
     {
-        if ($this->salles->removeElement($salle)) {
+        if ($this->salleCours->removeElement($salleCour)) {
             // set the owning side to null (unless already changed)
-            if ($salle->getCampus() === $this) {
-                $salle->setCampus(null);
+            if ($salleCour->getCampus() === $this) {
+                $salleCour->setCampus(null);
             }
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->nomCampus;
     }
 }

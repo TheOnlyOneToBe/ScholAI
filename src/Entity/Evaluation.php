@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
+use App\Enum\StatutEvaluation;
 use App\Repository\EvaluationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EvaluationRepository::class)]
-#[ORM\HasLifecycleCallbacks]
 class Evaluation
 {
     #[ORM\Id]
@@ -18,70 +17,37 @@ class Evaluation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'evaluation.titre.not_blank')]
-    private ?string $titre = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank(message: 'evaluation.dateEvaluation.not_blank')]
-    #[Assert\Type("\DateTimeInterface")]
-    private ?\DateTimeInterface $dateEvaluation = null;
-
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'evaluations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message: 'evaluation.programme.not_blank')]
-    private ?Programme $programme = null;
+    private ?UE $UE = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'evaluations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Semestre $semestre = null;
 
-    #[ORM\Column(length: 50)]
-    #[Assert\NotBlank(message: 'evaluation.type.not_blank')]
-    #[Assert\Choice(
-        choices: ['cc', 'tp', 'examen'],
-        message: 'evaluation.type.invalid'
-    )]
-    private ?string $type = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'evaluation.coefficient.not_blank')]
-    #[Assert\Positive(message: 'evaluation.coefficient.positive')]
-    private ?float $coefficient = null;
+    private ?int $tempsEvaluation = null;
 
-    #[ORM\OneToMany(mappedBy: 'evaluation', targetEntity: Note::class, orphanRemoval: true)]
+    #[ORM\Column(length: 50,enumType: StatutEvaluation::class)]
+    private ?string $statut = null;
+
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'evaluation')]
     private Collection $notes;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $createdBy = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updatedAt = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $updatedBy = null;
+    #[ORM\ManyToOne(inversedBy: 'evaluations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypeEvaluation $type = null;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-    }
-
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $this->createdAt = new \DateTime();
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -89,47 +55,15 @@ class Evaluation
         return $this->id;
     }
 
-    public function getTitre(): ?string
+    public function getUE(): ?UE
     {
-        return $this->titre;
+        return $this->UE;
     }
 
-    public function setTitre(string $titre): static
+    public function setUE(?UE $UE): static
     {
-        $this->titre = $titre;
-        return $this;
-    }
+        $this->UE = $UE;
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getDateEvaluation(): ?\DateTimeInterface
-    {
-        return $this->dateEvaluation;
-    }
-
-    public function setDateEvaluation(\DateTimeInterface $dateEvaluation): static
-    {
-        $this->dateEvaluation = $dateEvaluation;
-        return $this;
-    }
-
-    public function getProgramme(): ?Programme
-    {
-        return $this->programme;
-    }
-
-    public function setProgramme(?Programme $programme): static
-    {
-        $this->programme = $programme;
         return $this;
     }
 
@@ -141,28 +75,44 @@ class Evaluation
     public function setSemestre(?Semestre $semestre): static
     {
         $this->semestre = $semestre;
+
         return $this;
     }
 
-    public function getType(): ?string
+    
+    public function getDateDebut(): ?\DateTimeInterface
     {
-        return $this->type;
+        return $this->dateDebut;
     }
 
-    public function setType(string $type): static
+    public function setDateDebut(\DateTimeInterface $dateDebut): static
     {
-        $this->type = $type;
+        $this->dateDebut = $dateDebut;
+
         return $this;
     }
 
-    public function getCoefficient(): ?float
+    public function getTempsEvaluation(): ?int
     {
-        return $this->coefficient;
+        return $this->tempsEvaluation;
     }
 
-    public function setCoefficient(float $coefficient): static
+    public function setTempsEvaluation(int $tempsEvaluation): static
     {
-        $this->coefficient = $coefficient;
+        $this->tempsEvaluation = $tempsEvaluation;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
+
         return $this;
     }
 
@@ -180,60 +130,31 @@ class Evaluation
             $this->notes->add($note);
             $note->setEvaluation($this);
         }
+
         return $this;
     }
 
     public function removeNote(Note $note): static
     {
         if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
             if ($note->getEvaluation() === $this) {
                 $note->setEvaluation(null);
             }
         }
+
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getType(): ?TypeEvaluation
     {
-        return $this->createdAt;
+        return $this->type;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setType(?TypeEvaluation $type): static
     {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
+        $this->type = $type;
 
-    public function getCreatedBy(): ?string
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(string $createdBy): static
-    {
-        $this->createdBy = $createdBy;
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?string
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?string $updatedBy): static
-    {
-        $this->updatedBy = $updatedBy;
         return $this;
     }
 }

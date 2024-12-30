@@ -6,62 +6,33 @@ use App\Repository\SalleCoursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SalleCoursRepository::class)]
-#[UniqueEntity(fields: ['numero'], message: 'salle_cours.numero.unique')]
 class SalleCours
 {
-    public const TYPES = [
-        'Amphi' => 'Amphithéâtre',
-        'TD' => 'Salle de TD',
-        'TP' => 'Salle de TP',
-        'Labo' => 'Laboratoire'
-    ];
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
-    #[Assert\NotBlank(message: 'salle_cours.numero.not_blank')]
-    private ?string $numero = null;
+    #[ORM\Column(length: 255)]
+    private ?string $NomSalle = null;
 
-    #[ORM\Column(length: 150)]
-    private ?string $nomSalle = null;
-
-    #[ORM\ManyToOne(inversedBy: 'salles')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Campus $campus = null;
-
-    #[ORM\Column]
-    #[Assert\NotBlank(message: 'salle_cours.capacite.not_blank')]
-    #[Assert\Range(
-        min: 10,
-        max: 500,
-        notInRangeMessage: 'salle_cours.capacite.not_in_range'
-    )]
+    #[ORM\Column(nullable: true)]
     private ?int $capacite = null;
 
-    #[ORM\Column(length: 20)]
-    #[Assert\NotBlank(message: 'salle_cours.type.not_blank')]
-    #[Assert\Choice(
-        choices: self::TYPES,
-        message: 'salle_cours.type.invalid'
-    )]
-    private ?string $type = null;
+    #[ORM\ManyToOne(inversedBy: 'salleCours')]
+    private ?Campus $campus = null;
 
     /**
-     * @var Collection<int, EmploiTemps>
+     * @var Collection<int, PlanningCours>
      */
-    #[ORM\OneToMany(targetEntity: EmploiTemps::class, mappedBy: 'salle', orphanRemoval: true)]
-    private Collection $emploiTemps;
+    #[ORM\OneToMany(targetEntity: PlanningCours::class, mappedBy: 'sallecours', orphanRemoval: true)]
+    private Collection $planningCours;
 
     public function __construct()
     {
-        $this->emploiTemps = new ArrayCollection();
+        $this->planningCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,26 +40,26 @@ class SalleCours
         return $this->id;
     }
 
-    public function getNumero(): ?string
+    public function getNomSalle(): ?string
     {
-        return $this->numero;
+        return $this->NomSalle;
     }
 
-    public function setNumero(string $numero): static
+    public function setNomSalle(string $NomSalle): static
     {
-        $this->numero = $numero;
+        $this->NomSalle = $NomSalle;
 
         return $this;
     }
 
-    public function getNomSalle(): ?string
+    public function getCapacite(): ?int
     {
-        return $this->nomSalle;
+        return $this->capacite;
     }
 
-    public function setNomSalle(string $nomSalle): static
+    public function setCapacite(?int $capacite): static
     {
-        $this->nomSalle = $nomSalle;
+        $this->capacite = $capacite;
 
         return $this;
     }
@@ -105,62 +76,33 @@ class SalleCours
         return $this;
     }
 
-    public function getCapacite(): ?int
-    {
-        return $this->capacite;
-    }
-
-    public function setCapacite(int $capacite): static
-    {
-        $this->capacite = $capacite;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, EmploiTemps>
+     * @return Collection<int, PlanningCours>
      */
-    public function getEmploiTemps(): Collection
+    public function getPlanningCours(): Collection
     {
-        return $this->emploiTemps;
+        return $this->planningCours;
     }
 
-    public function addEmploiTemp(EmploiTemps $emploiTemp): static
+    public function addPlanningCour(PlanningCours $planningCour): static
     {
-        if (!$this->emploiTemps->contains($emploiTemp)) {
-            $this->emploiTemps->add($emploiTemp);
-            $emploiTemp->setSalle($this);
+        if (!$this->planningCours->contains($planningCour)) {
+            $this->planningCours->add($planningCour);
+            $planningCour->setSallecours($this);
         }
 
         return $this;
     }
 
-    public function removeEmploiTemp(EmploiTemps $emploiTemp): static
+    public function removePlanningCour(PlanningCours $planningCour): static
     {
-        if ($this->emploiTemps->removeElement($emploiTemp)) {
+        if ($this->planningCours->removeElement($planningCour)) {
             // set the owning side to null (unless already changed)
-            if ($emploiTemp->getSalle() === $this) {
-                $emploiTemp->setSalle(null);
+            if ($planningCour->getSallecours() === $this) {
+                $planningCour->setSallecours(null);
             }
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->numero;
     }
 }

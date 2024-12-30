@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Campus;
+use App\Entity\ChefDepartement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Campus>
+ * @extends ServiceEntityRepository<ChefDepartement>
  */
-class CampusRepository extends ServiceEntityRepository
+class ChefDepartementRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Campus::class);
+        parent::__construct($registry, ChefDepartement::class);
     }
 
     //    /**
-    //     * @return Campus[] Returns an array of Campus objects
+    //     * @return ChefDepartement[] Returns an array of ChefDepartement objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class CampusRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Campus
+    //    public function findOneBySomeField($value): ?ChefDepartement
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')

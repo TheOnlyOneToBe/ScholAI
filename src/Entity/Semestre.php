@@ -7,70 +7,52 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SemestreRepository::class)]
-#[UniqueEntity(
-    fields: ['nomsemestre', 'datedebut'],
-    message: 'semestre.nomsemestre.unique'
-)]
-#[ORM\HasLifecycleCallbacks]
 class Semestre
 {
-    public const NUMEROS = [1, 2];
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    #[Assert\NotBlank(message: 'semestre.nomsemestre.not_blank')]
-    #[Assert\Length(
-        min: 2,
-        max: 50,
-        minMessage: 'semestre.nomsemestre.min_length',
-        maxMessage: 'semestre.nomsemestre.max_length'
-    )]
-    private ?string $nomsemestre = null;
+    #[ORM\Column(length: 255)]
+    private ?string $numSemestre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank(message: 'semestre.datedebut.not_blank')]
-    #[Assert\Type("\DateTimeInterface")]
-    private ?\DateTimeInterface $datedebut = null;
+    private ?\DateTimeInterface $date_debut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotBlank(message: 'semestre.datefin.not_blank')]
-    #[Assert\Type("\DateTimeInterface")]
-    #[Assert\Expression(
-        "this.getDatefin() > this.getDatedebut()",
-        message: 'semestre.dates.valid_range'
-    )]
-    private ?\DateTimeInterface $datefin = null;
+    private ?\DateTimeInterface $dateFin = null;
+
+    #[ORM\ManyToOne(inversedBy: 'semestres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AnneeAcademique $anneeacademique = null;
+
 
     /**
-     * @var Collection<int, Programme>
+     * @var Collection<int, Inscription>
      */
-    #[ORM\OneToMany(targetEntity: Programme::class, mappedBy: 'semestre', orphanRemoval: true)]
-    private Collection $programmes;
+    #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'semestre', orphanRemoval: true)]
+    private Collection $inscriptions;
 
-    #[Assert\Callback]
-    public function validateDateRange(\Symfony\Component\Validator\Context\ExecutionContextInterface $context): void
-    {
-        if ($this->datedebut && $this->datefin) {
-            // Vérifier que les dates sont valides
-            if ($this->datedebut >= $this->datefin) {
-                $context->buildViolation('semestre.dates.outside_year')
-                    ->atPath('datedebut')
-                    ->addViolation();
-            }
-        }
-    }
+    /**
+     * @var Collection<int, UE>
+     */
+    #[ORM\OneToMany(targetEntity: UE::class, mappedBy: 'semestre', orphanRemoval: true)]
+    private Collection $uEs;
+
+    /**
+     * @var Collection<int, Evaluation>
+     */
+    #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'smestre', orphanRemoval: true)]
+    private Collection $evaluations;
 
     public function __construct()
     {
-        $this->programmes = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
+        $this->uEs = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,66 +60,138 @@ class Semestre
         return $this->id;
     }
 
-    public function getNomsemestre(): ?string
+    public function getNumSemestre(): ?string
     {
-        return $this->nomsemestre;
+        return $this->numSemestre;
     }
 
-    public function setNomsemestre(string $nomsemestre): static
+    public function setNumSemestre(string $numSemestre): static
     {
-        $this->nomsemestre = $nomsemestre;
+        $this->numSemestre = $numSemestre;
 
         return $this;
     }
 
-    public function getDatedebut(): ?\DateTimeInterface
+    public function getDateDebut(): ?\DateTimeInterface
     {
-        return $this->datedebut;
+        return $this->date_debut;
     }
 
-    public function setDatedebut(\DateTimeInterface $datedebut): static
+    public function setDateDebut(\DateTimeInterface $date_debut): static
     {
-        $this->datedebut = $datedebut;
+        $this->date_debut = $date_debut;
 
         return $this;
     }
 
-    public function getDatefin(): ?\DateTimeInterface
+    public function getDateFin(): ?\DateTimeInterface
     {
-        return $this->datefin;
+        return $this->dateFin;
     }
 
-    public function setDatefin(\DateTimeInterface $datefin): static
+    public function setDateFin(\DateTimeInterface $dateFin): static
     {
-        $this->datefin = $datefin;
+        $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function getAnneeacademique(): ?AnneeAcademique
+    {
+        return $this->anneeacademique;
+    }
+
+    public function setAnneeacademique(?AnneeAcademique $anneeacademique): static
+    {
+        $this->anneeacademique = $anneeacademique;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Programme>
+     * @return Collection<int, Inscription>
      */
-    public function getProgrammes(): Collection
+    public function getInscriptions(): Collection
     {
-        return $this->programmes;
+        return $this->inscriptions;
     }
 
-    public function addProgramme(Programme $programme): static
+    public function addInscription(Inscription $inscription): static
     {
-        if (!$this->programmes->contains($programme)) {
-            $this->programmes->add($programme);
-            $programme->setSemestre($this);
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setSemestre($this);
         }
 
         return $this;
     }
 
-    public function removeProgramme(Programme $programme): static
+    public function removeInscription(Inscription $inscription): static
     {
-        if ($this->programmes->removeElement($programme)) {
+        if ($this->inscriptions->removeElement($inscription)) {
             // set the owning side to null (unless already changed)
-            if ($programme->getSemestre() === $this) {
-                $programme->setSemestre(null);
+            if ($inscription->getSemestre() === $this) {
+                $inscription->setSemestre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UE>
+     */
+    public function getUEs(): Collection
+    {
+        return $this->uEs;
+    }
+
+    public function addUE(UE $uE): static
+    {
+        if (!$this->uEs->contains($uE)) {
+            $this->uEs->add($uE);
+            $uE->setSemestre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUE(UE $uE): static
+    {
+        if ($this->uEs->removeElement($uE)) {
+            // set the owning side to null (unless already changed)
+            if ($uE->getSemestre() === $this) {
+                $uE->setSemestre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setSmestre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): static
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getSmestre() === $this) {
+                $evaluation->setSmestre(null);
             }
         }
 

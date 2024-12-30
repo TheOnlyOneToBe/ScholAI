@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Campus;
+use App\Entity\UE;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Campus>
+ * @extends ServiceEntityRepository<UE>
  */
-class CampusRepository extends ServiceEntityRepository
+class UERepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Campus::class);
+        parent::__construct($registry, UE::class);
     }
 
     //    /**
-    //     * @return Campus[] Returns an array of Campus objects
+    //     * @return UE[] Returns an array of UE objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
+    //            ->orderBy('u.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Campus
+    //    public function findOneBySomeField($value): ?UE
     //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

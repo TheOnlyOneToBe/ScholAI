@@ -15,69 +15,37 @@ class FiliereCycle
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $inscription = null;
-
-    #[ORM\Column]
-    private ?int $pension = null;
-
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?bool $statut = null;
-
     #[ORM\ManyToOne(inversedBy: 'filiereCycles')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Filiere $filiere = null;
 
     #[ORM\ManyToOne(inversedBy: 'filiereCycles')]
-    private ?Cycle $cycle = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Cycle $Cycle = null;
 
-    /**
-     * @var Collection<int, Programme>
-     */
-    #[ORM\OneToMany(targetEntity: Programme::class, mappedBy: 'FiliereCycle', orphanRemoval: true)]
-    private Collection $programmes;
+    #[ORM\Column]
+    private ?float $fraisInscription = null;
+
+    #[ORM\Column]
+    private ?float $montantPension = null;
 
     /**
      * @var Collection<int, Inscription>
      */
-    #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'filierecycle', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'filiereCycle', orphanRemoval: true)]
     private Collection $inscriptions;
 
     public function __construct()
     {
-        $this->programmes = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getInscription(): ?int
-    {
-        return $this->inscription;
-    }
-
-    public function setInscription(int $inscription): static
-    {
-        $this->inscription = $inscription;
-
-        return $this;
-    }
-
-    public function getPension(): ?int
-    {
-        return $this->pension;
-    }
-
-    public function setPension(int $pension): static
-    {
-        $this->pension = $pension;
-
-        return $this;
     }
 
     public function getDescription(): ?string
@@ -88,18 +56,6 @@ class FiliereCycle
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function isStatut(): ?bool
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(bool $statut): static
-    {
-        $this->statut = $statut;
 
         return $this;
     }
@@ -118,42 +74,36 @@ class FiliereCycle
 
     public function getCycle(): ?Cycle
     {
-        return $this->cycle;
+        return $this->Cycle;
     }
 
-    public function setCycle(?Cycle $cycle): static
+    public function setCycle(?Cycle $Cycle): static
     {
-        $this->cycle = $cycle;
+        $this->Cycle = $Cycle;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Programme>
-     */
-    public function getProgrammes(): Collection
+    public function getFraisInscription(): ?float
     {
-        return $this->programmes;
+        return $this->fraisInscription;
     }
 
-    public function addProgramme(Programme $programme): static
+    public function setFraisInscription(float $fraisInscription): static
     {
-        if (!$this->programmes->contains($programme)) {
-            $this->programmes->add($programme);
-            $programme->setFiliereCycle($this);
-        }
+        $this->fraisInscription = $fraisInscription;
 
         return $this;
     }
 
-    public function removeProgramme(Programme $programme): static
+    public function getMontantPension(): ?float
     {
-        if ($this->programmes->removeElement($programme)) {
-            // set the owning side to null (unless already changed)
-            if ($programme->getFiliereCycle() === $this) {
-                $programme->setFiliereCycle(null);
-            }
-        }
+        return $this->montantPension;
+    }
+
+    public function setMontantPension(float $montantPension): static
+    {
+        $this->montantPension = $montantPension;
 
         return $this;
     }
@@ -170,7 +120,7 @@ class FiliereCycle
     {
         if (!$this->inscriptions->contains($inscription)) {
             $this->inscriptions->add($inscription);
-            $inscription->setFilierecycle($this);
+            $inscription->setFiliereCycle($this);
         }
 
         return $this;
@@ -180,8 +130,8 @@ class FiliereCycle
     {
         if ($this->inscriptions->removeElement($inscription)) {
             // set the owning side to null (unless already changed)
-            if ($inscription->getFilierecycle() === $this) {
-                $inscription->setFilierecycle(null);
+            if ($inscription->getFiliereCycle() === $this) {
+                $inscription->setFiliereCycle(null);
             }
         }
 

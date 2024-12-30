@@ -2,20 +2,12 @@
 
 namespace App\Entity;
 
+use App\Enum\StatutInscription;
 use App\Repository\InscriptionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: InscriptionRepository::class)]
-#[UniqueEntity(
-    fields: ['etudiant', 'filierecycle', 'annee'],
-    message: 'inscription.unique_combination'
-)]
-#[ORM\HasLifecycleCallbacks]
 class Inscription
 {
     #[ORM\Id]
@@ -25,102 +17,28 @@ class Inscription
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message: 'inscription.etudiant.not_blank')]
     private ?Etudiant $etudiant = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message: 'inscription.filiere_cycle.not_blank')]
-    private ?FiliereCycle $filierecycle = null;
+    private ?FiliereCycle $filiereCycle = null;
+
+    #[ORM\Column(length: 50,enumType: StatutInscription::class)]
+    private ?string $statut = null;
+
+    #[ORM\Column]
+    private ?bool $isSuspended = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank(message: 'inscription.annee.not_blank')]
-    private ?Annee $annee = null;
+    private ?Semestre $semestre = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank(message: 'inscription.date.not_blank')]
-    #[Assert\Type("\DateTimeInterface")]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateInscription = null;
-
-    #[ORM\Column]
-    private ?bool $statutInscription = null;
-
-    /**
-     * @var Collection<int, Reglement>
-     */
-    #[ORM\OneToMany(targetEntity: Reglement::class, mappedBy: 'inscription', orphanRemoval: true)]
-    private Collection $reglements;
-
-    #[Assert\Callback]
-    public function validateDateInscription(\Symfony\Component\Validator\Context\ExecutionContextInterface $context): void
-    {
-        if ($this->dateInscription && $this->annee) {
-            if ($this->dateInscription < $this->annee->getYearStart() || $this->dateInscription > $this->annee->getYearEnd()) {
-                $context->buildViolation('inscription.date.in_year')
-                    ->atPath('dateInscription')
-                    ->addViolation();
-            }
-        }
-    }
-
-    public function __construct()
-    {
-        $this->reglements = new ArrayCollection();
-        $this->dateInscription = new \DateTime();
-    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDateInscription(): ?\DateTimeInterface
-    {
-        return $this->dateInscription;
-    }
-
-    public function setDateInscription(\DateTimeInterface $dateInscription): static
-    {
-        $this->dateInscription = $dateInscription;
-
-        return $this;
-    }
-
-    public function getFilierecycle(): ?FiliereCycle
-    {
-        return $this->filierecycle;
-    }
-
-    public function setFilierecycle(?FiliereCycle $filierecycle): static
-    {
-        $this->filierecycle = $filierecycle;
-
-        return $this;
-    }
-
-    public function getAnnee(): ?Annee
-    {
-        return $this->annee;
-    }
-
-    public function setAnnee(?Annee $annee): static
-    {
-        $this->annee = $annee;
-
-        return $this;
-    }
-
-    public function isStatutInscription(): ?bool
-    {
-        return $this->statutInscription;
-    }
-
-    public function setStatutInscription(bool $statutInscription): static
-    {
-        $this->statutInscription = $statutInscription;
-
-        return $this;
     }
 
     public function getEtudiant(): ?Etudiant
@@ -135,32 +53,62 @@ class Inscription
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reglement>
-     */
-    public function getReglements(): Collection
+    public function getFiliereCycle(): ?FiliereCycle
     {
-        return $this->reglements;
+        return $this->filiereCycle;
     }
 
-    public function addReglement(Reglement $reglement): static
+    public function setFiliereCycle(?FiliereCycle $filiereCycle): static
     {
-        if (!$this->reglements->contains($reglement)) {
-            $this->reglements->add($reglement);
-            $reglement->setInscription($this);
-        }
+        $this->filiereCycle = $filiereCycle;
 
         return $this;
     }
 
-    public function removeReglement(Reglement $reglement): static
+    public function getStatut(): ?string
     {
-        if ($this->reglements->removeElement($reglement)) {
-            // set the owning side to null (unless already changed)
-            if ($reglement->getInscription() === $this) {
-                $reglement->setInscription(null);
-            }
-        }
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function isSuspended(): ?bool
+    {
+        return $this->isSuspended;
+    }
+
+    public function setSuspended(bool $isSuspended): static
+    {
+        $this->isSuspended = $isSuspended;
+
+        return $this;
+    }
+
+    public function getSemestre(): ?Semestre
+    {
+        return $this->semestre;
+    }
+
+    public function setSemestre(?Semestre $semestre): static
+    {
+        $this->semestre = $semestre;
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTimeInterface
+    {
+        return $this->dateInscription;
+    }
+
+    public function setDateInscription(\DateTimeInterface $dateInscription): static
+    {
+        $this->dateInscription = $dateInscription;
 
         return $this;
     }
