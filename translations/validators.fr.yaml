@@ -161,6 +161,43 @@ validation:
     min: 'Ce nombre doit être supérieur ou égal à {{ limit }}'
     max: 'Ce nombre doit être inférieur ou égal à {{ limit }}'
 
+# Messages de validation pour l'entité FiliereCycle
+filiere_cycle:
+    description:
+        not_blank: 'La description ne peut pas être vide'
+        min_length: 'La description doit contenir au moins {{ limit }} caractères'
+        max_length: 'La description ne peut pas dépasser {{ limit }} caractères'
+    filiere:
+        not_null: 'La filière doit être spécifiée'
+    cycle:
+        not_null: 'Le cycle doit être spécifié'
+    frais_inscription:
+        not_null: 'Les frais d''inscription sont requis'
+        must_be_positive: 'Les frais d''inscription doivent être supérieurs à 0'
+    montant_pension:
+        not_null: 'Le montant de la pension est requis'
+        must_be_positive: 'Le montant de la pension doit être supérieur à 0'
+    filiere_cycle:
+        unique: 'Cette combinaison filière/cycle existe déjà'
+
+# Messages de validation pour l'entité ImpressionFormat
+impression_format:
+    nom_format:
+        not_blank: 'Le nom du format ne peut pas être vide'
+        min_length: 'Le nom du format doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom du format ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de format existe déjà'
+    largeur_page:
+        not_blank: 'La largeur de la page ne peut pas être vide'
+        invalid_format: 'La largeur doit être un nombre suivi de mm, cm ou in'
+    longueur_page:
+        not_null: 'La longueur de la page est requise'
+        must_be_positive: 'La longueur de la page doit être supérieure à 0'
+    description:
+        not_blank: 'La description ne peut pas être vide'
+        min_length: 'La description doit contenir au moins {{ limit }} caractères'
+        max_length: 'La description ne peut pas dépasser {{ limit }} caractères'
+
 # Validations spécifiques aux entités
 # translations/validator.fr.yaml
 evaluation:
@@ -212,3 +249,236 @@ impression:
     imprime: 'Imprimé'
     annule: 'Annulé'
 
+# Messages de validation pour l'entité Bourse
+bourse:
+    montant:
+        not_null: 'Le montant de la bourse est requis'
+        must_be_positive: 'Le montant de la bourse doit être supérieur à 0'
+    remise:
+        must_be_positive_or_zero: 'La remise doit être supérieure ou égale à 0'
+        must_be_less_than_100: 'La remise ne peut pas dépasser 100%'
+    etudiant:
+        not_null: 'L''étudiant doit être spécifié'
+
+# Messages de validation pour l'entité Campus
+campus:
+    nom_campus:
+        not_blank: 'Le nom du campus ne peut pas être vide'
+        min_length: 'Le nom du campus doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom du campus ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de campus existe déjà'
+    adresse_campus:
+        min_length: 'L''adresse du campus doit contenir au moins {{ limit }} caractères'
+        max_length: 'L''adresse du campus ne peut pas dépasser {{ limit }} caractères'
+
+# Messages de validation pour l'entité Etudiant
+etudiant:
+  sexe:
+    not_null: 'Le sexe doit être spécifié'
+  date_naissance:
+    not_null: 'La date de naissance est requise'
+    less_than_today: 'La date de naissance doit être antérieure à aujourd''hui'
+  adresse:
+    not_blank: 'L''adresse ne peut pas être vide'
+    min_length: 'L''adresse doit contenir au moins {{ limit }} caractères'
+    max_length: 'L''adresse ne peut pas dépasser {{ limit }} caractères'
+  nom:
+    not_blank: 'Le nom ne peut pas être vide'
+    min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
+    max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
+  prenom:
+    not_blank: 'Le prénom ne peut pas être vide'
+    min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
+    max_length: 'Le prénom ne peut pas dépasser {{ limit }} caractères'
+  email:
+    not_blank: 'L''email ne peut pas être vide'
+    invalid: 'L''email n''est pas valide'
+  telephone:
+    not_blank: 'Le numéro de téléphone ne peut pas être vide'
+    invalid: 'Le numéro de téléphone n''est pas valide'
+
+# Messages de validation pour l'entité AnneeAcademique
+annee_academique:
+  year_start:
+    not_null: 'La date de début d''année est requise'
+  year_end:
+    not_null: 'La date de fin d''année est requise'
+    must_be_after_start: 'La date de fin doit être postérieure à la date de début'
+  is_current:
+    not_null: 'Le statut actuel de l''année académique doit être spécifié'
+  year_range:
+    too_long: 'La durée de l''année académique ne peut pas dépasser 1 an'
+
+# Messages de validation pour l'entité AntecedentAcademique
+antecedent_academique:
+  etablissement:
+    not_blank: 'Le nom de l''établissement ne peut pas être vide'
+    min_length: 'Le nom de l''établissement doit contenir au moins {{ limit }} caractères'
+    max_length: 'Le nom de l''établissement ne peut pas dépasser {{ limit }} caractères'
+  diplome:
+    not_blank: 'Le diplôme ne peut pas être vide'
+    min_length: 'Le diplôme doit contenir au moins {{ limit }} caractères'
+    max_length: 'Le diplôme ne peut pas dépasser {{ limit }} caractères'
+  matricule_diplome:
+    not_blank: 'Le matricule du diplôme ne peut pas être vide'
+    min_length: 'Le matricule du diplôme doit contenir au moins {{ limit }} caractères'
+    max_length: 'Le matricule du diplôme ne peut pas dépasser {{ limit }} caractères'
+  annee_obtention:
+    not_null: 'L''année d''obtention est requise'
+    must_be_past: 'L''année d''obtention doit être dans le passé'
+  etudiant:
+    not_null: 'L''étudiant doit être spécifié'
+
+# Messages de validation pour l'entité ChefDepartement
+chef_departement:
+    professeur:
+        not_null: 'Le professeur doit être spécifié'
+    departement:
+        not_null: 'Le département doit être spécifié'
+    date_debut_mandat:
+        not_null: 'La date de début de mandat est requise'
+        must_be_past_or_today: 'La date de début de mandat ne peut pas être dans le futur'
+    professeur_departement:
+        unique: 'Ce professeur est déjà chef de ce département'
+
+# Messages de validation pour l'entité Cours
+cours:
+    nom_cours:
+        not_blank: 'Le nom du cours ne peut pas être vide'
+        min_length: 'Le nom du cours doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom du cours ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de cours existe déjà'
+    descriptif:
+        min_length: 'Le descriptif doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le descriptif ne peut pas dépasser {{ limit }} caractères'
+    type_cours:
+        not_blank: 'Le type de cours doit être spécifié'
+        invalid_choice: 'Le type de cours doit être CM, TD ou TP'
+
+# Messages de validation pour l'entité Cycle
+cycle:
+    nom_cycle:
+        not_blank: 'Le nom du cycle ne peut pas être vide'
+        min_length: 'Le nom du cycle doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom du cycle ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de cycle existe déjà'
+
+# Messages de validation pour l'entité Departement
+departement:
+    nom_departement:
+        not_blank: 'Le nom du département ne peut pas être vide'
+        min_length: 'Le nom du département doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom du département ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de département existe déjà'
+    date_creation:
+        not_null: 'La date de création est requise'
+        must_be_past_or_today: 'La date de création ne peut pas être dans le futur'
+
+# Messages de validation pour l'entité Evaluation
+evaluation:
+    ue:
+        not_null: 'L''UE doit être spécifiée'
+    semestre:
+        not_null: 'Le semestre doit être spécifié'
+    date_debut:
+        not_null: 'La date de début est requise'
+        must_be_future: 'La date de début doit être dans le futur'
+    temps_evaluation:
+        not_null: 'Le temps d''évaluation est requis'
+        must_be_positive: 'Le temps d''évaluation doit être positif'
+        max_duration: 'Le temps d''évaluation ne peut pas dépasser 240 minutes'
+    statut:
+        not_null: 'Le statut de l''évaluation doit être spécifié'
+    type:
+        not_null: 'Le type d''évaluation doit être spécifié'
+
+# Messages de validation pour l'entité Filiere
+filiere:
+    nom_filiere:
+        not_blank: 'Le nom de la filière ne peut pas être vide'
+        min_length: 'Le nom de la filière doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom de la filière ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de filière existe déjà'
+
+# Messages de validation pour l'entité Incident
+incident:
+    description:
+        not_blank: 'La description de l''incident ne peut pas être vide'
+        min_length: 'La description doit contenir au moins {{ limit }} caractères'
+        max_length: 'La description ne peut pas dépasser {{ limit }} caractères'
+    date_incident:
+        not_null: 'La date de l''incident est requise'
+        must_be_past_or_today: 'La date de l''incident ne peut pas être dans le futur'
+    gravite:
+        not_null: 'La gravité de l''incident doit être spécifiée'
+    type_incident:
+        not_null: 'Le type d''incident doit être spécifié'
+    etudiant:
+        not_null: 'L''étudiant concerné doit être spécifié'
+
+# Messages de validation pour l'entité Inscription
+inscription:
+    etudiant:
+        not_null: 'L''étudiant doit être spécifié'
+    filiere_cycle:
+        not_null: 'La filière et le cycle doivent être spécifiés'
+    statut:
+        not_null: 'Le statut de l''inscription doit être spécifié'
+    is_suspended:
+        not_null: 'Le statut de suspension doit être spécifié'
+    semestre:
+        not_null: 'Le semestre doit être spécifié'
+    date_inscription:
+        not_null: 'La date d''inscription est requise'
+        must_be_past_or_today: 'La date d''inscription ne peut pas être dans le futur'
+    etudiant_filiere_semestre:
+        unique: 'Cet étudiant est déjà inscrit dans cette filière pour ce semestre'
+
+# Messages de validation pour l'entité Note
+note:
+    etudiant:
+        not_null: 'L''étudiant doit être spécifié'
+    evaluation:
+        not_null: 'L''évaluation doit être spécifiée'
+    note_value:
+        not_null: 'La note doit être spécifiée'
+        not_in_range: 'La note doit être comprise entre {{ min }} et {{ max }}'
+    etudiant_evaluation:
+        unique: 'Cet étudiant a déjà une note pour cette évaluation'
+
+# Messages de validation pour l'entité Professeur
+professeur:
+    nom:
+        not_blank: 'Le nom ne peut pas être vide'
+        min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
+    prenom:
+        not_blank: 'Le prénom ne peut pas être vide'
+        min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le prénom ne peut pas dépasser {{ limit }} caractères'
+    email:
+        not_blank: 'L''email ne peut pas être vide'
+        invalid: 'L''email n''est pas valide'
+        unique: 'Cet email est déjà utilisé'
+    numero_telephone:
+        invalid: 'Le numéro de téléphone n''est pas valide'
+    cni:
+        not_blank: 'Le numéro CNI ne peut pas être vide'
+        invalid: 'Le numéro CNI n''est pas valide'
+        unique: 'Ce numéro CNI est déjà utilisé'
+    date_naissance:
+        must_be_past: 'La date de naissance doit être dans le passé'
+    nationalite:
+        min_length: 'La nationalité doit contenir au moins {{ limit }} caractères'
+        max_length: 'La nationalité ne peut pas dépasser {{ limit }} caractères'
+    adresse:
+        not_blank: 'L''adresse ne peut pas être vide'
+        min_length: 'L''adresse doit contenir au moins {{ limit }} caractères'
+        max_length: 'L''adresse ne peut pas dépasser {{ limit }} caractères'
+    photo_profil:
+        not_blank: 'La photo de profil est requise'
+        max_size: 'La photo ne doit pas dépasser 5Mo'
+        mime_types: 'La photo doit être au format JPG ou PNG'
+    date_creation:
+        not_null: 'La date de création est requise'
+        must_be_past_or_today: 'La date de création ne peut pas être dans le futur'

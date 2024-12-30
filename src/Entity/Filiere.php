@@ -6,8 +6,14 @@ use App\Repository\FiliereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: FiliereRepository::class)]
+#[UniqueEntity(
+    fields: ['nomFiliere'],
+    message: 'filiere.nom_filiere.unique'
+)]
 class Filiere
 {
     #[ORM\Id]
@@ -16,6 +22,13 @@ class Filiere
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
+    #[Assert\NotBlank(message: 'filiere.nom_filiere.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 150,
+        minMessage: 'filiere.nom_filiere.min_length',
+        maxMessage: 'filiere.nom_filiere.max_length'
+    )]
     private ?string $nomFiliere = null;
 
     /**

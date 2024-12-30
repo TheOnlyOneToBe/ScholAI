@@ -6,8 +6,14 @@ use App\Repository\CycleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CycleRepository::class)]
+#[UniqueEntity(
+    fields: ['nomCycle'],
+    message: 'cycle.nom_cycle.unique'
+)]
 class Cycle
 {
     #[ORM\Id]
@@ -16,6 +22,13 @@ class Cycle
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'cycle.nom_cycle.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'cycle.nom_cycle.min_length',
+        maxMessage: 'cycle.nom_cycle.max_length'
+    )]
     private ?string $nomCycle = null;
 
     /**

@@ -7,8 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
+#[UniqueEntity(
+    fields: ['nomDepartement'],
+    message: 'departement.nom_departement.unique'
+)]
 class Departement
 {
     #[ORM\Id]
@@ -17,9 +23,21 @@ class Departement
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'departement.nom_departement.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: 'departement.nom_departement.min_length',
+        maxMessage: 'departement.nom_departement.max_length'
+    )]
     private ?string $nomDepartement = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: 'departement.date_creation.not_null')]
+    #[Assert\LessThanOrEqual(
+        'today',
+        message: 'departement.date_creation.must_be_past_or_today'
+    )]
     private ?\DateTimeInterface $dateCreation = null;
 
     /**

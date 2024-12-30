@@ -4,8 +4,14 @@ namespace App\Entity;
 
 use App\Repository\NoteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
+#[UniqueEntity(
+    fields: ['etudiant', 'evaluation'],
+    message: 'note.etudiant_evaluation.unique'
+)]
 class Note
 {
     #[ORM\Id]
@@ -15,13 +21,21 @@ class Note
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'note.etudiant.not_null')]
     private ?Etudiant $etudiant = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'note.evaluation.not_null')]
     private ?Evaluation $evaluation = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'note.note_value.not_null')]
+    #[Assert\Range(
+        min: 0,
+        max: 20,
+        notInRangeMessage: 'note.note_value.not_in_range'
+    )]
     private ?float $noteValue = null;
 
     public function getId(): ?int

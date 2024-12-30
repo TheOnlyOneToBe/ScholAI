@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtudiantRepository::class)]
 class Etudiant
@@ -17,28 +18,53 @@ class Etudiant
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 10, nullable: true,enumType: Genre::class)]
+    #[ORM\Column(length: 10, nullable: true, enumType: Genre::class)]
+    #[Assert\NotNull(message: 'etudiant.sexe.not_null')]
     private ?string $sexe = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'etudiant.date_naissance.not_null')]
+    #[Assert\LessThan('today', message: 'etudiant.date_naissance.less_than_today')]
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'etudiant.adresse.not_blank')]
+    #[Assert\Length(min: 5, max: 255, 
+        minMessage: 'etudiant.adresse.min_length',
+        maxMessage: 'etudiant.adresse.max_length'
+    )]
     private ?string $adresse = null;
 
     #[ORM\Column]
     private ?bool $isRegistrationAllowed = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'etudiant.nom.not_blank')]
+    #[Assert\Length(min: 2, max: 255,
+        minMessage: 'etudiant.nom.min_length',
+        maxMessage: 'etudiant.nom.max_length'
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'etudiant.prenom.not_blank')]
+    #[Assert\Length(min: 2, max: 255,
+        minMessage: 'etudiant.prenom.min_length',
+        maxMessage: 'etudiant.prenom.max_length'
+    )]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255,unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'etudiant.email.not_blank')]
+    #[Assert\Email(message: 'etudiant.email.invalid')]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: 'etudiant.telephone.not_blank')]
+    #[Assert\Regex(
+        pattern: '/^[0-9\+\-\(\) ]{8,20}$/',
+        message: 'etudiant.telephone.invalid'
+    )]
     private ?string $numTelephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]

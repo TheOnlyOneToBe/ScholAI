@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: AnneeAcademiqueRepository::class)]
 class AnneeAcademique
@@ -17,12 +19,19 @@ class AnneeAcademique
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'annee_academique.year_start.not_null')]
     private ?\DateTimeInterface $YearStart = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'annee_academique.year_end.not_null')]
+    #[Assert\GreaterThan(
+        propertyPath: 'YearStart',
+        message: 'annee_academique.year_end.must_be_after_start'
+    )]
     private ?\DateTimeInterface $YearEnd = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'annee_academique.is_current.not_null')]
     private ?bool $isCurrent = null;
 
     /**
@@ -105,5 +114,18 @@ class AnneeAcademique
         }
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validateYearRange(ExecutionContextInterface $context): void
+    {
+        if ($this->YearStart && $this->YearEnd) {
+            $diff = $this->YearStart->diff($this->YearEnd);
+            if ($diff->y > 1) {
+                $context->buildViolation('annee_academique.year_range.too_long')
+                    ->atPath('YearEnd')
+                    ->addViolation();
+            }
+        }
     }
 }

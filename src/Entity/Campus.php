@@ -6,8 +6,14 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
+#[UniqueEntity(
+    fields: ['nomCampus'],
+    message: 'campus.nom_campus.unique'
+)]
 class Campus
 {
     #[ORM\Id]
@@ -16,9 +22,22 @@ class Campus
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
+    #[Assert\NotBlank(message: 'campus.nom_campus.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 150,
+        minMessage: 'campus.nom_campus.min_length',
+        maxMessage: 'campus.nom_campus.max_length'
+    )]
     private ?string $nomCampus = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'campus.adresse_campus.min_length',
+        maxMessage: 'campus.adresse_campus.max_length'
+    )]
     private ?string $adresseCampus = null;
 
     /**

@@ -6,8 +6,14 @@ use App\Enum\StatutInscription;
 use App\Repository\InscriptionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: InscriptionRepository::class)]
+#[UniqueEntity(
+    fields: ['etudiant', 'filiereCycle', 'semestre'],
+    message: 'inscription.etudiant_filiere_semestre.unique'
+)]
 class Inscription
 {
     #[ORM\Id]
@@ -17,23 +23,33 @@ class Inscription
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'inscription.etudiant.not_null')]
     private ?Etudiant $etudiant = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'inscription.filiere_cycle.not_null')]
     private ?FiliereCycle $filiereCycle = null;
 
-    #[ORM\Column(length: 50,enumType: StatutInscription::class)]
+    #[ORM\Column(length: 50, enumType: StatutInscription::class)]
+    #[Assert\NotNull(message: 'inscription.statut.not_null')]
     private ?string $statut = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'inscription.is_suspended.not_null')]
     private ?bool $isSuspended = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'inscription.semestre.not_null')]
     private ?Semestre $semestre = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'inscription.date_inscription.not_null')]
+    #[Assert\LessThanOrEqual(
+        'today',
+        message: 'inscription.date_inscription.must_be_past_or_today'
+    )]
     private ?\DateTimeInterface $dateInscription = null;
 
     public function getId(): ?int

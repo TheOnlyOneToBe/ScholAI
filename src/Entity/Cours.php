@@ -6,8 +6,14 @@ use App\Repository\CoursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CoursRepository::class)]
+#[UniqueEntity(
+    fields: ['nomCours'],
+    message: 'cours.nom_cours.unique'
+)]
 class Cours
 {
     #[ORM\Id]
@@ -16,13 +22,30 @@ class Cours
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'cours.nom_cours.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: 'cours.nom_cours.min_length',
+        maxMessage: 'cours.nom_cours.max_length'
+    )]
     private ?string $nomCours = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 10,
+        max: 255,
+        minMessage: 'cours.descriptif.min_length',
+        maxMessage: 'cours.descriptif.max_length'
+    )]
     private ?string $descriptif = null;
 
-
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'cours.type_cours.not_blank')]
+    #[Assert\Choice(
+        choices: ['CM', 'TD', 'TP'],
+        message: 'cours.type_cours.invalid_choice'
+    )]
     private ?string $typeCours = null;
 
     /**

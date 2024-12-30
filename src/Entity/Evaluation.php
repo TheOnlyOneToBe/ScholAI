@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EvaluationRepository::class)]
 class Evaluation
@@ -19,20 +20,33 @@ class Evaluation
 
     #[ORM\ManyToOne(inversedBy: 'evaluations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'evaluation.ue.not_null')]
     private ?UE $UE = null;
 
     #[ORM\ManyToOne(inversedBy: 'evaluations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'evaluation.semestre.not_null')]
     private ?Semestre $semestre = null;
 
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'evaluation.date_debut.not_null')]
+    #[Assert\GreaterThanOrEqual(
+        'today',
+        message: 'evaluation.date_debut.must_be_future'
+    )]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'evaluation.temps_evaluation.not_null')]
+    #[Assert\Positive(message: 'evaluation.temps_evaluation.must_be_positive')]
+    #[Assert\LessThanOrEqual(
+        value: 240,
+        message: 'evaluation.temps_evaluation.max_duration'
+    )]
     private ?int $tempsEvaluation = null;
 
-    #[ORM\Column(length: 50,enumType: StatutEvaluation::class)]
+    #[ORM\Column(length: 50, enumType: StatutEvaluation::class)]
+    #[Assert\NotNull(message: 'evaluation.statut.not_null')]
     private ?string $statut = null;
 
     /**
@@ -43,6 +57,7 @@ class Evaluation
 
     #[ORM\ManyToOne(inversedBy: 'evaluations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'evaluation.type.not_null')]
     private ?TypeEvaluation $type = null;
 
     public function __construct()
@@ -79,7 +94,9 @@ class Evaluation
         return $this;
     }
 
-    
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getDateDebut(): ?\DateTimeInterface
     {
         return $this->dateDebut;

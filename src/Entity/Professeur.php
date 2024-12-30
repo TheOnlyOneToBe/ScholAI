@@ -8,8 +8,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProfesseurRepository::class)]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'professeur.email.unique'
+)]
+#[UniqueEntity(
+    fields: ['cni'],
+    message: 'professeur.cni.unique'
+)]
 class Professeur
 {
     #[ORM\Id]
@@ -18,36 +28,90 @@ class Professeur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.nom.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'professeur.nom.min_length',
+        maxMessage: 'professeur.nom.max_length'
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.prenom.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'professeur.prenom.min_length',
+        maxMessage: 'professeur.prenom.max_length'
+    )]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255,unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'professeur.email.not_blank')]
+    #[Assert\Email(message: 'professeur.email.invalid')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^\+?[0-9]{9,15}$/',
+        message: 'professeur.numero_telephone.invalid'
+    )]
     private ?string $numeroTelephone = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.cni.not_blank')]
+    #[Assert\Regex(
+        pattern: '/^[A-Z0-9]+$/',
+        message: 'professeur.cni.invalid'
+    )]
     private ?string $cni = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\LessThan(
+        'today',
+        message: 'professeur.date_naissance.must_be_past'
+    )]
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'professeur.nationalite.min_length',
+        maxMessage: 'professeur.nationalite.max_length'
+    )]
     private ?string $nationalite = null;
 
-    #[ORM\Column(length: 10, nullable: true,enumType: Genre::class)]
+    #[ORM\Column(length: 10, nullable: true, enumType: Genre::class)]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.adresse.not_blank')]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'professeur.adresse.min_length',
+        maxMessage: 'professeur.adresse.max_length'
+    )]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.photo_profil.not_blank')]
+    #[Assert\Image(
+        maxSize: '5M',
+        mimeTypes: ['image/jpeg', 'image/png'],
+        maxSizeMessage: 'professeur.photo_profil.max_size',
+        mimeTypesMessage: 'professeur.photo_profil.mime_types'
+    )]
     private ?string $photoProfil = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: 'professeur.date_creation.not_null')]
+    #[Assert\LessThanOrEqual(
+        'today',
+        message: 'professeur.date_creation.must_be_past_or_today'
+    )]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

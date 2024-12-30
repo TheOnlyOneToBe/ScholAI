@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BourseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BourseRepository::class)]
 class Bourse
@@ -14,13 +15,27 @@ class Bourse
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'bourse.montant.not_null')]
+    #[Assert\GreaterThan(
+        value: 0,
+        message: 'bourse.montant.must_be_positive'
+    )]
     private ?float $montant = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\GreaterThanOrEqual(
+        value: 0,
+        message: 'bourse.remise.must_be_positive_or_zero'
+    )]
+    #[Assert\LessThanOrEqual(
+        value: 100,
+        message: 'bourse.remise.must_be_less_than_100'
+    )]
     private ?float $remise = null;
 
     #[ORM\ManyToOne(inversedBy: 'bourses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'bourse.etudiant.not_null')]
     private ?Etudiant $etudiant = null;
 
     public function getId(): ?int

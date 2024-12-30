@@ -6,8 +6,14 @@ use App\Repository\FiliereCycleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: FiliereCycleRepository::class)]
+#[UniqueEntity(
+    fields: ['filiere', 'Cycle'],
+    message: 'filiere_cycle.filiere_cycle.unique'
+)]
 class FiliereCycle
 {
     #[ORM\Id]
@@ -16,20 +22,39 @@ class FiliereCycle
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'filiere_cycle.description.not_blank')]
+    #[Assert\Length(
+        min: 10,
+        max: 255,
+        minMessage: 'filiere_cycle.description.min_length',
+        maxMessage: 'filiere_cycle.description.max_length'
+    )]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'filiereCycles')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'filiere_cycle.filiere.not_null')]
     private ?Filiere $filiere = null;
 
     #[ORM\ManyToOne(inversedBy: 'filiereCycles')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'filiere_cycle.cycle.not_null')]
     private ?Cycle $Cycle = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'filiere_cycle.frais_inscription.not_null')]
+    #[Assert\GreaterThan(
+        value: 0,
+        message: 'filiere_cycle.frais_inscription.must_be_positive'
+    )]
     private ?float $fraisInscription = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'filiere_cycle.montant_pension.not_null')]
+    #[Assert\GreaterThan(
+        value: 0,
+        message: 'filiere_cycle.montant_pension.must_be_positive'
+    )]
     private ?float $montantPension = null;
 
     /**
