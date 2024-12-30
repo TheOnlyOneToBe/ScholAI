@@ -198,57 +198,6 @@ impression_format:
         min_length: 'La description doit contenir au moins {{ limit }} caractères'
         max_length: 'La description ne peut pas dépasser {{ limit }} caractères'
 
-# Validations spécifiques aux entités
-# translations/validator.fr.yaml
-evaluation:
-  status:
-    pending: 'En attente'
-    open: 'Ouverte'
-    closed: 'Fermée'
-tuteur:
-  type:
-    pere: 'Père'
-    mere: 'Mère'
-    legal: 'Légal'
-genre:
-  homme: 'Homme'
-  femme: 'Femme'
-  autre: 'Autre'
-semestre:
-  type:
-    regular: 'Régulier'
-    summer: 'Été'
-cours:
-  type:
-    jour: 'Jour'
-    soir: 'Soir'
-inscription:
-  statut:
-    pending: 'En attente'
-    valide: 'Validé'
-    rejete: 'Rejeté'
-    termine: 'Terminé'
-incident:
-  gravite:
-    faible: 'Faible'
-    moyenne: 'Moyenne'
-    elevee: 'Élevée'
-avertissement:
-  type:
-    disciplinaire: 'Disciplinaire'
-    academique: 'Académique'
-    autre: 'Autre'
-presence:
-  statut:
-    present: 'Présent'
-    absent: 'Absent'
-    justifie: 'Justifié'
-impression:
-  statut:
-    pending: 'En attente'
-    imprime: 'Imprimé'
-    annule: 'Annulé'
-
 # Messages de validation pour l'entité Bourse
 bourse:
     montant:
@@ -341,20 +290,6 @@ chef_departement:
     professeur_departement:
         unique: 'Ce professeur est déjà chef de ce département'
 
-# Messages de validation pour l'entité Cours
-cours:
-    nom_cours:
-        not_blank: 'Le nom du cours ne peut pas être vide'
-        min_length: 'Le nom du cours doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le nom du cours ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Ce nom de cours existe déjà'
-    descriptif:
-        min_length: 'Le descriptif doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le descriptif ne peut pas dépasser {{ limit }} caractères'
-    type_cours:
-        not_blank: 'Le type de cours doit être spécifié'
-        invalid_choice: 'Le type de cours doit être CM, TD ou TP'
-
 # Messages de validation pour l'entité Cycle
 cycle:
     nom_cycle:
@@ -373,32 +308,6 @@ departement:
     date_creation:
         not_null: 'La date de création est requise'
         must_be_past_or_today: 'La date de création ne peut pas être dans le futur'
-
-# Messages de validation pour l'entité Evaluation
-evaluation:
-    ue:
-        not_null: 'L''UE doit être spécifiée'
-    semestre:
-        not_null: 'Le semestre doit être spécifié'
-    date_debut:
-        not_null: 'La date de début est requise'
-        must_be_future: 'La date de début doit être dans le futur'
-    temps_evaluation:
-        not_null: 'Le temps d''évaluation est requis'
-        must_be_positive: 'Le temps d''évaluation doit être positif'
-        max_duration: 'Le temps d''évaluation ne peut pas dépasser 240 minutes'
-    statut:
-        not_null: 'Le statut de l''évaluation doit être spécifié'
-    type:
-        not_null: 'Le type d''évaluation doit être spécifié'
-
-# Messages de validation pour l'entité Filiere
-filiere:
-    nom_filiere:
-        not_blank: 'Le nom de la filière ne peut pas être vide'
-        min_length: 'Le nom de la filière doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le nom de la filière ne peut pas dépasser {{ limit }} caractères'
-        unique: 'Ce nom de filière existe déjà'
 
 # Messages de validation pour l'entité Incident
 incident:
