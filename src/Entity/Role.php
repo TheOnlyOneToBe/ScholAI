@@ -6,8 +6,14 @@ use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
+#[UniqueEntity(
+    fields: ['nomRole'],
+    message: 'role.nom_role.unique'
+)]
 class Role
 {
     #[ORM\Id]
@@ -16,6 +22,17 @@ class Role
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'role.nom_role.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'role.nom_role.min_length',
+        maxMessage: 'role.nom_role.max_length'
+    )]
+    #[Assert\Regex(
+        pattern: '/^ROLE_[A-Z_]+$/',
+        message: 'role.nom_role.invalid_format'
+    )]
     private ?string $nomRole = null;
 
     /**

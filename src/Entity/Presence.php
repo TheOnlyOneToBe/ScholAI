@@ -5,8 +5,14 @@ namespace App\Entity;
 use App\Enum\StatutPresence;
 use App\Repository\PresenceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PresenceRepository::class)]
+#[UniqueEntity(
+    fields: ['etudiant', 'UE', 'PlanningCours'],
+    message: 'presence.etudiant_ue_planning.unique'
+)]
 class Presence
 {
     #[ORM\Id]
@@ -16,17 +22,21 @@ class Presence
 
     #[ORM\ManyToOne(inversedBy: 'presences')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'presence.etudiant.not_null')]
     private ?Etudiant $etudiant = null;
 
     #[ORM\ManyToOne(inversedBy: 'presences')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'presence.ue.not_null')]
     private ?UE $UE = null;
 
     #[ORM\ManyToOne(inversedBy: 'presences')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'presence.planning_cours.not_null')]
     private ?PlanningCours $PlanningCours = null;
 
-    #[ORM\Column(length: 50,enumType: StatutPresence::class)]
+    #[ORM\Column(length: 50, enumType: StatutPresence::class)]
+    #[Assert\NotNull(message: 'presence.statut.not_null')]
     private ?string $statut = null;
 
     public function getId(): ?int

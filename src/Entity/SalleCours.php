@@ -6,8 +6,14 @@ use App\Repository\SalleCoursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SalleCoursRepository::class)]
+#[UniqueEntity(
+    fields: ['NomSalle', 'campus'],
+    message: 'salle_cours.nom_salle_campus.unique'
+)]
 class SalleCours
 {
     #[ORM\Id]
@@ -16,12 +22,28 @@ class SalleCours
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'salle_cours.nom_salle.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'salle_cours.nom_salle.min_length',
+        maxMessage: 'salle_cours.nom_salle.max_length'
+    )]
     private ?string $NomSalle = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\GreaterThan(
+        value: 0,
+        message: 'salle_cours.capacite.must_be_positive'
+    )]
+    #[Assert\LessThan(
+        value: 1000,
+        message: 'salle_cours.capacite.too_large'
+    )]
     private ?int $capacite = null;
 
     #[ORM\ManyToOne(inversedBy: 'salleCours')]
+    #[Assert\NotNull(message: 'salle_cours.campus.not_null')]
     private ?Campus $campus = null;
 
     /**

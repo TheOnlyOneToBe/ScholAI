@@ -52,29 +52,36 @@ class Professeur
     #[Assert\Email(message: 'professeur.email.invalid')]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.numero_telephone.not_blank')]
     #[Assert\Regex(
         pattern: '/^\+?[0-9]{9,15}$/',
-        message: 'professeur.numero_telephone.invalid'
+        message: 'professeur.numero_telephone.invalid_format'
     )]
     private ?string $numeroTelephone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank(message: 'professeur.cni.not_blank')]
     #[Assert\Regex(
         pattern: '/^[A-Z0-9]+$/',
-        message: 'professeur.cni.invalid'
+        message: 'professeur.cni.invalid_format'
     )]
     private ?string $cni = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'professeur.date_naissance.not_null')]
     #[Assert\LessThan(
         'today',
         message: 'professeur.date_naissance.must_be_past'
     )]
+    #[Assert\Expression(
+        "this.getDateNaissance() <= new \DateTime('-18 years')",
+        message: 'professeur.date_naissance.must_be_adult'
+    )]
     private ?\DateTimeInterface $dateNaissance = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'professeur.nationalite.not_blank')]
     #[Assert\Length(
         min: 2,
         max: 255,
@@ -83,7 +90,8 @@ class Professeur
     )]
     private ?string $nationalite = null;
 
-    #[ORM\Column(length: 10, nullable: true, enumType: Genre::class)]
+    #[ORM\Column(length: 10, enumType: Genre::class)]
+    #[Assert\NotNull(message: 'professeur.sexe.not_null')]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255)]
@@ -96,8 +104,7 @@ class Professeur
     )]
     private ?string $adresse = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'professeur.photo_profil.not_blank')]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Image(
         maxSize: '5M',
         mimeTypes: ['image/jpeg', 'image/png'],
@@ -109,8 +116,8 @@ class Professeur
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotNull(message: 'professeur.date_creation.not_null')]
     #[Assert\LessThanOrEqual(
-        'today',
-        message: 'professeur.date_creation.must_be_past_or_today'
+        'now',
+        message: 'professeur.date_creation.must_be_past_or_present'
     )]
     private ?\DateTimeInterface $dateCreation = null;
 
@@ -191,7 +198,7 @@ class Professeur
         return $this->numeroTelephone;
     }
 
-    public function setNumeroTelephone(?string $numeroTelephone): static
+    public function setNumeroTelephone(string $numeroTelephone): static
     {
         $this->numeroTelephone = $numeroTelephone;
 
@@ -215,7 +222,7 @@ class Professeur
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(?\DateTimeInterface $dateNaissance): static
+    public function setDateNaissance(\DateTimeInterface $dateNaissance): static
     {
         $this->dateNaissance = $dateNaissance;
 
@@ -227,7 +234,7 @@ class Professeur
         return $this->nationalite;
     }
 
-    public function setNationalite(?string $nationalite): static
+    public function setNationalite(string $nationalite): static
     {
         $this->nationalite = $nationalite;
 
@@ -239,7 +246,7 @@ class Professeur
         return $this->sexe;
     }
 
-    public function setSexe(?string $sexe): static
+    public function setSexe(string $sexe): static
     {
         $this->sexe = $sexe;
 
@@ -263,7 +270,7 @@ class Professeur
         return $this->photoProfil;
     }
 
-    public function setPhotoProfil(string $photoProfil): static
+    public function setPhotoProfil(?string $photoProfil): static
     {
         $this->photoProfil = $photoProfil;
 

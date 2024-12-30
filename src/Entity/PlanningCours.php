@@ -7,8 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PlanningCoursRepository::class)]
+#[UniqueEntity(
+    fields: ['UE', 'sallecours', 'jour', 'heureDebut'],
+    message: 'planning_cours.unique_cours'
+)]
 class PlanningCours
 {
     #[ORM\Id]
@@ -18,22 +24,40 @@ class PlanningCours
 
     #[ORM\ManyToOne(inversedBy: 'planningCours')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'planning_cours.ue.not_null')]
     private ?UE $UE = null;
 
     #[ORM\ManyToOne(inversedBy: 'planningCours')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'planning_cours.salle_cours.not_null')]
     private ?SalleCours $sallecours = null;
 
     #[ORM\Column(length: 16)]
+    #[Assert\NotBlank(message: 'planning_cours.jour.not_blank')]
+    #[Assert\Choice(
+        choices: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+        message: 'planning_cours.jour.invalid_choice'
+    )]
     private ?string $jour = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Assert\NotNull(message: 'planning_cours.heure_debut.not_null')]
+    #[Assert\Expression(
+        "this.getHeureDebut() < this.getHeureFin()",
+        message: 'planning_cours.heure_debut.must_be_before_fin'
+    )]
     private ?\DateTimeInterface $heureDebut = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Assert\NotNull(message: 'planning_cours.heure_fin.not_null')]
     private ?\DateTimeInterface $heureFin = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'planning_cours.type_cours.not_blank')]
+    #[Assert\Choice(
+        choices: ['CM', 'TD', 'TP'],
+        message: 'planning_cours.type_cours.invalid_choice'
+    )]
     private ?string $typeCours = null;
 
     /**

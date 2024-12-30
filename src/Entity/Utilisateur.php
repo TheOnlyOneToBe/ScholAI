@@ -6,8 +6,18 @@ use App\Enum\Genre;
 use App\Repository\UtilisateurRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'utilisateur.email.unique'
+)]
+#[UniqueEntity(
+    fields: ['cni'],
+    message: 'utilisateur.cni.unique'
+)]
 class Utilisateur
 {
     #[ORM\Id]
@@ -16,36 +26,92 @@ class Utilisateur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'utilisateur.nom.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'utilisateur.nom.min_length',
+        maxMessage: 'utilisateur.nom.max_length'
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'utilisateur.prenom.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'utilisateur.prenom.min_length',
+        maxMessage: 'utilisateur.prenom.max_length'
+    )]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'utilisateur.email.not_blank')]
+    #[Assert\Email(message: 'utilisateur.email.invalid')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'utilisateur.mot_de_passe.not_blank')]
+    #[Assert\Length(
+        min: 8,
+        minMessage: 'utilisateur.mot_de_passe.min_length'
+    )]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+        message: 'utilisateur.mot_de_passe.complexity'
+    )]
     private ?string $motdepasse = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^\+?[0-9]{9,15}$/',
+        message: 'utilisateur.numero_telephone.invalid'
+    )]
     private ?string $numerotelephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^[A-Z0-9]+$/',
+        message: 'utilisateur.cni.invalid'
+    )]
     private ?string $cni = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\LessThan(
+        'today',
+        message: 'utilisateur.date_naissance.must_be_past'
+    )]
     private ?\DateTimeInterface $dateNaissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'utilisateur.lieu_naissance.min_length',
+        maxMessage: 'utilisateur.lieu_naissance.max_length'
+    )]
     private ?string $lieuNaissance = null;
 
-    #[ORM\Column(length: 10, nullable: true ,enumType: Genre::class)]
+    #[ORM\Column(length: 10, nullable: true, enumType: Genre::class)]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'utilisateur.adresse.min_length',
+        maxMessage: 'utilisateur.adresse.max_length'
+    )]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'utilisateur.profession.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'utilisateur.profession.min_length',
+        maxMessage: 'utilisateur.profession.max_length'
+    )]
     private ?string $profession = null;
 
     #[ORM\Column(length: 255, nullable: true)]

@@ -6,8 +6,14 @@ use App\Enum\Genre;
 use App\Enum\TypeTuteur;
 use App\Repository\TuteurEtudiantRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TuteurEtudiantRepository::class)]
+#[UniqueEntity(
+    fields: ['numTelephone'],
+    message: 'tuteur_etudiant.num_telephone.unique'
+)]
 class TuteurEtudiant
 {
     #[ORM\Id]
@@ -16,20 +22,44 @@ class TuteurEtudiant
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'tuteur_etudiant.nom.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'tuteur_etudiant.nom.min_length',
+        maxMessage: 'tuteur_etudiant.nom.max_length'
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'tuteur_etudiant.prenom.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'tuteur_etudiant.prenom.min_length',
+        maxMessage: 'tuteur_etudiant.prenom.max_length'
+    )]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 10,enumType: Genre::class)]
+    #[ORM\Column(length: 10, enumType: Genre::class)]
+    #[Assert\NotNull(message: 'tuteur_etudiant.sexe.not_null')]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 24)]
+    #[Assert\NotBlank(message: 'tuteur_etudiant.num_telephone.not_blank')]
+    #[Assert\Regex(
+        pattern: '/^\+?[0-9]{9,15}$/',
+        message: 'tuteur_etudiant.num_telephone.invalid_format'
+    )]
     private ?string $numTelephone = null;
-    #[ORM\Column(length: 30,enumType: TypeTuteur::class)]
+
+    #[ORM\Column(length: 30, enumType: TypeTuteur::class)]
+    #[Assert\NotNull(message: 'tuteur_etudiant.type_tuteur.not_null')]
     private ?string $typeTuteur = null;
+
     #[ORM\ManyToOne(inversedBy: 'tuteurEtudiants')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'tuteur_etudiant.etudiant.not_null')]
     private ?Etudiant $etudiant = null;
 
     public function getId(): ?int

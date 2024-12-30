@@ -6,8 +6,14 @@ use App\Repository\UERepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UERepository::class)]
+#[UniqueEntity(
+    fields: ['matiere', 'semestre'],
+    message: 'ue.matiere_semestre.unique'
+)]
 class UE
 {
     #[ORM\Id]
@@ -17,20 +23,34 @@ class UE
 
     #[ORM\ManyToOne(inversedBy: 'uEs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'ue.matiere.not_null')]
     private ?Cours $matiere = null;
 
     #[ORM\ManyToOne(inversedBy: 'uEs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'ue.professeur.not_null')]
     private ?Professeur $profeseur = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'ue.volume_horaire.not_null')]
+    #[Assert\Range(
+        min: 10,
+        max: 100,
+        notInRangeMessage: 'ue.volume_horaire.not_in_range'
+    )]
     private ?int $volumeHoraire = null;
 
     #[ORM\ManyToOne(inversedBy: 'uEs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'ue.semestre.not_null')]
     private ?Semestre $semestre = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'ue.statut.not_blank')]
+    #[Assert\Choice(
+        choices: ['En cours', 'Terminé', 'Planifié', 'Annulé'],
+        message: 'ue.statut.invalid_choice'
+    )]
     private ?string $statut = null;
 
     /**
