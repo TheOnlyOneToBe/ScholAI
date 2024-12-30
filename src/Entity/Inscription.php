@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\StatutInscription;
 use App\Repository\InscriptionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -51,6 +53,17 @@ class Inscription
         message: 'inscription.date_inscription.must_be_past_or_today'
     )]
     private ?\DateTimeInterface $dateInscription = null;
+
+    /**
+     * @var Collection<int, Reglement>
+     */
+    #[ORM\OneToMany(targetEntity: Reglement::class, mappedBy: 'inscription', orphanRemoval: true)]
+    private Collection $reglements;
+
+    public function __construct()
+    {
+        $this->reglements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -125,6 +138,36 @@ class Inscription
     public function setDateInscription(\DateTimeInterface $dateInscription): static
     {
         $this->dateInscription = $dateInscription;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reglement>
+     */
+    public function getReglements(): Collection
+    {
+        return $this->reglements;
+    }
+
+    public function addReglement(Reglement $reglement): static
+    {
+        if (!$this->reglements->contains($reglement)) {
+            $this->reglements->add($reglement);
+            $reglement->setInscription($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReglement(Reglement $reglement): static
+    {
+        if ($this->reglements->removeElement($reglement)) {
+            // set the owning side to null (unless already changed)
+            if ($reglement->getInscription() === $this) {
+                $reglement->setInscription(null);
+            }
+        }
 
         return $this;
     }

@@ -6,6 +6,8 @@ use App\Enum\Genre;
 use App\Repository\UtilisateurRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -18,7 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     fields: ['cni'],
     message: 'utilisateur.cni.unique'
 )]
-class Utilisateur
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -340,5 +342,25 @@ class Utilisateur
         $this->role = $role;
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->motdepasse;
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->role];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }
