@@ -1,39 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Campus index{% endblock %}
+{% block title %}Liste des Campus{% endblock %}
 
 {% block body %}
-    <h1>Campus index</h1>
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Liste des Campus</h1>
+            <a href="{{ path('app_campus_new') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                <i class="fas fa-plus mr-2"></i>Nouveau Campus
+            </a>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NomCampus</th>
-                <th>Adresse</th>
-                <th>SalleCours</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for campus in campuses %}
-            <tr>
-                <td>{{ campus.id }}</td>
-                <td>{{ campus.nomCampus }}</td>
-                <td>{{ campus.adresse }}</td>
-                <td>{{ campus.SalleCours }}</td>
-                <td>
-                    <a href="{{ path('app_campus_show', {'id': campus.id}) }}">show</a>
-                    <a href="{{ path('app_campus_edit', {'id': campus.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_campus_new') }}">Create new</a>
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom du Campus</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adresse</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre de Salles</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for campus in campuses %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ campus.nomCampus }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">{{ campus.adresse }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ campus.SalleCours|length }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            <a href="{{ path('app_campus_show', {'id': campus.id}) }}" class="text-blue-600 hover:text-blue-900 mx-1">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ path('app_campus_edit', {'id': campus.id}) }}" class="text-green-600 hover:text-green-900 mx-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">Aucun campus trouvé</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

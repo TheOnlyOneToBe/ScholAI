@@ -6,8 +6,11 @@ use App\Repository\MatiereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
+#[UniqueEntity(fields: ['uniteenseignement'], message: 'matiere.uniteenseignement.unique')]
 class Matiere
 {
     #[ORM\Id]
@@ -16,6 +19,13 @@ class Matiere
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Assert\NotBlank(message: 'matiere.uniteenseignement.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 200,
+        minMessage: 'matiere.uniteenseignement.min_length',
+        maxMessage: 'matiere.uniteenseignement.max_length'
+    )]
     private ?string $uniteenseignement = null;
 
     /**

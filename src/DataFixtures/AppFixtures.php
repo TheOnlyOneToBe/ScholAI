@@ -6,208 +6,305 @@ use App\Entity\Annee;
 use App\Entity\Campus;
 use App\Entity\Cycle;
 use App\Entity\Departement;
+use App\Entity\EmploiTemps;
 use App\Entity\Etudiant;
 use App\Entity\Evaluation;
 use App\Entity\Filiere;
 use App\Entity\FiliereCycle;
+use App\Entity\Inscription;
 use App\Entity\Matiere;
 use App\Entity\Note;
+use App\Entity\PayementMethod;
+use App\Entity\PayementReason;
 use App\Entity\Professeur;
 use App\Entity\Programme;
+use App\Entity\Reglement;
+use App\Entity\SalleCours;
 use App\Entity\Semestre;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Année académique (une seule active)
+        $faker = Factory::create('fr_FR');
+
+        // Création de l'année scolaire
         $annee = new Annee();
-        $annee->setLibelle('2023-2024')
-              ->setDateDebut(new \DateTime('2023-09-04'))
-              ->setDateFin(new \DateTime('2024-07-31'))
-              ->setStatut(true);
+        $annee->setYearStart(new \DateTime('2023-09-01'));
+        $annee->setYearEnd(new \DateTime('2024-07-31'));
+        $annee->setYearStatut(true);
         $manager->persist($annee);
 
-        // Campus
-        $campus = new Campus();
-        $campus->setLibelle('Campus Principal de Yaoundé')
-               ->setAdresse('Quartier Ngoa-Ekelle, Yaoundé')
-               ->setTelephone('+237 222 234 567')
-               ->setEmail('contact@campus-yaounde.cm');
-        $manager->persist($campus);
+        // Création des campus
+        $campusYaounde = new Campus();
+        $campusYaounde->setNomCampus('Campus de Yaoundé');
+        $campusYaounde->setAdresse('Quartier Ngoa-Ekelle, Yaoundé');
+        $manager->persist($campusYaounde);
 
-        // Départements
-        $departements = [];
-        $depNames = [
-            'Génie Informatique',
-            'Génie Civil',
-            'Gestion et Commerce',
-            'Sciences de l\'Ingénieur'
-        ];
+        $campusDouala = new Campus();
+        $campusDouala->setNomCampus('Campus de Douala');
+        $campusDouala->setAdresse('Quartier Akwa, Douala');
+        $manager->persist($campusDouala);
 
-        foreach ($depNames as $name) {
-            $dep = new Departement();
-            $dep->setLibelle($name);
-            $manager->persist($dep);
-            $departements[] = $dep;
-        }
+        $campusBafoussam = new Campus();
+        $campusBafoussam->setNomCampus('Campus de Bafoussam');
+        $campusBafoussam->setAdresse('Quartier Tamdja, Bafoussam');
+        $manager->persist($campusBafoussam);
 
-        // Cycles
-        $cycles = [];
-        $cycleNames = ['Licence', 'Master'];
-        foreach ($cycleNames as $name) {
+        // Création des cycles
+        $cycles = ['Licence 1', 'Licence 2', 'Licence 3', 'Master 1', 'Master 2'];
+        $cyclesObj = [];
+        foreach ($cycles as $cycleLibelle) {
             $cycle = new Cycle();
-            $cycle->setLibelle($name);
+            $cycle->setLibelle($cycleLibelle);
             $manager->persist($cycle);
-            $cycles[] = $cycle;
+            $cyclesObj[$cycleLibelle] = $cycle;
         }
 
-        // Filières
-        $filieres = [];
-        $filiereData = [
-            'Génie Logiciel' => $departements[0],
-            'Réseaux et Télécommunications' => $departements[0],
-            'Génie Civil' => $departements[1],
-            'Commerce International' => $departements[2],
-            'Génie Mécanique' => $departements[3]
+        // Création des départements
+        $departements = [
+            'Informatique et Télécommunications',
+            'Sciences de Gestion',
+            'Génie Civil',
+            'Sciences Biomédicales'
         ];
 
-        foreach ($filiereData as $name => $dep) {
+        $departementsObj = [];
+        foreach ($departements as $nomDepartement) {
+            $departement = new Departement();
+            $departement->setNomDepartement($nomDepartement);
+            $departement->setDescription("Département de $nomDepartement");
+            $manager->persist($departement);
+            $departementsObj[$nomDepartement] = $departement;
+        }
+
+        // Création des filières
+        $filieres = [
+            'Informatique' => 'Informatique et Télécommunications',
+            'Réseaux et Systèmes' => 'Informatique et Télécommunications',
+            'Finance Comptabilité' => 'Sciences de Gestion',
+            'Marketing' => 'Sciences de Gestion',
+            'Construction' => 'Génie Civil',
+            'Travaux Publics' => 'Génie Civil'
+        ];
+
+        $filieresObj = [];
+        foreach ($filieres as $nomFiliere => $departement) {
             $filiere = new Filiere();
-            $filiere->setLibelle($name);
+            $filiere->setLibellefiliere($nomFiliere);
             $manager->persist($filiere);
-            $filieres[] = $filiere;
+            $filieresObj[$nomFiliere] = $filiere;
         }
 
-        // FiliereCycles
-        $filiereCycles = [];
-        foreach ($filieres as $filiere) {
-            foreach ($cycles as $cycle) {
+        // Création des associations Filière-Cycle avec stockage dans un tableau
+        $filiereCyclesObj = [];
+        foreach ($filieresObj as $nomFiliere => $filiere) {
+            foreach ($cyclesObj as $nomCycle => $cycle) {
                 $filiereCycle = new FiliereCycle();
-                $filiereCycle->setFiliere($filiere)
-                            ->setCycle($cycle);
+                $filiereCycle->setFiliere($filiere);
+                $filiereCycle->setCycle($cycle);
+                $filiereCycle->setInscription(150000);
+                $filiereCycle->setPension(850000);
+                $filiereCycle->setDescription("Programme de $nomFiliere - $nomCycle");
+                $filiereCycle->setStatut(true);
                 $manager->persist($filiereCycle);
-                $filiereCycles[] = $filiereCycle;
+                $filiereCyclesObj[$nomFiliere][$nomCycle] = $filiereCycle;
             }
         }
 
-        // Semestres
-        $semestres = [];
-        $semestreNames = ['Semestre 1', 'Semestre 2'];
-        foreach ($semestreNames as $name) {
-            $semestre = new Semestre();
-            $semestre->setLibelle($name);
-            $manager->persist($semestre);
-            $semestres[] = $semestre;
-        }
-
-        // Professeurs
-        $professeurs = [];
-        $profData = [
-            ['Dr. KAMGA Paul', 'M', '+237 655123456'],
-            ['Dr. NGANOU Marie', 'F', '+237 655789012'],
-            ['Prof. MBARGA Jean', 'M', '+237 655345678'],
-            ['Dr. FOUDA Claire', 'F', '+237 655901234']
+        // Création des matières
+        $matieres = [
+            'Algorithmique',
+            'Programmation Web',
+            'Base de données',
+            'Comptabilité générale',
+            'Marketing fondamental',
+            'Résistance des matériaux'
         ];
 
-        foreach ($profData as [$name, $sexe, $tel]) {
-            $prof = new Professeur();
-            $prof->setNoms($name)
-                 ->setSexeProfesseur($sexe)
-                 ->setTelephone($tel);
-            $manager->persist($prof);
-            $professeurs[] = $prof;
-        }
-
-        // Matières
-        $matieres = [];
-        $matiereData = [
-            'Programmation Java' => 'INF201',
-            'Base de données' => 'INF202',
-            'Réseaux informatiques' => 'INF203',
-            'Analyse numérique' => 'MAT201',
-            'Anglais technique' => 'ANG201'
-        ];
-
-        foreach ($matiereData as $name => $code) {
+        $matieresObj = [];
+        foreach ($matieres as $nomMatiere) {
             $matiere = new Matiere();
-            $matiere->setLibelle($name)
-                   ->setCode($code);
+            $matiere->setUniteenseignement($nomMatiere);
             $manager->persist($matiere);
-            $matieres[] = $matiere;
+            $matieresObj[$nomMatiere] = $matiere;
         }
 
-        // Programmes
-        $programmes = [];
-        foreach ($matieres as $index => $matiere) {
-            $programme = new Programme();
-            $programme->setMatiere($matiere)
-                     ->setProfesseur($professeurs[$index % count($professeurs)])
-                     ->setFiliereCycle($filiereCycles[0])
-                     ->setAnnee($annee)
-                     ->setSemestre($semestres[0])
-                     ->setHeurealloue(30);
-            $manager->persist($programme);
-            $programmes[] = $programme;
-        }
-
-        // Étudiants
-        $etudiants = [];
-        $etudiantData = [
-            ['TCHAMBA Kevin', 'TCHAMBA', 'Kevin', 'M', '2023GL001'],
-            ['FOUDA Sarah', 'FOUDA', 'Sarah', 'F', '2023GL002'],
-            ['ATANGANA Paul', 'ATANGANA', 'Paul', 'M', '2023GL003'],
-            ['MENGUE Alice', 'MENGUE', 'Alice', 'F', '2023GL004']
+        // Création des professeurs
+        $professeurs = [
+            ['KAMGA', 'Paul', 'Informatique et Télécommunications'],
+            ['NKENG', 'Marie', 'Sciences de Gestion'],
+            ['FOTSO', 'Jean', 'Génie Civil'],
+            ['MBARGA', 'Claire', 'Sciences Biomédicales']
         ];
 
-        foreach ($etudiantData as [$fullName, $nom, $prenom, $sexe, $matricule]) {
+        $professeursObj = [];
+        foreach ($professeurs as [$nom, $prenom, $dept]) {
+            $professeur = new Professeur();
+            $professeur->setNom($nom);
+            $professeur->setPrenom($prenom);
+            $professeur->setEmail(strtolower($prenom) . '.' . strtolower($nom) . '@schol.cm');
+            $professeur->setDepartement($departementsObj[$dept]);
+            $manager->persist($professeur);
+            $professeursObj[$nom] = $professeur;
+        }
+
+        // Création des semestres
+        $semestre1 = new Semestre();
+        $semestre1->setNomsemestre('Semestre 1');
+        $semestre1->setDatedebut(new \DateTime('2023-09-01'));
+        $semestre1->setDatefin(new \DateTime('2024-01-31'));
+        $manager->persist($semestre1);
+
+        $semestre2 = new Semestre();
+        $semestre2->setNomsemestre('Semestre 2');
+        $semestre2->setDatedebut(new \DateTime('2024-02-01'));
+        $semestre2->setDatefin(new \DateTime('2024-06-30'));
+        $manager->persist($semestre2);
+
+        // Création des salles de cours
+        $salles = [
+            ['A101', 60, $campusYaounde],
+            ['A102', 45, $campusYaounde],
+            ['A201', 80, $campusYaounde],
+            ['Amphi 1', 200, $campusYaounde],
+            ['B101', 50, $campusDouala],
+            ['B102', 40, $campusDouala],
+            ['B201', 70, $campusDouala],
+            ['Amphi 2', 150, $campusDouala],
+            ['C101', 45, $campusBafoussam],
+            ['C102', 35, $campusBafoussam],
+            ['Amphi 3', 100, $campusBafoussam]
+        ];
+
+        $sallesObj = [];
+        foreach ($salles as [$nomSalle, $capacite, $campus]) {
+            $salle = new SalleCours();
+            $salle->setNomSalle($nomSalle);
+            $salle->setCapacite($capacite);
+            $salle->setCampus($campus);
+            $manager->persist($salle);
+            $sallesObj[$nomSalle] = $salle;
+        }
+
+        // Création des méthodes de paiement
+        $methodePaiements = ['Espèces', 'Mobile Money', 'Virement Bancaire'];
+        $methodePaiementsObj = [];
+        foreach ($methodePaiements as $methode) {
+            $methodePaiement = new PayementMethod();
+            $methodePaiement->setPayementName($methode);
+            $manager->persist($methodePaiement);
+            $methodePaiementsObj[$methode] = $methodePaiement;
+        }
+
+        // Création des raisons de paiement
+        $raisonsPaiement = ['Inscription', 'Scolarité', 'Examen'];
+        $raisonsPaiementObj = [];
+        foreach ($raisonsPaiement as $raison) {
+            $raisonPaiement = new PayementReason();
+            $raisonPaiement->setLibelleRaison($raison);
+            $manager->persist($raisonPaiement);
+            $raisonsPaiementObj[$raison] = $raisonPaiement;
+        }
+
+        // Création des étudiants et leurs inscriptions
+        $filieresList = array_keys($filieresObj);
+        $cyclesList = array_keys($cyclesObj);
+
+        for ($i = 0; $i < 50; $i++) {
             $etudiant = new Etudiant();
-            $etudiant->setNoms($nom)
-                    ->setPrenoms($prenom)
-                    ->setAge(rand(18, 25))
-                    ->setSexeEtudiant($sexe)
-                    ->setMatriculeStudent($matricule)
-                    ->setStudentFather($fullName . ' Père')
-                    ->setStudentMother($fullName . ' Mère')
-                    ->setTelephone('+237 6' . rand(55000000, 99999999));
+            $etudiant->setNoms($faker->lastName);
+            $etudiant->setPrenoms($faker->firstName);
+            $etudiant->setAge($faker->numberBetween(18, 25));
+            $etudiant->setTelephone($faker->phoneNumber);
+            $etudiant->setAdresseStudent($faker->address);
+            $etudiant->setSexeEtudiant($faker->randomElement(['M', 'F']));
+            $etudiant->setMatriculeStudent('ST' . str_pad($i + 1, 4, '0', STR_PAD_LEFT));
+            $etudiant->setStudentFather($faker->name('male'));
+            $etudiant->setStudentMother($faker->name('female'));
+            $etudiant->setFatherNumber($faker->phoneNumber);
+            $etudiant->setMotherNumber($faker->phoneNumber);
+            $etudiant->setStudentEmail($faker->email);
             $manager->persist($etudiant);
-            $etudiants[] = $etudiant;
+
+            // Sélection aléatoire d'une filière et d'un cycle
+            $filiereChoisie = $faker->randomElement($filieresList);
+            $cycleChoisi = $faker->randomElement($cyclesList);
+            
+            // Récupération du FiliereCycle correspondant
+            $filiereCycle = $filiereCyclesObj[$filiereChoisie][$cycleChoisi];
+
+            // Création de l'inscription
+            $inscription = new Inscription();
+            $inscription->setDateInscription(new \DateTime());
+            $inscription->setStatutInscription(true);
+            $inscription->setFilierecycle($filiereCycle);
+            $inscription->setAnnee($annee);
+            $inscription->setEtudiant($etudiant);
+            $manager->persist($inscription);
+
+            // Création du règlement
+            $reglement = new Reglement();
+            $reglement->setOntantReglement(150000);
+            $reglement->setDateReglement(new \DateTime());
+            $reglement->setInscription($inscription);
+            $reglement->setPayementMethod($methodePaiementsObj['Mobile Money']);
+            $reglement->setPayementReason($raisonsPaiementObj['Inscription']);
+            $manager->persist($reglement);
         }
 
-        // Évaluations
-        $evaluations = [];
-        $evaluationTypes = ['cc', 'examen', 'tp'];
-        foreach ($programmes as $programme) {
-            foreach ($evaluationTypes as $type) {
-                $evaluation = new Evaluation();
-                $evaluation->setTitre($type . ' - ' . $programme->getMatiere()->getLibelle())
-                          ->setDescription('Évaluation de type ' . strtoupper($type))
-                          ->setDateEvaluation(new \DateTime('+2 weeks'))
-                          ->setProgramme($programme)
-                          ->setSemestre($programme->getSemestre())
-                          ->setType($type)
-                          ->setCoefficient($type === 'examen' ? 0.6 : 0.2)
-                          ->setCreatedBy('admin')
-                          ->setCreatedAt(new \DateTime());
-                $manager->persist($evaluation);
-                $evaluations[] = $evaluation;
-            }
-        }
+        // Création des programmes
+        foreach ($matieresObj as $matiere) {
+            foreach ($filiereCyclesObj as $filiereNom => $cyclesMap) {
+                foreach ($cyclesMap as $cycleNom => $filiereCycle) {
+                    $programme = new Programme();
+                    $programme->setMatiere($matiere);
+                    $programme->setProfesseur($faker->randomElement($professeursObj));
+                    $programme->setFiliereCycle($filiereCycle);
+                    $programme->setAnnee($annee);
+                    $programme->setSemestre($semestre1);
+                    $programme->setHeurealloue($faker->numberBetween(30, 60));
+                    $manager->persist($programme);
 
-        // Notes
-        foreach ($evaluations as $evaluation) {
-            foreach ($etudiants as $etudiant) {
-                $note = new Note();
-                $note->setEvaluation($evaluation)
-                     ->setEtudiant($etudiant)
-                     ->setProgramme($evaluation->getProgramme())
-                     ->setValeur(rand(8, 18))
-                     ->setStatut('validee')
-                     ->setCreatedBy('admin')
-                     ->setCreatedAt(new \DateTime());
-                $manager->persist($note);
+                    // Création des évaluations
+                    $evaluation = new Evaluation();
+                    $evaluation->setProgramme($programme);
+                    $evaluation->setSemestre($semestre1);
+                    $evaluation->setTitre("Examen de " . $matiere->getUniteenseignement());
+                    $evaluation->setDescription("Evaluation finale");
+                    $evaluation->setDateEvaluation(new \DateTime());
+                    $evaluation->setType("Examen");
+                    $evaluation->setCoefficient(2);
+                    $evaluation->setCreatedAt(new \DateTime());
+                    $evaluation->setCreatedBy("System");
+                    $manager->persist($evaluation);
+
+                    // Création des emplois du temps
+                    $emploiTemps = new EmploiTemps();
+                    $emploiTemps->setSalle($faker->randomElement($sallesObj));
+                    $emploiTemps->setProgramme($programme);
+                    $emploiTemps->setDate($faker->dateTimeBetween('2023-09-01', '2024-06-30'));
+                    $emploiTemps->setHeureDebut(new \DateTime('08:00'));
+                    $emploiTemps->setHeureFin(new \DateTime('10:00'));
+                    $manager->persist($emploiTemps);
+
+                    // Création des notes
+                    foreach ($manager->getRepository(Etudiant::class)->findAll() as $etudiant) {
+                        $note = new Note();
+                        $note->setEvaluation($evaluation);
+                        $note->setEtudiant($etudiant);
+                        $note->setProgramme($programme);
+                        $note->setValeur($faker->randomFloat(2, 8, 20));
+                        $note->setCommentaire($faker->sentence);
+                        $note->setStatut('Validé');
+                        $note->setCreatedAt(new \DateTime());
+                        $note->setCreatedBy('System');
+                        $manager->persist($note);
+                    }
+                }
             }
         }
 

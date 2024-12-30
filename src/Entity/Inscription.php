@@ -7,8 +7,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: InscriptionRepository::class)]
+#[UniqueEntity(
+    fields: ['etudiant', 'filierecycle', 'annee'],
+    message: 'inscription.unique_combination'
+)]
+#[ORM\HasLifecycleCallbacks]
 class Inscription
 {
     #[ORM\Id]
@@ -16,23 +23,28 @@ class Inscription
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateInscription = null;
+    #[ORM\ManyToOne(inversedBy: 'inscriptions')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'inscription.etudiant.not_blank')]
+    private ?Etudiant $etudiant = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'inscription.filiere_cycle.not_blank')]
     private ?FiliereCycle $filierecycle = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'inscription.annee.not_blank')]
     private ?Annee $annee = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: 'inscription.date.not_blank')]
+    #[Assert\Type("\DateTimeInterface")]
+    private ?\DateTimeInterface $dateInscription = null;
 
     #[ORM\Column]
     private ?bool $statutInscription = null;
-
-    #[ORM\ManyToOne(inversedBy: 'inscriptions')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Etudiant $etudiant = null;
 
     /**
      * @var Collection<int, Reglement>
@@ -40,9 +52,22 @@ class Inscription
     #[ORM\OneToMany(targetEntity: Reglement::class, mappedBy: 'inscription', orphanRemoval: true)]
     private Collection $reglements;
 
+    #[Assert\Callback]
+    public function validateDateInscription(\Symfony\Component\Validator\Context\ExecutionContextInterface $context): void
+    {
+        if ($this->dateInscription && $this->annee) {
+            if ($this->dateInscription < $this->annee->getYearStart() || $this->dateInscription > $this->annee->getYearEnd()) {
+                $context->buildViolation('inscription.date.in_year')
+                    ->atPath('dateInscription')
+                    ->addViolation();
+            }
+        }
+    }
+
     public function __construct()
     {
         $this->reglements = new ArrayCollection();
+        $this->dateInscription = new \DateTime();
     }
 
     public function getId(): ?int

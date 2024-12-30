@@ -6,8 +6,14 @@ use App\Repository\ProgrammeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProgrammeRepository::class)]
+#[UniqueEntity(
+    fields: ['matiere', 'semestre', 'filiereCycle'],
+    message: 'programme.unique_combination'
+)]
 class Programme
 {
     #[ORM\Id]
@@ -17,21 +23,35 @@ class Programme
 
     #[ORM\ManyToOne(inversedBy: 'programmes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Matiere $matiere = null;
-
-    #[ORM\ManyToOne(inversedBy: 'programmes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'programme.professeur.not_blank')]
     private ?Professeur $professeur = null;
 
     #[ORM\ManyToOne(inversedBy: 'programmes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?FiliereCycle $FiliereCycle = null;
+    #[Assert\NotBlank(message: 'programme.matiere.not_blank')]
+    private ?Matiere $matiere = null;
+
+    #[ORM\ManyToOne(inversedBy: 'programmes')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'programme.semestre.not_blank')]
+    private ?Semestre $semestre = null;
+
+    #[ORM\ManyToOne(inversedBy: 'programmes')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'programme.filiere_cycle.not_blank')]
+    private ?FiliereCycle $filiereCycle = null;
 
     #[ORM\ManyToOne(inversedBy: 'programmes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Annee $annee = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'programme.heurealloue.not_blank')]
+    #[Assert\Range(
+        min: 10,
+        max: 100,
+        notInRangeMessage: 'programme.heurealloue.not_in_range'
+    )]
     private ?int $heurealloue = null;
 
     /**
@@ -39,9 +59,6 @@ class Programme
      */
     #[ORM\OneToMany(targetEntity: EmploiTemps::class, mappedBy: 'programme', orphanRemoval: true)]
     private Collection $emploiTemps;
-
-    #[ORM\ManyToOne(inversedBy: 'programmes')]
-    private ?Semestre $semestre = null;
 
     public function __construct()
     {
@@ -79,12 +96,12 @@ class Programme
 
     public function getFiliereCycle(): ?FiliereCycle
     {
-        return $this->FiliereCycle;
+        return $this->filiereCycle;
     }
 
-    public function setFiliereCycle(?FiliereCycle $FiliereCycle): static
+    public function setFiliereCycle(?FiliereCycle $filiereCycle): static
     {
-        $this->FiliereCycle = $FiliereCycle;
+        $this->filiereCycle = $filiereCycle;
 
         return $this;
     }

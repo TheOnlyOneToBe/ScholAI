@@ -6,8 +6,11 @@ use App\Repository\DepartementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
+#[UniqueEntity(fields: ['nomDepartement'], message: 'departement.nomDepartement.unique')]
 class Departement
 {
     #[ORM\Id]
@@ -16,6 +19,13 @@ class Departement
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: 'departement.nomDepartement.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 100,
+        minMessage: 'departement.nomDepartement.min_length',
+        maxMessage: 'departement.nomDepartement.max_length'
+    )]
     private ?string $nomDepartement = null;
 
     #[ORM\Column(length: 200, nullable: true)]

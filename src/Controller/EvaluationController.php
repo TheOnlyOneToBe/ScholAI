@@ -7,19 +7,18 @@ use App\Form\EvaluationType;
 use App\Repository\EvaluationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/evaluation')]
 class EvaluationController extends AbstractController
 {
-    private $security;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator
+    ) {
     }
 
     #[Route('/', name: 'app_evaluation_index', methods: ['GET'])]
@@ -31,19 +30,29 @@ class EvaluationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_evaluation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $evaluation = new Evaluation();
         $form = $this->createForm(EvaluationType::class, $evaluation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $evaluation->setCreatedBy($this->security->getUser()->getUserIdentifier());
-            $entityManager->persist($evaluation);
-            $entityManager->flush();
+            try {
+                $this->entityManager->persist($evaluation);
+                $this->entityManager->flush();
 
-            $this->addFlash('success', 'L\'évaluation a été créée avec succès.');
-            return $this->redirectToRoute('app_evaluation_index', [], Response::HTTP_SEE_OTHER);
+                $this->addFlash('success', $this->translator->trans('flash.success.create', [
+                    '%entity%' => $this->translator->trans('entity.evaluation')
+                ]));
+
+                return $this->redirectToRoute('app_evaluation_index');
+            } catch (\Exception $e) {
+                $this->addFlash('error', $this->translator->trans('flash.error.create', [
+                    '%entity%' => $this->translator->trans('entity.evaluation')
+                ]));
+            }
+        } elseif ($form->isSubmitted()) {
+            $this->addFlash('error', $this->translator->trans('flash.error.form'));
         }
 
         return $this->render('evaluation/new.html.twig', [
@@ -61,17 +70,27 @@ class EvaluationController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_evaluation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Evaluation $evaluation, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Evaluation $evaluation): Response
     {
         $form = $this->createForm(EvaluationType::class, $evaluation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $evaluation->setUpdatedBy($this->security->getUser()->getUserIdentifier());
-            $entityManager->flush();
+            try {
+                $this->entityManager->flush();
 
-            $this->addFlash('success', 'L\'évaluation a été modifiée avec succès.');
-            return $this->redirectToRoute('app_evaluation_index', [], Response::HTTP_SEE_OTHER);
+                $this->addFlash('success', $this->translator->trans('flash.success.update', [
+                    '%entity%' => $this->translator->trans('entity.evaluation')
+                ]));
+
+                return $this->redirectToRoute('app_evaluation_index');
+            } catch (\Exception $e) {
+                $this->addFlash('error', $this->translator->trans('flash.error.update', [
+                    '%entity%' => $this->translator->trans('entity.evaluation')
+                ]));
+            }
+        } elseif ($form->isSubmitted()) {
+            $this->addFlash('error', $this->translator->trans('flash.error.form'));
         }
 
         return $this->render('evaluation/edit.html.twig', [
@@ -81,14 +100,23 @@ class EvaluationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_evaluation_delete', methods: ['POST'])]
-    public function delete(Request $request, Evaluation $evaluation, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Evaluation $evaluation): Response
     {
         if ($this->isCsrfTokenValid('delete'.$evaluation->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($evaluation);
-            $entityManager->flush();
-            $this->addFlash('success', 'L\'évaluation a été supprimée avec succès.');
+            try {
+                $this->entityManager->remove($evaluation);
+                $this->entityManager->flush();
+
+                $this->addFlash('success', $this->translator->trans('flash.success.delete', [
+                    '%entity%' => $this->translator->trans('entity.evaluation')
+                ]));
+            } catch (\Exception $e) {
+                $this->addFlash('error', $this->translator->trans('flash.error.delete', [
+                    '%entity%' => $this->translator->trans('entity.evaluation')
+                ]));
+            }
         }
 
-        return $this->redirectToRoute('app_evaluation_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_evaluation_index');
     }
 }

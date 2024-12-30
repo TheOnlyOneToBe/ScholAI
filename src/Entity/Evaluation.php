@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EvaluationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,16 +19,20 @@ class Evaluation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'evaluation.titre.not_blank')]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: 'evaluation.dateEvaluation.not_blank')]
+    #[Assert\Type("\DateTimeInterface")]
     private ?\DateTimeInterface $dateEvaluation = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'evaluation.programme.not_blank')]
     private ?Programme $programme = null;
 
     #[ORM\ManyToOne]
@@ -35,9 +40,16 @@ class Evaluation
     private ?Semestre $semestre = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'evaluation.type.not_blank')]
+    #[Assert\Choice(
+        choices: ['cc', 'tp', 'examen'],
+        message: 'evaluation.type.invalid'
+    )]
     private ?string $type = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'evaluation.coefficient.not_blank')]
+    #[Assert\Positive(message: 'evaluation.coefficient.positive')]
     private ?float $coefficient = null;
 
     #[ORM\OneToMany(mappedBy: 'evaluation', targetEntity: Note::class, orphanRemoval: true)]

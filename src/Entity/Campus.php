@@ -6,8 +6,11 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
+#[UniqueEntity(fields: ['nomCampus'], message: 'campus.nomCampus.unique')]
 class Campus
 {
     #[ORM\Id]
@@ -15,32 +18,29 @@ class Campus
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100,unique:true)]
+    #[ORM\Column(length: 100, unique: true)]
+    #[Assert\NotBlank(message: 'campus.nomCampus.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 100,
+        minMessage: 'campus.nomCampus.min_length',
+        maxMessage: 'campus.nomCampus.max_length'
+    )]
     private ?string $nomCampus = null;
 
     #[ORM\Column(length: 200)]
+    #[Assert\NotBlank(message: 'campus.adresse.not_blank')]
     private ?string $adresse = null;
-
-
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'campuses')]
-    private ?self $campus = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'campus')]
-    private Collection $campuses;
 
     /**
      * @var Collection<int, SalleCours>
      */
-    #[ORM\OneToMany(targetEntity: SalleCours::class, mappedBy: 'Campus', orphanRemoval: true)]
-    private Collection $salleCours;
+    #[ORM\OneToMany(targetEntity: SalleCours::class, mappedBy: 'campus', orphanRemoval: true)]
+    private Collection $salles;
 
     public function __construct()
     {
-        $this->campuses = new ArrayCollection();
-        $this->salleCours = new ArrayCollection();
+        $this->salles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -72,67 +72,38 @@ class Campus
         return $this;
     }
 
-    public function getCampus(): ?self
-    {
-        return $this->campus;
-    }
-
-    public function setCampus(?self $campus): static
-    {
-        $this->campus = $campus;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, self>
+     * @return Collection<int, SalleCours>
      */
-    public function getCampuses(): Collection
+    public function getSalles(): Collection
     {
-        return $this->campuses;
+        return $this->salles;
     }
 
-    public function addCampus(self $campus): static
+    public function addSalle(SalleCours $salle): static
     {
-        if (!$this->campuses->contains($campus)) {
-            $this->campuses->add($campus);
-            $campus->setCampus($this);
+        if (!$this->salles->contains($salle)) {
+            $this->salles->add($salle);
+            $salle->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeCampus(self $campus): static
+    public function removeSalle(SalleCours $salle): static
     {
-        if ($this->campuses->removeElement($campus)) {
+        if ($this->salles->removeElement($salle)) {
             // set the owning side to null (unless already changed)
-            if ($campus->getCampus() === $this) {
-                $campus->setCampus(null);
+            if ($salle->getCampus() === $this) {
+                $salle->setCampus(null);
             }
         }
 
         return $this;
     }
 
-    public function addSalleCour(SalleCours $salleCour): static
+    public function __toString(): string
     {
-        if (!$this->salleCours->contains($salleCour)) {
-            $this->salleCours->add($salleCour);
-            $salleCour->setCampus($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSalleCour(SalleCours $salleCour): static
-    {
-        if ($this->salleCours->removeElement($salleCour)) {
-            // set the owning side to null (unless already changed)
-            if ($salleCour->getCampus() === $this) {
-                $salleCour->setCampus(null);
-            }
-        }
-
-        return $this;
+        return $this->nomCampus;
     }
 }

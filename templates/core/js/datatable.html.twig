@@ -1,0 +1,113 @@
+{% block javascripts %}
+    <script>
+        function initDataTable(tableId, options = {}) {
+            // Options par défaut
+            const defaultOptions = {
+                responsive: true,
+                dom: '<"flex flex-col space-y-4"<"flex flex-wrap items-center justify-between gap-4"<"flex-1"l><"flex-1 flex justify-end"B>><"flex-1"f>>rtip',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fas fa-copy mr-2"></i>Copier',
+                        className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm focus:ring-indigo-500',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel mr-2 text-green-600"></i>Excel',
+                        className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm focus:ring-indigo-500',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fas fa-file-pdf mr-2 text-red-600"></i>PDF',
+                        className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm focus:ring-indigo-500',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print mr-2 text-gray-600"></i>Imprimer',
+                        className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm focus:ring-indigo-500',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                ],
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+                    search: "",
+                    lengthMenu: "Afficher _MENU_ par page",
+                    buttons: {
+                        copyTitle: 'Copié dans le presse-papier',
+                        copySuccess: {
+                            _: '%d lignes copiées',
+                            1: '1 ligne copiée'
+                        }
+                    }
+                },
+                pageLength: 10,
+                lengthMenu: [[10, 25, 50, -1], ['10 lignes', '25 lignes', '50 lignes', 'Tout afficher']],
+                order: [[1, 'asc']],
+                columnDefs: [
+                    { targets: -1, orderable: false },
+                    { targets: '_all', searchable: true }
+                ],
+                drawCallback: function(settings) {
+                    // Style des boutons de pagination
+                    $('.paginate_button:not(.previous):not(.next)').addClass('rounded-md mx-1');
+                    $('.paginate_button.previous').addClass('rounded-l-md');
+                    $('.paginate_button.next').addClass('rounded-r-md');
+                    $('.paginate_button.current').addClass('bg-indigo-600 text-white border-indigo-600');
+                    
+                    // Ajout d'effets hover sur les lignes
+                    $(tableId + ' tbody tr').hover(
+                        function() { $(this).addClass('bg-gray-50'); },
+                        function() { $(this).removeClass('bg-gray-50'); }
+                    );
+                },
+                initComplete: function() {
+                    // Personnalisation du champ de recherche
+                    $('.dataTables_filter label').contents().filter(function() {
+                        return this.nodeType === 3;
+                    }).remove();
+                    $('.dataTables_filter input').attr('placeholder', 'Rechercher...');
+                    
+                    // Style supplémentaire pour les boutons d'export
+                    $('.dt-button').addClass('py-2 px-4 rounded-lg font-medium transition-all duration-200');
+
+                    // Ajout des classes pour le sélecteur d'entrées
+                    $('.dataTables_length select').addClass('appearance-none bg-white transition-all duration-200');
+                    
+                    // Style des éléments de contrôle
+                    $('.dataTables_filter input').addClass('border-gray-300 rounded-lg pl-10');
+                    $('.dataTables_length select').addClass('border-gray-300 rounded-lg');
+                    
+                    // Ajout d'une classe pour le conteneur des boutons d'export
+                    $('.dt-buttons').addClass('gap-3');
+                    
+                    // Amélioration du style des boutons d'export
+                    $('.dt-button').each(function() {
+                        $(this).addClass('transition-all duration-200 ease-in-out transform hover:scale-105');
+                    });
+
+                    // Appliquer les options personnalisées
+                    if (options.initComplete) {
+                        options.initComplete.call(this);
+                    }
+                }
+            };
+
+            // Fusion des options par défaut avec les options personnalisées
+            const mergedOptions = {...defaultOptions, ...options};
+            
+            // Initialisation de la DataTable
+            return $(tableId).DataTable(mergedOptions);
+        }
+    </script>
+{% endblock %}

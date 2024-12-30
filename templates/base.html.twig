@@ -4,21 +4,92 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Schol - Gestion Scolaire{% endblock %}</title>
-
+        
+        {# Tailwind CSS #}
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        {# jQuery #}
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        
+        {# Select2 #}
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        
+        {# Font Awesome #}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        
+        {# Alpine.js #}
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        
         {% block stylesheets %}
-            <!-- Tailwind CSS -->
-            <script src="https://cdn.tailwindcss.com"></script>
-            <!-- Font Awesome -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-            <!-- Custom CSS -->
-            <style>
-                [x-cloak] { display: none !important; }
-            </style>
+        <style>
+            [x-cloak] { display: none !important; }
+            
+            /* Select2 customization */
+            .select2-container .select2-selection--single {
+                height: 38px;
+                padding-top: 4px;
+            }
+            
+            .select2-container--default .select2-selection--single {
+                border: 1px solid #d1d5db;
+                border-radius: 0.375rem;
+            }
+            
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 36px;
+            }
+            
+            /* Form styles */
+            .form-control {
+                width: 100%;
+                border-radius: 0.375rem;
+                border-color: #d1d5db;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .form-control:focus {
+                outline: none;
+                border-color: #6366f1;
+                box-shadow: 0 0 0 1px #6366f1;
+            }
+            
+            /* Alert styles */
+            .alert-success {
+                background-color: #ecfdf5;
+                color: #047857;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border-radius: 0.375rem;
+            }
+            
+            .alert-danger {
+                background-color: #fef2f2;
+                color: #b91c1c;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border-radius: 0.375rem;
+            }
+            
+            .invalid-feedback {
+                color: #dc2626;
+                font-size: 0.875rem;
+                margin-top: 0.5rem;
+            }
+        </style>
         {% endblock %}
 
         {% block javascripts %}
-            <!-- Alpine.js -->
-            <script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Select2
+                if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
+                    $('.select2').select2({
+                        width: '100%'
+                    });
+                }
+            });
+        </script>
         {% endblock %}
     </head>
     <body class="bg-gray-100">
@@ -52,16 +123,19 @@
                 <main class="py-6">
                     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <!-- Flash Messages -->
-                        {% for label, messages in app.flashes %}
-                            {% for message in messages %}
-                                <div class="mb-4 rounded-md p-4 {{ label == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
-                                    {{ message }}
-                                </div>
+                        <div class="container mt-4">
+                            {% for label, messages in app.flashes %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
 
-                        <!-- Page Content -->
-                        {% block body %}{% endblock %}
+                            <!-- Page Content -->
+                            {% block body %}{% endblock %}
+                        </div>
                     </div>
                 </main>
             </div>

@@ -1,0 +1,189 @@
+# Global
+Save: Enregistrer
+Back to list: Retour à la liste
+Actions: Actions
+Edit: Modifier
+Delete: Supprimer
+'Yes, delete': 'Oui, supprimer'
+Cancel: Annuler
+Create: Créer
+Update: Mettre à jour
+Show: Voir
+
+# Common actions
+actions: Actions
+create: Créer
+edit: Modifier
+delete: Supprimer
+back: Retour
+save: Enregistrer
+cancel: Annuler
+update: Mettre à jour
+show: Voir
+
+# Navigation
+nav:
+  sidebar:
+    # Sections
+    academic_management: Gestion Académique
+    organization: Organisation
+    classroom_management: Gestion des Salles
+    financial_management: Gestion Financière
+    
+    # Menu items
+    home: Tableau de bord
+    students: Étudiants
+    teachers: Professeurs
+    grades: Notes
+    evaluations: Évaluations
+    subjects: Matières
+    campus: Campus
+    departments: Départements
+    curricula: Filières
+    cycles: Cycles
+    school_years: Années scolaires
+    semesters: Semestres
+    classrooms: Salles de cours
+    timetable: Emploi du temps
+    enrollments: Inscriptions
+    payments: Règlements
+    
+  top:
+    profile: Mon profil
+    settings: Paramètres
+    logout: Déconnexion
+    search: Rechercher...
+    notifications: Notifications
+    user_menu: Menu utilisateur
+    open_sidebar: Ouvrir le menu latéral
+    messages: Messages
+    language: Langue
+    dark_mode: Mode sombre
+    help: Aide
+    documentation: Documentation
+
+# Student form
+student:
+  form:
+    description: Remplissez les informations de l'étudiant. Tous les champs marqués d'un astérisque (*) sont obligatoires.
+    personal_info: Informations personnelles
+    contact_info: Informations de contact
+    parent_info: Informations des parents
+    enrollment: Inscription
+    title:
+      new: Nouvel étudiant
+      edit: Modifier l'étudiant
+    fields:
+      noms: Nom
+      prenoms: Prénom(s)
+      age: Âge
+      sexe: Sexe
+      telephone: Téléphone
+      adresse: Adresse
+      photo: Photo
+      matricule: Matricule
+      email: Email
+      father_name: Nom du père
+      mother_name: Nom de la mère
+      father_phone: Téléphone du père
+      mother_phone: Téléphone de la mère
+      filiere_cycle: Filière et Cycle
+    placeholders:
+      noms: Entrez le nom
+      prenoms: Entrez le(s) prénom(s)
+      age: Entrez l'âge
+      telephone: '+237 6XX XX XX XX'
+      adresse: Entrez l'adresse
+      matricule: Entrez le matricule
+      email: exemple@email.com
+      father_name: Nom du père
+      mother_name: Nom de la mère
+      father_phone: '+237 6XX XX XX XX'
+      mother_phone: '+237 6XX XX XX XX'
+      filiere_cycle: Sélectionnez une filière et un cycle
+    choices:
+      sexe:
+        male: Masculin
+        female: Féminin
+    validation:
+      required: Ce champ est obligatoire
+      min_length: Ce champ doit contenir au moins {{ limit }} caractères
+      max_length: Ce champ ne peut pas contenir plus de {{ limit }} caractères
+      email: Veuillez entrer une adresse email valide
+      photo:
+        max_size: La photo ne doit pas dépasser 1Mo
+        mime_types: 'Formats acceptés : JPEG, PNG'
+    success:
+      created: L'étudiant a été créé avec succès
+      updated: L'étudiant a été mis à jour avec succès
+      deleted: L'étudiant a été supprimé avec succès
+    error:
+      photo_upload: Une erreur est survenue lors du téléchargement de la photo
+      no_active_year: 'Aucune année scolaire active n''est disponible'
+
+# Flash messages
+flash:
+  success: Opération réussie
+  error: Une erreur est survenue
+  warning: Attention
+  info: Information
+  success:
+    create: '%entity% créé(e) avec succès'
+    update: '%entity% modifié(e) avec succès'
+    delete: '%entity% supprimé(e) avec succès'
+  error:
+    create: 'Erreur lors de la création de %entity%'
+    update: 'Erreur lors de la modification de %entity%'
+    delete: 'Erreur lors de la suppression de %entity%'
+    form: 'Le formulaire contient des erreurs. Veuillez les corriger.'
+
+# Entités
+entity:
+  annee: Année scolaire
+  etudiant: Étudiant
+  professeur: Professeur
+  matiere: Matière
+  filiere_cycle: Filière/Cycle
+  inscription: Inscription
+  evaluation: Évaluation
+  programme: Programme
+  campus: Campus
+  departement: Département
+  salle_cours: Salle de cours
+  semestre: Semestre
+  user: Utilisateur
+
+# Messages spécifiques
+student:
+  form:
+    error:
+      no_active_year: 'Aucune année scolaire active n''est disponible'
+      photo_upload: 'Une erreur est survenue lors du téléchargement de la photo'
+
+# Boutons et actions
+action:
+  create: Créer
+  edit: Modifier
+  delete: Supprimer
+  show: Voir
+  back: Retour
+  save: Enregistrer
+  cancel: Annuler
+
+# Titres des pages
+title:
+  list: 'Liste des %entity%s'
+  create: 'Créer un(e) %entity%'
+  edit: 'Modifier %entity%'
+  show: 'Détails de %entity%'
+
+# Confirmations
+confirm:
+  delete: 'Êtes-vous sûr de vouloir supprimer cet élément ?'
+
+# Messages généraux
+general:
+  no_records: 'Aucun enregistrement trouvé'
+  loading: 'Chargement en cours...'
+  error: 'Une erreur est survenue'
+  success: 'Opération réussie'

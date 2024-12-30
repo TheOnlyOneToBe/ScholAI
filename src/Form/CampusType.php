@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Campus;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,12 +13,17 @@ class CampusType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomCampus')
-            ->add('adresse')
-            ->add('SalleCours')
-            ->add('campus', EntityType::class, [
-                'class' => Campus::class,
-                'choice_label' => 'id',
+            ->add('nomCampus', TextType::class, [
+                'label' => 'Nom du Campus',
+                'attr' => [
+                    'placeholder' => 'Ex: Campus de Yaoundé'
+                ]
+            ])
+            ->add('adresse', TextType::class, [
+                'label' => 'Adresse',
+                'attr' => [
+                    'placeholder' => 'Ex: Quartier Ngoa-Ekelle, Yaoundé'
+                ]
             ])
         ;
     }

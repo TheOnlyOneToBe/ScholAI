@@ -6,8 +6,12 @@ use App\Repository\ProfesseurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProfesseurRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'professor.email.unique')]
+#[UniqueEntity(fields: ['telephone'], message: 'professor.telephone.unique')]
 class Professeur
 {
     #[ORM\Id]
@@ -16,16 +20,41 @@ class Professeur
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $nom = null;
+    #[Assert\NotBlank(message: 'professor.noms.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'professor.noms.min_length',
+        maxMessage: 'professor.noms.max_length'
+    )]
+    private ?string $noms = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $prenom = null;
+    #[Assert\NotBlank(message: 'professor.prenoms.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'professor.prenoms.min_length',
+        maxMessage: 'professor.prenoms.max_length'
+    )]
+    private ?string $prenoms = null;
+
+    #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: 'professor.telephone.not_blank')]
+    #[Assert\Regex(
+        pattern: '/^[0-9+\s-]+$/',
+        message: 'professor.telephone.invalid'
+    )]
+    private ?string $telephone = null;
 
     #[ORM\Column(length: 200)]
+    #[Assert\NotBlank(message: 'professor.email.not_blank')]
+    #[Assert\Email(message: 'professor.email.invalid')]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'professeurs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'professor.departement.not_blank')]
     private ?Departement $departement = null;
 
     /**
@@ -44,26 +73,38 @@ class Professeur
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNoms(): ?string
     {
-        return $this->nom;
+        return $this->noms;
     }
 
-    public function setNom(string $nom): static
+    public function setNoms(string $noms): static
     {
-        $this->nom = $nom;
+        $this->noms = $noms;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getPrenoms(): ?string
     {
-        return $this->prenom;
+        return $this->prenoms;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenoms(string $prenoms): static
     {
-        $this->prenom = $prenom;
+        $this->prenoms = $prenoms;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(string $telephone): static
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }

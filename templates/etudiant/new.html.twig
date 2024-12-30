@@ -1,11 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Etudiant{% endblock %}
+{% block title %}{{ 'student.form.title.new'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Create new Etudiant</h1>
-
-    {{ include('etudiant/_form.html.twig') }}
-
-    <a href="{{ path('app_etudiant_index') }}">back to list</a>
+    <div class="space-y-6">
+        <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">{{ 'student.form.title.new'|trans }}</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        {{ 'student.form.description'|trans }}
+                    </p>
+                </div>
+                <div class="mt-5 md:col-span-2 md:mt-0">
+                    {{ include('etudiant/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

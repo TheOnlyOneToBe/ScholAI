@@ -1,0 +1,96 @@
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.tailwind.min.css">
+    <style>
+        /* Style personnalisé pour DataTables */
+        .dataTables_wrapper {
+            @apply bg-white shadow-md rounded-lg p-6;
+        }
+        /* Style pour les boutons d'export */
+        .dt-buttons {
+            @apply mb-6 flex flex-wrap items-center gap-3;
+        }
+        .dt-button {
+            @apply inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+        }
+        /* Container pour les contrôles */
+        .dataTables_wrapper .dt-buttons {
+            @apply mb-6 flex flex-wrap items-center gap-3 border-b border-gray-200 pb-6;
+        }
+        /* Style pour la barre de recherche */
+        .dataTables_filter {
+            @apply mb-6 relative;
+        }
+        .dataTables_filter label {
+            @apply flex items-center justify-end gap-2 text-sm font-medium text-gray-700;
+        }
+        .dataTables_filter input {
+            @apply pl-10 pr-4 py-2.5 border border-gray-300 text-sm font-medium rounded-lg shadow-sm bg-white hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full transition-all duration-200;
+            min-width: 300px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 12px center;
+            background-size: 18px;
+        }
+        .dataTables_filter input:focus {
+            @apply bg-white ring-2 ring-indigo-500 border-indigo-500;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234F46E5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .dataTables_filter input::placeholder {
+            @apply text-gray-400 font-normal;
+        }
+        /* Style pour le sélecteur d'entrées */
+        .dataTables_length {
+            @apply mb-6;
+        }
+        .dataTables_length label {
+            @apply flex items-center gap-2 text-sm font-medium text-gray-700;
+        }
+        .dataTables_length select {
+            @apply block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+            min-width: 110px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 32px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .dataTables_length select:focus {
+            @apply ring-2 ring-indigo-500 border-indigo-500;
+        }
+        /* Style pour la pagination */
+        .dataTables_paginate {
+            @apply mt-4 flex items-center justify-end;
+        }
+        .paginate_button {
+            @apply px-3 py-2 border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50;
+        }
+        .paginate_button.current {
+            @apply z-10 bg-indigo-50 border-indigo-500 text-indigo-600;
+        }
+        .paginate_button.disabled {
+            @apply opacity-50 cursor-not-allowed;
+        }
+        /* Style pour le tableau */
+        table.dataTable {
+            @apply w-full divide-y divide-gray-200;
+        }
+        table.dataTable thead th {
+            @apply px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+        }
+        table.dataTable tbody td {
+            @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+        }
+        /* Style pour les boutons d'action */
+        .action-buttons a {
+            @apply inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-200;
+        }
+        .action-buttons a:hover {
+            @apply bg-gray-100;
+        }
+    </style>
+{% endblock %}
