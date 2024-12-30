@@ -60,6 +60,10 @@ class Inscription
     #[ORM\OneToMany(targetEntity: Reglement::class, mappedBy: 'inscription', orphanRemoval: true)]
     private Collection $reglements;
 
+    #[ORM\ManyToOne(inversedBy: 'inscriptions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AnneeAcademique $annee = null;
+
     public function __construct()
     {
         $this->reglements = new ArrayCollection();
@@ -168,6 +172,18 @@ class Inscription
                 $reglement->setInscription(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAnnee(): ?AnneeAcademique
+    {
+        return $this->annee;
+    }
+
+    public function setAnnee(?AnneeAcademique $annee): static
+    {
+        $this->annee = $annee;
 
         return $this;
     }

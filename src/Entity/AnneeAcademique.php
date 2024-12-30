@@ -40,9 +40,16 @@ class AnneeAcademique
     #[ORM\OneToMany(targetEntity: Semestre::class, mappedBy: 'anneeacademique')]
     private Collection $semestres;
 
+    /**
+     * @var Collection<int, Inscription>
+     */
+    #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'annee', orphanRemoval: true)]
+    private Collection $inscriptions;
+
     public function __construct()
     {
         $this->semestres = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,5 +134,35 @@ class AnneeAcademique
                     ->addViolation();
             }
         }
+    }
+
+    /**
+     * @return Collection<int, Inscription>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscription $inscription): static
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setAnnee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscription $inscription): static
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getAnnee() === $this) {
+                $inscription->setAnnee(null);
+            }
+        }
+
+        return $this;
     }
 }
