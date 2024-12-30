@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanningCours{% endblock %}
+
+{% block body %}
+    <h1>PlanningCours</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ planning_cour.id }}</td>
+            </tr>
+            <tr>
+                <th>Jour</th>
+                <td>{{ planning_cour.jour }}</td>
+            </tr>
+            <tr>
+                <th>HeureDebut</th>
+                <td>{{ planning_cour.heureDebut ? planning_cour.heureDebut|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>HeureFin</th>
+                <td>{{ planning_cour.heureFin ? planning_cour.heureFin|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TypeCours</th>
+                <td>{{ planning_cour.typeCours }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_planning_cours_index') }}">back to list</a>
+
+    <a href="{{ path('app_planning_cours_edit', {'id': planning_cour.id}) }}">edit</a>
+
+    {{ include('planning_cours/_delete_form.html.twig') }}
+{% endblock %}

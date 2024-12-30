@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TypeEvaluation index{% endblock %}
+
+{% block body %}
+    <h1>TypeEvaluation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for type_evaluation in type_evaluations %}
+            <tr>
+                <td>{{ type_evaluation.id }}</td>
+                <td>{{ type_evaluation.titre }}</td>
+                <td>
+                    <a href="{{ path('app_type_evaluation_show', {'id': type_evaluation.id}) }}">show</a>
+                    <a href="{{ path('app_type_evaluation_edit', {'id': type_evaluation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_type_evaluation_new') }}">Create new</a>
+{% endblock %}

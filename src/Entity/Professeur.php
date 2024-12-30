@@ -92,7 +92,7 @@ class Professeur
 
     #[ORM\Column(length: 10, enumType: Genre::class)]
     #[Assert\NotNull(message: 'professeur.sexe.not_null')]
-    private ?string $sexe = null;
+    private ?Genre $sexe = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'professeur.adresse.not_blank')]
@@ -241,12 +241,12 @@ class Professeur
         return $this;
     }
 
-    public function getSexe(): ?string
+    public function getSexe(): ?Genre
     {
         return $this->sexe;
     }
 
-    public function setSexe(string $sexe): static
+    public function setSexe(Genre $sexe): static
     {
         $this->sexe = $sexe;
 

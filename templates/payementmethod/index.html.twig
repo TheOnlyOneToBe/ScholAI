@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payementmethod index{% endblock %}
+
+{% block body %}
+    <h1>Payementmethod index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>PayementName</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payementmethod in payementmethods %}
+            <tr>
+                <td>{{ payementmethod.id }}</td>
+                <td>{{ payementmethod.PayementName }}</td>
+                <td>
+                    <a href="{{ path('app_payementmethod_show', {'id': payementmethod.id}) }}">show</a>
+                    <a href="{{ path('app_payementmethod_edit', {'id': payementmethod.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payementmethod_new') }}">Create new</a>
+{% endblock %}

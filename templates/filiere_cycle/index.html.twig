@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FiliereCycle index{% endblock %}
+
+{% block body %}
+    <h1>FiliereCycle index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>FraisInscription</th>
+                <th>MontantPension</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for filiere_cycle in filiere_cycles %}
+            <tr>
+                <td>{{ filiere_cycle.id }}</td>
+                <td>{{ filiere_cycle.description }}</td>
+                <td>{{ filiere_cycle.fraisInscription }}</td>
+                <td>{{ filiere_cycle.montantPension }}</td>
+                <td>
+                    <a href="{{ path('app_filiere_cycle_show', {'id': filiere_cycle.id}) }}">show</a>
+                    <a href="{{ path('app_filiere_cycle_edit', {'id': filiere_cycle.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_filiere_cycle_new') }}">Create new</a>
+{% endblock %}

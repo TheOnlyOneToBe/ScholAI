@@ -18,9 +18,9 @@ class Etudiant
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 10, nullable: true, enumType: Genre::class)]
+    #[ORM\Column(length: 10, enumType: Genre::class)]
     #[Assert\NotNull(message: 'etudiant.sexe.not_null')]
-    private ?string $sexe = null;
+    private ?Genre $sexe = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotNull(message: 'etudiant.date_naissance.not_null')]
@@ -36,7 +36,8 @@ class Etudiant
     private ?string $adresse = null;
 
     #[ORM\Column]
-    private ?bool $isRegistrationAllowed = null;
+    #[Assert\NotNull(message: 'etudiant.registration_allowed.not_null')]
+    private bool $isRegistrationAllowed = true;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'etudiant.nom.not_blank')]
@@ -62,7 +63,7 @@ class Etudiant
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank(message: 'etudiant.telephone.not_blank')]
     #[Assert\Regex(
-        pattern: '/^[0-9\+\-\(\) ]{8,20}$/',
+        pattern: '/^\+?[0-9]{9,15}$/',
         message: 'etudiant.telephone.invalid'
     )]
     private ?string $numTelephone = null;
@@ -75,6 +76,13 @@ class Etudiant
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $studentPhoto = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^[A-Z]{2}[0-9]{6}$/',
+        message: 'etudiant.cni.invalid'
+    )]
+    private ?string $cni = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreation = null;
@@ -147,12 +155,12 @@ class Etudiant
         return $this->id;
     }
 
-    public function getSexe(): ?string
+    public function getSexe(): ?Genre
     {
         return $this->sexe;
     }
 
-    public function setSexe(?string $sexe): static
+    public function setSexe(?Genre $sexe): static
     {
         $this->sexe = $sexe;
 
@@ -275,6 +283,18 @@ class Etudiant
     public function setStudentPhoto(?string $studentPhoto): static
     {
         $this->studentPhoto = $studentPhoto;
+
+        return $this;
+    }
+
+    public function getCni(): ?string
+    {
+        return $this->cni;
+    }
+
+    public function setCni(?string $cni): static
+    {
+        $this->cni = $cni;
 
         return $this;
     }

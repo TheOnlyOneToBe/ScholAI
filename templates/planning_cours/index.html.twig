@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PlanningCours index{% endblock %}
+
+{% block body %}
+    <h1>PlanningCours index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Jour</th>
+                <th>HeureDebut</th>
+                <th>HeureFin</th>
+                <th>TypeCours</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for planning_cour in planning_cours %}
+            <tr>
+                <td>{{ planning_cour.id }}</td>
+                <td>{{ planning_cour.jour }}</td>
+                <td>{{ planning_cour.heureDebut ? planning_cour.heureDebut|date('H:i:s') : '' }}</td>
+                <td>{{ planning_cour.heureFin ? planning_cour.heureFin|date('H:i:s') : '' }}</td>
+                <td>{{ planning_cour.typeCours }}</td>
+                <td>
+                    <a href="{{ path('app_planning_cours_show', {'id': planning_cour.id}) }}">show</a>
+                    <a href="{{ path('app_planning_cours_edit', {'id': planning_cour.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_planning_cours_new') }}">Create new</a>
+{% endblock %}

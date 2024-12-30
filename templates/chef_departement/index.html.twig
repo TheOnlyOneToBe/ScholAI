@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ChefDepartement index{% endblock %}
+
+{% block body %}
+    <h1>ChefDepartement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>DateDebutMandat</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for chef_departement in chef_departements %}
+            <tr>
+                <td>{{ chef_departement.id }}</td>
+                <td>{{ chef_departement.dateDebutMandat ? chef_departement.dateDebutMandat|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_chef_departement_show', {'id': chef_departement.id}) }}">show</a>
+                    <a href="{{ path('app_chef_departement_edit', {'id': chef_departement.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_chef_departement_new') }}">Create new</a>
+{% endblock %}

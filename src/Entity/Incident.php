@@ -37,11 +37,11 @@ class Incident
 
     #[ORM\Column(length: 255, enumType: GraviteIncident::class)]
     #[Assert\NotNull(message: 'incident.gravite.not_null')]
-    private ?string $gravite = null;
+    private ?GraviteIncident $gravite = null;
 
     #[ORM\Column(length: 255, enumType: TypeAvertissement::class)]
     #[Assert\NotNull(message: 'incident.type_incident.not_null')]
-    private ?string $typeIncident = null;
+    private ?TypeAvertissement $typeIncident = null;
 
     #[ORM\ManyToOne(inversedBy: 'incidents')]
     #[ORM\JoinColumn(nullable: false)]
@@ -77,24 +77,24 @@ class Incident
         return $this;
     }
 
-    public function getGravite(): ?string
+    public function getGravite(): ?GraviteIncident
     {
         return $this->gravite;
     }
 
-    public function setGravite(string $gravite): static
+    public function setGravite(GraviteIncident $gravite): static
     {
         $this->gravite = $gravite;
 
         return $this;
     }
 
-    public function getTypeIncident(): ?string
+    public function getTypeIncident(): ?TypeAvertissement
     {
         return $this->typeIncident;
     }
 
-    public function setTypeIncident(string $typeIncident): static
+    public function setTypeIncident(TypeAvertissement $typeIncident): static
     {
         $this->typeIncident = $typeIncident;
 

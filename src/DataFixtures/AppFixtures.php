@@ -40,6 +40,7 @@ use App\Enum\StatutInscription;
 use App\Enum\StatutPresence;
 use App\Enum\TypeAvertissement;
 use App\Enum\TypeTuteur;
+use App\Enum\StatutEvaluation;
 
 class AppFixtures extends Fixture
 {
@@ -65,7 +66,37 @@ class AppFixtures extends Fixture
             $roles[$roleName] = $role;
         }
 
-        // 2. Création des campus
+        // 2. Création des utilisateurs
+        $users = [];
+        foreach ($roles as $roleName => $role) {
+            $user = new Utilisateur();
+            $user->setNom($this->faker->lastName())
+                ->setPrenom($this->faker->firstName())
+                ->setEmail(strtolower($roleName) . '@example.com')
+                ->setMotdepasse($this->passwordHasher->hashPassword($user, 'password'))
+                ->setRole($role)
+                ->setDateCreation(new \DateTime())
+                ->setDateModification(new \DateTime())
+                ->setSexe($this->faker->randomElement(Genre::cases()));
+
+            // Définir la profession en fonction du rôle
+            switch ($roleName) {
+                case 'ROLE_PROF':
+                    $user->setProfession('Enseignant');
+                    break;
+                case 'ROLE_ADMIN':
+                    $user->setProfession('Administrateur');
+                    break;
+                case 'ROLE_ETUDIANT':
+                    $user->setProfession('Étudiant');
+                    break;
+            }
+
+            $manager->persist($user);
+            $users[$roleName] = $user;
+        }
+
+        // 3. Création des campus
         $campuses = [];
         $campusNames = ['Campus Principal', 'Campus Annexe', 'Campus Nord', 'Campus Sud'];
         
@@ -77,14 +108,14 @@ class AppFixtures extends Fixture
             $campuses[] = $campus;
         }
 
-        // 3. Création de l'année académique
+        // 4. Création de l'année académique
         $anneeActive = new AnneeAcademique();
         $anneeActive->setYearStart(new \DateTime('2023-09-01'))
                    ->setYearEnd(new \DateTime('2024-07-31'))
                    ->setCurrent(true);
         $manager->persist($anneeActive);
 
-        // 4. Création des départements
+        // 5. Création des départements
         $departements = [];
         $deptNames = ['Informatique', 'Génie Civil', 'Électronique', 'Management', 'Communication'];
         
@@ -96,7 +127,7 @@ class AppFixtures extends Fixture
             $departements[] = $departement;
         }
 
-        // 5. Création des cycles
+        // 6. Création des cycles
         $cycles = [];
         $cycleNames = ['Licence', 'Master', 'Doctorat'];
 
@@ -107,7 +138,7 @@ class AppFixtures extends Fixture
             $cycles[] = $cycle;
         }
 
-        // 6. Création des filières
+        // 7. Création des filières
         $filieres = [];
         $filiereNames = [
             'Génie Logiciel',
@@ -124,7 +155,7 @@ class AppFixtures extends Fixture
             $filieres[] = $filiere;
         }
 
-        // 7. Création des semestres
+        // 8. Création des semestres
         $semestres = [];
         $semDates = [
             ['S1', '2023-09-01', '2024-01-31'],
@@ -141,7 +172,7 @@ class AppFixtures extends Fixture
             $semestres[] = $semestre;
         }
 
-        // 8. Création des cours
+        // 9. Création des cours
         $cours = [];
         $coursNames = [
             'Programmation Orientée Objet' => 'CM',
@@ -160,26 +191,31 @@ class AppFixtures extends Fixture
             $cours[] = $cours_item;
         }
 
-        // 9. Création des professeurs
+        // 10. Création des professeurs
         $professeurs = [];
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $professeur = new Professeur();
             $professeur->setNom($this->faker->lastName())
                       ->setPrenom($this->faker->firstName())
-                      ->setEmail($this->faker->email())
-                      ->setNumeroTelephone($this->faker->phoneNumber())
-                      ->setCni($this->faker->regexify('[A-Z0-9]{8}'))
-                      ->setDateNaissance($this->faker->dateTimeBetween('-60 years', '-25 years'))
-                      ->setNationalite('Camerounaise')
-                      ->setSexe($this->faker->randomElement(['M', 'F']))
+                      ->setEmail($this->faker->unique()->email())
                       ->setAdresse($this->faker->address())
+                      ->setDateNaissance($this->faker->dateTimeBetween('-60 years', '-25 years'))
+                      ->setSexe($this->faker->randomElement(Genre::cases()))
+                      ->setNumeroTelephone($this->faker->numerify('+237########'))
+                      ->setCni($this->faker->unique()->regexify('[A-Z]{2}[0-9]{6}'))
+                      ->setNationalite($this->faker->country())
                       ->setDateCreation(new \DateTime())
-                      ->setDateModification(new \DateTime());
+                      ->setDateModification(new \DateTime())
+                      ->setDepartement($this->faker->randomElement($departements));
+            // Optionnellement lier à un utilisateur
+            if ($this->faker->boolean(30)) { // 30% de chance d'avoir un utilisateur
+                $professeur->addUtilisateur($users['ROLE_PROF']);
+            }
             $manager->persist($professeur);
             $professeurs[] = $professeur;
         }
 
-        // 10. Création des UEs
+        // 11. Création des UEs
         $ues = [];
         foreach ($semestres as $semestre) {
             foreach ($cours as $cours_item) {
@@ -194,7 +230,7 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 11. Création des types d'évaluation
+        // 12. Création des types d'évaluation
         $typeEvals = [];
         $typeNames = ['Contrôle Continu', 'Examen Final', 'TP', 'Projet', 'Rattrapage'];
         
@@ -205,7 +241,7 @@ class AppFixtures extends Fixture
             $typeEvals[] = $typeEval;
         }
 
-        // 12. Création des salles de cours
+        // 13. Création des salles de cours
         $salles = [];
         foreach ($campuses as $campus) {
             for ($i = 1; $i <= 5; $i++) {
@@ -218,7 +254,22 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 13. Création des filière-cycles
+        // 14. Création des plannings de cours
+        $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+        $plannings = [];
+        foreach ($ues as $ue) {
+            $planningCours = new PlanningCours();
+            $planningCours->setUE($ue)
+                         ->setSallecours($this->faker->randomElement($salles))
+                         ->setJour($this->faker->randomElement($jours))
+                         ->setHeureDebut(new \DateTime('08:00'))
+                         ->setHeureFin(new \DateTime('10:00'))
+                         ->setTypeCours($ue->getMatiere()->getTypeCours());
+            $manager->persist($planningCours);
+            $plannings[] = $planningCours;
+        }
+
+        // 15. Création des filière-cycles
         $filiereCycles = [];
         foreach ($filieres as $filiere) {
             foreach ($cycles as $cycle) {
@@ -226,42 +277,47 @@ class AppFixtures extends Fixture
                 $filiereCycle->setFiliere($filiere)
                             ->setCycle($cycle)
                             ->setDescription("Programme de " . $filiere->getNomFiliere() . " en " . $cycle->getNomCycle())
-                            ->setFraisInscription($this->faker->numberBetween(300000, 1000000));
+                            ->setFraisInscription($this->faker->numberBetween(300000, 1000000))
+                            ->setMontantPension($this->faker->numberBetween(500000, 2000000));
                 $manager->persist($filiereCycle);
                 $filiereCycles[] = $filiereCycle;
             }
         }
 
-        // 14. Création des évaluations
+        // 16. Création des évaluations
         foreach ($ues as $ue) {
             foreach ($typeEvals as $type) {
                 $evaluation = new Evaluation();
-                $evaluation->setUE($ue)
+                $evaluation->setUe($ue)
                           ->setSemestre($ue->getSemestre())
-                          ->setDateDebut($this->faker->dateTimeBetween('+1 month', '+3 months'))
+                          ->setDateDebut($this->faker->dateTimeBetween($ue->getSemestre()->getDateDebut(), $ue->getSemestre()->getDateFin()))
                           ->setTempsEvaluation($this->faker->numberBetween(60, 180))
-                          ->setStatut('Planifié')
+                          ->setStatut($this->faker->randomElement(StatutEvaluation::cases()))
                           ->setType($type);
                 $manager->persist($evaluation);
             }
         }
 
-        // 15. Création des étudiants et leurs antécédents académiques
+        // 17. Création des étudiants
         $etudiants = [];
         for ($i = 0; $i < 100; $i++) {
             $etudiant = new Etudiant();
             $etudiant->setNom($this->faker->lastName())
                     ->setPrenom($this->faker->firstName())
-                    ->setDateNaissance($this->faker->dateTimeBetween('-25 years', '-18 years'))
-                    ->setLieuNaissance($this->faker->city())
+                    ->setEmail($this->faker->unique()->email())
                     ->setAdresse($this->faker->address())
-                    ->setEmail($this->faker->email())
-                    ->setNumTelephone($this->faker->phoneNumber())
-                    ->setSexe($this->faker->randomElement(['M', 'F']))
-                    ->setNationalite('Camerounaise')
-                    ->setRegistrationAllowed(true)
+                    ->setDateNaissance($this->faker->dateTimeBetween('-25 years', '-18 years'))
+                    ->setSexe($this->faker->randomElement(Genre::cases()))
+                    ->setNumTelephone($this->faker->numerify('+237########'))
+                    ->setCni($this->faker->unique()->regexify('[A-Z]{2}[0-9]{6}'))
+                    ->setNationalite($this->faker->country())
                     ->setDateCreation(new \DateTime())
-                    ->setDateModification(new \DateTime());
+                    ->setDateModification(new \DateTime())
+                    ->setRegistrationAllowed(true);
+            // Optionnellement lier à un utilisateur
+            if ($this->faker->boolean(30)) { // 30% de chance d'avoir un utilisateur
+                $etudiant->addUtilisateur($users['ROLE_ETUDIANT']);
+            }
             $manager->persist($etudiant);
             $etudiants[] = $etudiant;
 
@@ -284,7 +340,7 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 16. Création des chefs de département
+        // 18. Création des chefs de département
         foreach ($departements as $departement) {
             $chefDept = new ChefDepartement();
             $chefDept->setProfesseur($this->faker->randomElement($professeurs))
@@ -293,7 +349,7 @@ class AppFixtures extends Fixture
             $manager->persist($chefDept);
         }
 
-        // 17. Création des inscriptions
+        // 19. Création des inscriptions
         $inscriptions = [];
         foreach ($etudiants as $etudiant) {
             $inscription = new Inscription();
@@ -308,7 +364,7 @@ class AppFixtures extends Fixture
             $inscriptions[] = $inscription;
         }
 
-        // 18. Création des notes
+        // 20. Création des notes
         foreach ($etudiants as $etudiant) {
             foreach ($ues as $ue) {
                 foreach ($typeEvals as $typeEval) {
@@ -323,43 +379,21 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 19. Création des plannings de cours
-        $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-        $plannings = [];
-        foreach ($ues as $ue) {
-            for ($i = 0; $i < 3; $i++) { // 3 séances par UE
-                $heureDebut = new \DateTime('08:00:00');
-                $heureDebut->modify('+' . $this->faker->numberBetween(0, 8) . ' hours');
-                
-                $heureFin = clone $heureDebut;
-                $heureFin->modify('+2 hours');
-
-                $planning = new PlanningCours();
-                $planning->setUE($ue)
-                        ->setSalleCours($this->faker->randomElement($salles))
-                        ->setJour($this->faker->randomElement($jours))
-                        ->setHeureDebut($heureDebut)
-                        ->setHeureFin($heureFin);
-                $manager->persist($planning);
-                $plannings[] = $planning;
-            }
-        }
-
-        // 20. Création des présences
+        // 21. Création des présences
         foreach ($etudiants as $etudiant) {
             foreach ($plannings as $planning) {
                 if ($this->faker->boolean(80)) { // 80% de chance d'être présent
                     $presence = new Presence();
                     $presence->setEtudiant($etudiant)
-                            ->setUE($planning->getUE())
                             ->setPlanningCours($planning)
+                            ->setUE($planning->getUE())
                             ->setStatut($this->faker->randomElement(StatutPresence::cases()));
                     $manager->persist($presence);
                 }
             }
         }
 
-        // 21. Création des tuteurs
+        // 22. Création des tuteurs
         foreach ($etudiants as $etudiant) {
             $tuteur = new TuteurEtudiant();
             $tuteur->setEtudiant($etudiant)
@@ -371,7 +405,7 @@ class AppFixtures extends Fixture
             $manager->persist($tuteur);
         }
 
-        // 22. Création des formats d'impression
+        // 23. Création des formats d'impression
         $formatNames = [
             'A4' => ['210mm', 297],
             'A3' => ['297mm', 420],
@@ -387,7 +421,7 @@ class AppFixtures extends Fixture
             $manager->persist($format);
         }
 
-        // 23. Création des méthodes de paiement
+        // 24. Création des méthodes de paiement
         $methodesNames = ['Espèces', 'Chèque', 'Virement bancaire', 'Mobile Money', 'Carte bancaire'];
         $methodes = [];
         
@@ -398,7 +432,7 @@ class AppFixtures extends Fixture
             $methodes[] = $methode;
         }
 
-        // 24. Création des raisons de paiement
+        // 25. Création des raisons de paiement
         $payementReasons = [];
         $raisons = ['Frais de scolarité', 'Frais d\'inscription', 'Frais d\'examen', 'Frais de bibliothèque'];
         foreach ($raisons as $raison) {
@@ -408,7 +442,7 @@ class AppFixtures extends Fixture
             $payementReasons[] = $payementReason;
         }
 
-        // 25. Création des règlements
+        // 26. Création des règlements
         foreach ($inscriptions as $inscription) {
             foreach ($payementReasons as $reason) {
                 if ($this->faker->boolean(70)) { // 70% de chance d'avoir un règlement
@@ -423,7 +457,7 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 26. Création des incidents
+        // 27. Création des incidents
         foreach ($etudiants as $etudiant) {
             if ($this->faker->boolean(30)) { // 30% de chance d'avoir un incident
                 $incident = new Incident();

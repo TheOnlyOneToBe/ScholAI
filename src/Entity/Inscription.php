@@ -35,7 +35,7 @@ class Inscription
 
     #[ORM\Column(length: 50, enumType: StatutInscription::class)]
     #[Assert\NotNull(message: 'inscription.statut.not_null')]
-    private ?string $statut = null;
+    private ?StatutInscription $statut = null;
 
     #[ORM\Column]
     #[Assert\NotNull(message: 'inscription.is_suspended.not_null')]
@@ -98,12 +98,12 @@ class Inscription
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?StatutInscription
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(StatutInscription $statut): static
     {
         $this->statut = $statut;
 

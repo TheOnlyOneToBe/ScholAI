@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Semestre{% endblock %}
+
+{% block body %}
+    <h1>Semestre</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ semestre.id }}</td>
+            </tr>
+            <tr>
+                <th>NumSemestre</th>
+                <td>{{ semestre.numSemestre }}</td>
+            </tr>
+            <tr>
+                <th>Date_debut</th>
+                <td>{{ semestre.dateDebut ? semestre.dateDebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateFin</th>
+                <td>{{ semestre.dateFin ? semestre.dateFin|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_semestre_index') }}">back to list</a>
+
+    <a href="{{ path('app_semestre_edit', {'id': semestre.id}) }}">edit</a>
+
+    {{ include('semestre/_delete_form.html.twig') }}
+{% endblock %}

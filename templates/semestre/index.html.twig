@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Semestre index{% endblock %}
+
+{% block body %}
+    <h1>Semestre index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NumSemestre</th>
+                <th>Date_debut</th>
+                <th>DateFin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for semestre in semestres %}
+            <tr>
+                <td>{{ semestre.id }}</td>
+                <td>{{ semestre.numSemestre }}</td>
+                <td>{{ semestre.dateDebut ? semestre.dateDebut|date('Y-m-d') : '' }}</td>
+                <td>{{ semestre.dateFin ? semestre.dateFin|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_semestre_show', {'id': semestre.id}) }}">show</a>
+                    <a href="{{ path('app_semestre_edit', {'id': semestre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_semestre_new') }}">Create new</a>
+{% endblock %}

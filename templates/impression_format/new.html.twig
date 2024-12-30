@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ImpressionFormat{% endblock %}
+
+{% block body %}
+    <h1>Create new ImpressionFormat</h1>
+
+    {{ include('impression_format/_form.html.twig') }}
+
+    <a href="{{ path('app_impression_format_index') }}">back to list</a>
+{% endblock %}

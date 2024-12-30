@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AntecedentAcademique index{% endblock %}
+
+{% block body %}
+    <h1>AntecedentAcademique index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Etablissement</th>
+                <th>Diplome</th>
+                <th>MatriculeDiplome</th>
+                <th>AnneeObtention</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for antecedent_academique in antecedent_academiques %}
+            <tr>
+                <td>{{ antecedent_academique.id }}</td>
+                <td>{{ antecedent_academique.etablissement }}</td>
+                <td>{{ antecedent_academique.diplome }}</td>
+                <td>{{ antecedent_academique.matriculeDiplome }}</td>
+                <td>{{ antecedent_academique.anneeObtention ? antecedent_academique.anneeObtention|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_antecedent_academique_show', {'id': antecedent_academique.id}) }}">show</a>
+                    <a href="{{ path('app_antecedent_academique_edit', {'id': antecedent_academique.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_antecedent_academique_new') }}">Create new</a>
+{% endblock %}

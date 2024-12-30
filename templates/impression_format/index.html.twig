@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ImpressionFormat index{% endblock %}
+
+{% block body %}
+    <h1>ImpressionFormat index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NomFormat</th>
+                <th>LargeurPage</th>
+                <th>LongueurPage</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for impression_format in impression_formats %}
+            <tr>
+                <td>{{ impression_format.id }}</td>
+                <td>{{ impression_format.nomFormat }}</td>
+                <td>{{ impression_format.largeurPage }}</td>
+                <td>{{ impression_format.longueurPage }}</td>
+                <td>{{ impression_format.description }}</td>
+                <td>
+                    <a href="{{ path('app_impression_format_show', {'id': impression_format.id}) }}">show</a>
+                    <a href="{{ path('app_impression_format_edit', {'id': impression_format.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_impression_format_new') }}">Create new</a>
+{% endblock %}

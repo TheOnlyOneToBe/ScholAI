@@ -43,7 +43,7 @@ class TuteurEtudiant
 
     #[ORM\Column(length: 10, enumType: Genre::class)]
     #[Assert\NotNull(message: 'tuteur_etudiant.sexe.not_null')]
-    private ?string $sexe = null;
+    private ?Genre $sexe = null;
 
     #[ORM\Column(length: 24)]
     #[Assert\NotBlank(message: 'tuteur_etudiant.num_telephone.not_blank')]
@@ -55,7 +55,7 @@ class TuteurEtudiant
 
     #[ORM\Column(length: 30, enumType: TypeTuteur::class)]
     #[Assert\NotNull(message: 'tuteur_etudiant.type_tuteur.not_null')]
-    private ?string $typeTuteur = null;
+    private ?TypeTuteur $typeTuteur = null;
 
     #[ORM\ManyToOne(inversedBy: 'tuteurEtudiants')]
     #[ORM\JoinColumn(nullable: false)]
@@ -91,15 +91,14 @@ class TuteurEtudiant
         return $this;
     }
 
-    public function getSexe(): ?string
+    public function getSexe(): ?Genre
     {
         return $this->sexe;
     }
 
-    public function setSexe(string $sexe): static
+    public function setSexe(Genre $sexe): static
     {
         $this->sexe = $sexe;
-
         return $this;
     }
 
@@ -128,18 +127,19 @@ class TuteurEtudiant
     }
 
     /**
-     * @return string|null
+     * @return TypeTuteur|null
      */
-    public function getTypeTuteur(): ?string
+    public function getTypeTuteur(): ?TypeTuteur
     {
         return $this->typeTuteur;
     }
 
     /**
-     * @param string|null $typeTuteur
+     * @param TypeTuteur|null $typeTuteur
      */
-    public function setTypeTuteur(?string $typeTuteur): void
+    public function setTypeTuteur(TypeTuteur $typeTuteur): static
     {
         $this->typeTuteur = $typeTuteur;
+        return $this;
     }
 }

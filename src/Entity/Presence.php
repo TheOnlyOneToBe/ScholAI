@@ -37,7 +37,7 @@ class Presence
 
     #[ORM\Column(length: 50, enumType: StatutPresence::class)]
     #[Assert\NotNull(message: 'presence.statut.not_null')]
-    private ?string $statut = null;
+    private ?StatutPresence $statut = null;
 
     public function getId(): ?int
     {
@@ -80,15 +80,14 @@ class Presence
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?StatutPresence
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(StatutPresence $statut): static
     {
         $this->statut = $statut;
-
         return $this;
     }
 }

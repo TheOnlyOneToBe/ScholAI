@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payementreason{% endblock %}
+
+{% block body %}
+    <h1>Payementreason</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ payementreason.id }}</td>
+            </tr>
+            <tr>
+                <th>Raison</th>
+                <td>{{ payementreason.Raison }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payementreason_index') }}">back to list</a>
+
+    <a href="{{ path('app_payementreason_edit', {'id': payementreason.id}) }}">edit</a>
+
+    {{ include('payementreason/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bourse index{% endblock %}
+
+{% block body %}
+    <h1>Bourse index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Montant</th>
+                <th>Remise</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bourse in bourses %}
+            <tr>
+                <td>{{ bourse.id }}</td>
+                <td>{{ bourse.montant }}</td>
+                <td>{{ bourse.remise }}</td>
+                <td>
+                    <a href="{{ path('app_bourse_show', {'id': bourse.id}) }}">show</a>
+                    <a href="{{ path('app_bourse_edit', {'id': bourse.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_bourse_new') }}">Create new</a>
+{% endblock %}

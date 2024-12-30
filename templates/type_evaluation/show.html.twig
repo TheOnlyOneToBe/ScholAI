@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TypeEvaluation{% endblock %}
+
+{% block body %}
+    <h1>TypeEvaluation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ type_evaluation.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ type_evaluation.titre }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_type_evaluation_index') }}">back to list</a>
+
+    <a href="{{ path('app_type_evaluation_edit', {'id': type_evaluation.id}) }}">edit</a>
+
+    {{ include('type_evaluation/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ImpressionFormat{% endblock %}
+
+{% block body %}
+    <h1>Edit ImpressionFormat</h1>
+
+    {{ include('impression_format/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_impression_format_index') }}">back to list</a>
+
+    {{ include('impression_format/_delete_form.html.twig') }}
+{% endblock %}

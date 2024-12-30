@@ -47,7 +47,7 @@ class Evaluation
 
     #[ORM\Column(length: 50, enumType: StatutEvaluation::class)]
     #[Assert\NotNull(message: 'evaluation.statut.not_null')]
-    private ?string $statut = null;
+    private ?StatutEvaluation $statut = null;
 
     /**
      * @var Collection<int, Note>
@@ -121,12 +121,12 @@ class Evaluation
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getStatut(): ?StatutEvaluation
     {
         return $this->statut;
     }
 
-    public function setStatut(string $statut): static
+    public function setStatut(StatutEvaluation $statut): static
     {
         $this->statut = $statut;
 

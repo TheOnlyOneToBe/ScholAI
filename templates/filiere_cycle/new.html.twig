@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New FiliereCycle{% endblock %}
+
+{% block body %}
+    <h1>Create new FiliereCycle</h1>
+
+    {{ include('filiere_cycle/_form.html.twig') }}
+
+    <a href="{{ path('app_filiere_cycle_index') }}">back to list</a>
+{% endblock %}

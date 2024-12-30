@@ -94,8 +94,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $lieuNaissance = null;
 
-    #[ORM\Column(length: 10, nullable: true, enumType: Genre::class)]
-    private ?string $sexe = null;
+    #[ORM\Column(length: 10, enumType: Genre::class)]
+    #[Assert\NotNull(message: 'utilisateur.sexe.not_null')]
+    private ?Genre $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(
@@ -236,12 +237,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSexe(): ?string
+    public function getSexe(): ?Genre
     {
         return $this->sexe;
     }
 
-    public function setSexe(?string $sexe): static
+    public function setSexe(?Genre $sexe): static
     {
         $this->sexe = $sexe;
 
