@@ -9,12 +9,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\Trait\FlashMessageTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/incident')]
 final class IncidentController extends AbstractController
 {
-    #[Route(name: 'app_incident_index', methods: ['GET'])]
+    use FlashMessageTrait;
+
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    #[Route('/', name: 'app_incident_index', methods: ['GET'])]
     public function index(IncidentRepository $incidentRepository): Response
     {
         return $this->render('incident/index.html.twig', [
@@ -30,10 +41,24 @@ final class IncidentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($incident);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($incident);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_incident_index', [], Response::HTTP_SEE_OTHER);
+                $this->addSuccessFlash(
+                    $this->translator->trans('flash.success.created', [
+                        '%entity%' => $this->translator->trans('incident.title')
+                    ])
+                );
+
+                return $this->redirectToRoute('app_incident_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addErrorFlash(
+                    $this->translator->trans('flash.error.create_failed', [
+                        '%entity%' => $this->translator->trans('incident.title')
+                    ])
+                );
+            }
         }
 
         return $this->render('incident/new.html.twig', [
@@ -57,9 +82,23 @@ final class IncidentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_incident_index', [], Response::HTTP_SEE_OTHER);
+                $this->addSuccessFlash(
+                    $this->translator->trans('flash.success.updated', [
+                        '%entity%' => $this->translator->trans('incident.title')
+                    ])
+                );
+
+                return $this->redirectToRoute('app_incident_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->addErrorFlash(
+                    $this->translator->trans('flash.error.update_failed', [
+                        '%entity%' => $this->translator->trans('incident.title')
+                    ])
+                );
+            }
         }
 
         return $this->render('incident/edit.html.twig', [
@@ -72,8 +111,22 @@ final class IncidentController extends AbstractController
     public function delete(Request $request, Incident $incident, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$incident->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($incident);
-            $entityManager->flush();
+            try {
+                $entityManager->remove($incident);
+                $entityManager->flush();
+
+                $this->addSuccessFlash(
+                    $this->translator->trans('flash.success.deleted', [
+                        '%entity%' => $this->translator->trans('incident.title')
+                    ])
+                );
+            } catch (\Exception $e) {
+                $this->addErrorFlash(
+                    $this->translator->trans('flash.error.delete_failed', [
+                        '%entity%' => $this->translator->trans('incident.title')
+                    ])
+                );
+            }
         }
 
         return $this->redirectToRoute('app_incident_index', [], Response::HTTP_SEE_OTHER);

@@ -8,23 +8,26 @@ use App\Repository\AnneeAcademiqueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Trait\FlashMessageTrait;
 use App\Controller\Trait\ErrorHandlerTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/annee/academique')]
+#[Route('/annee')]
 class AnneeAcademiqueController extends AbstractController
 {
     use FlashMessageTrait;
     use ErrorHandlerTrait;
 
     private TranslatorInterface $translator;
+    private RequestStack $requestStack;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->translator = $translator;
+        $this->requestStack = $requestStack;
     }
 
     #[Route('/', name: 'app_annee_academique_index', methods: ['GET'])]
@@ -44,12 +47,14 @@ class AnneeAcademiqueController extends AbstractController
     #[Route('/new', name: 'app_annee_academique_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        try {
-            $anneeAcademique = new AnneeAcademique();
-            $form = $this->createForm(AnneeAcademiqueType::class, $anneeAcademique);
-            $form->handleRequest($request);
+        $anneeAcademique = new AnneeAcademique();
+        $anneeAcademique->setCurrent(false); // Définir isCurrent à false par défaut
+        
+        $form = $this->createForm(AnneeAcademiqueType::class, $anneeAcademique);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $entityManager->persist($anneeAcademique);
                 $entityManager->flush();
 
@@ -57,19 +62,18 @@ class AnneeAcademiqueController extends AbstractController
                     '%entity%' => $this->translator->trans('entity.annee_academique')
                 ]));
 
-                return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_annee_academique_index');
+            } catch (\Exception $e) {
+                $this->addErrorFlash($this->translator->trans('flash.error.create_error', [
+                    '%entity%' => $this->translator->trans('entity.annee_academique')
+                ]));
             }
-
-            return $this->render('annee_academique/new.html.twig', [
-                'annee_academique' => $anneeAcademique,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addErrorFlash($this->translator->trans('flash.error.create_error', [
-                '%entity%' => $this->translator->trans('entity.annee_academique')
-            ]));
-            return $this->redirectToRoute('app_annee_academique_index');
         }
+
+        return $this->render('annee_academique/new.html.twig', [
+            'annee_academique' => $anneeAcademique,
+            'form' => $form,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_annee_academique_show', methods: ['GET'])]

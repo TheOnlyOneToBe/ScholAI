@@ -2,11 +2,23 @@
 
 namespace App\Controller\Trait;
 
+use Symfony\Component\HttpFoundation\RequestStack;
+
 trait FlashMessageTrait
 {
+    private RequestStack $requestStack;
+
+    /**
+     * @required
+     */
+    public function setRequestStack(RequestStack $requestStack): void
+    {
+        $this->requestStack = $requestStack;
+    }
+
     protected function addFlash(string $type, mixed $message): void
     {
-        $this->container->get('session')->getFlashBag()->add($type, $message);
+        $this->requestStack->getSession()->getFlashBag()->add($type, $message);
     }
 
     private function addSuccessFlash(string $message): void
@@ -28,5 +40,5 @@ trait FlashMessageTrait
     {
         $this->addFlash('info', $message);
     }
- }
+}
 // Ok vérifie les entités et creer les ficture un fichier appfixture existe deja je veux que tu me géneres des données pour 04 années une seule doit etre active le reste non active

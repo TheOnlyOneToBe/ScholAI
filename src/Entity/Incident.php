@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Enum\GraviteIncident;
-use App\Enum\TypeAvertissement;
 use App\Repository\IncidentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +15,16 @@ class Incident
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'incident.titre.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: 'incident.titre.min_length',
+        maxMessage: 'incident.titre.max_length'
+    )]
+    private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'incident.description.not_blank')]
@@ -39,9 +48,8 @@ class Incident
     #[Assert\NotNull(message: 'incident.gravite.not_null')]
     private ?GraviteIncident $gravite = null;
 
-    #[ORM\Column(length: 255, enumType: TypeAvertissement::class)]
-    #[Assert\NotNull(message: 'incident.type_incident.not_null')]
-    private ?TypeAvertissement $typeIncident = null;
+    #[ORM\Column(length: 255)]
+    private ?string $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'incidents')]
     #[ORM\JoinColumn(nullable: false)]
@@ -53,6 +61,17 @@ class Incident
         return $this->id;
     }
 
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -61,7 +80,6 @@ class Incident
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -73,7 +91,6 @@ class Incident
     public function setDateIncident(\DateTimeInterface $dateIncident): static
     {
         $this->dateIncident = $dateIncident;
-
         return $this;
     }
 
@@ -85,19 +102,17 @@ class Incident
     public function setGravite(GraviteIncident $gravite): static
     {
         $this->gravite = $gravite;
-
         return $this;
     }
 
-    public function getTypeIncident(): ?TypeAvertissement
+    public function getStatut(): ?string
     {
-        return $this->typeIncident;
+        return $this->statut;
     }
 
-    public function setTypeIncident(TypeAvertissement $typeIncident): static
+    public function setStatut(string $statut): static
     {
-        $this->typeIncident = $typeIncident;
-
+        $this->statut = $statut;
         return $this;
     }
 
@@ -109,7 +124,6 @@ class Incident
     public function setEtudiant(?Etudiant $etudiant): static
     {
         $this->etudiant = $etudiant;
-
         return $this;
     }
 }

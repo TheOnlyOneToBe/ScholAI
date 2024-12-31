@@ -1,41 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Incident index{% endblock %}
+{% block title %}{{ 'incident.list'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Incident index</h1>
+    <h1>{{ 'incident.list'|trans }}</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>DateIncident</th>
-                <th>Gravite</th>
-                <th>TypeIncident</th>
-                <th>actions</th>
+                <th>{{ 'form.incident.titre'|trans }}</th>
+                <th>{{ 'form.incident.description'|trans }}</th>
+                <th>{{ 'form.incident.dateIncident'|trans }}</th>
+                <th>{{ 'form.incident.gravite'|trans }}</th>
+                <th>{{ 'form.incident.statut'|trans }}</th>
+                <th>{{ 'form.incident.etudiant'|trans }}</th>
+                <th>{{ 'action.actions'|trans }}</th>
             </tr>
         </thead>
         <tbody>
         {% for incident in incidents %}
             <tr>
-                <td>{{ incident.id }}</td>
+                <td>{{ incident.titre|trans }}</td>
                 <td>{{ incident.description }}</td>
-                <td>{{ incident.dateIncident ? incident.dateIncident|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ incident.gravite }}</td>
-                <td>{{ incident.typeIncident }}</td>
+                <td>{{ incident.dateIncident ? incident.dateIncident|date('d MMMM Y', 'Europe/Paris', 'fr') : '' }}</td>
+                <td>{{ incident.gravite ? incident.gravite.value|trans : '' }}</td>
+                <td>{{ incident.statut }}</td>
+                <td>{{ incident.etudiant ? incident.etudiant.id : '' }}</td>
                 <td>
-                    <a href="{{ path('app_incident_show', {'id': incident.id}) }}">show</a>
-                    <a href="{{ path('app_incident_edit', {'id': incident.id}) }}">edit</a>
+                    <a href="{{ path('app_incident_show', {'id': incident.id}) }}" class="btn btn-info">{{ 'action.show'|trans }}</a>
+                    <a href="{{ path('app_incident_edit', {'id': incident.id}) }}" class="btn btn-primary">{{ 'action.edit'|trans }}</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="7">{{ 'message.no_records_found'|trans }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_incident_new') }}">Create new</a>
+    <a href="{{ path('app_incident_new') }}" class="btn btn-success">{{ 'incident.new'|trans }}</a>
 {% endblock %}
