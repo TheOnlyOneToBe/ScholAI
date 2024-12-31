@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/ue')]
-class UEController extends AbstractController
+#[Route('/u/e')]
+final class UEController extends AbstractController
 {
-    #[Route('/', name: 'app_u_e_index', methods: ['GET'])]
+    #[Route(name: 'app_u_e_index', methods: ['GET'])]
     public function index(UERepository $uERepository): Response
     {
         return $this->render('ue/index.html.twig', [

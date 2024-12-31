@@ -14,7 +14,18 @@ class BourseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('montant')
+            ->add('montant', null, [
+                'label' => 'form.bourse.montant'
+            ])
+            ->add('description', null, [
+                'label' => 'form.bourse.description'
+            ])
+            ->add('dateLimite', null, [
+                'label' => 'form.bourse.dateLimite'
+            ])
+            ->add('statut', null, [
+                'label' => 'form.bourse.statut'
+            ])
             ->add('remise')
             ->add('etudiant', EntityType::class, [
                 'class' => Etudiant::class,

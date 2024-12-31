@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/role')]
-class RoleController extends AbstractController
+final class RoleController extends AbstractController
 {
-    #[Route('/', name: 'app_role_index', methods: ['GET'])]
+    #[Route(name: 'app_role_index', methods: ['GET'])]
     public function index(RoleRepository $roleRepository): Response
     {
         return $this->render('role/index.html.twig', [

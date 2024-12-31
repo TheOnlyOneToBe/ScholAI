@@ -15,16 +15,23 @@ class ChefDepartementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('dateDebutMandat', null, [
+            ->add('dateDebut', null, [
                 'widget' => 'single_text',
+                'label' => 'form.chef_departement.dateDebut'
+            ])
+            ->add('dateFin', null, [
+                'widget' => 'single_text',
+                'label' => 'form.chef_departement.dateFin'
             ])
             ->add('professeur', EntityType::class, [
                 'class' => Professeur::class,
                 'choice_label' => 'id',
+                'label' => 'form.chef_departement.professeur'
             ])
             ->add('departement', EntityType::class, [
                 'class' => Departement::class,
                 'choice_label' => 'id',
+                'label' => 'form.chef_departement.departement'
             ])
         ;
     }

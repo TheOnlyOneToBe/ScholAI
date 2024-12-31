@@ -12,7 +12,9 @@ class PayementmethodType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('PayementName')
+            ->add('PayementName', null, [
+                'label' => 'form.payementmethod.PayementName'
+            ])
         ;
     }
 

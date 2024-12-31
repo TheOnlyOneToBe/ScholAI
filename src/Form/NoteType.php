@@ -15,14 +15,21 @@ class NoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('noteValue')
-            ->add('etudiant', EntityType::class, [
-                'class' => Etudiant::class,
-                'choice_label' => 'id',
+            ->add('valeur', null, [
+                'label' => 'form.note.valeur'
+            ])
+            ->add('appreciation', null, [
+                'label' => 'form.note.appreciation'
             ])
             ->add('evaluation', EntityType::class, [
                 'class' => Evaluation::class,
                 'choice_label' => 'id',
+                'label' => 'form.note.evaluation'
+            ])
+            ->add('etudiant', EntityType::class, [
+                'class' => Etudiant::class,
+                'choice_label' => 'id',
+                'label' => 'form.note.etudiant'
             ])
         ;
     }

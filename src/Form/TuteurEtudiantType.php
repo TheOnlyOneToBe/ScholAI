@@ -14,14 +14,25 @@ class TuteurEtudiantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('sexe')
-            ->add('numTelephone')
-            ->add('typeTuteur')
+            ->add('nom', null, [
+                'label' => 'form.tuteur_etudiant.nom'
+            ])
+            ->add('prenom', null, [
+                'label' => 'form.tuteur_etudiant.prenom'
+            ])
+            ->add('sexe', null, [
+                'label' => 'form.tuteur_etudiant.sexe'
+            ])
+            ->add('numTelephone', null, [
+                'label' => 'form.tuteur_etudiant.numTelephone'
+            ])
+            ->add('typeTuteur', null, [
+                'label' => 'form.tuteur_etudiant.typeTuteur'
+            ])
             ->add('etudiant', EntityType::class, [
                 'class' => Etudiant::class,
                 'choice_label' => 'id',
+                'label' => 'form.tuteur_etudiant.etudiant'
             ])
         ;
     }

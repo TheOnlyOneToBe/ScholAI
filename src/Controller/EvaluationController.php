@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/evaluation')]
-class EvaluationController extends AbstractController
+final class EvaluationController extends AbstractController
 {
-    #[Route('/', name: 'app_evaluation_index', methods: ['GET'])]
+    #[Route(name: 'app_evaluation_index', methods: ['GET'])]
     public function index(EvaluationRepository $evaluationRepository): Response
     {
         return $this->render('evaluation/index.html.twig', [

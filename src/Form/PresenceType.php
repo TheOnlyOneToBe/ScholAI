@@ -16,18 +16,22 @@ class PresenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('statut')
+            ->add('datePresence', null, [
+                'widget' => 'single_text',
+                'label' => 'form.presence.datePresence'
+            ])
+            ->add('statut', null, [
+                'label' => 'form.presence.statut'
+            ])
             ->add('etudiant', EntityType::class, [
                 'class' => Etudiant::class,
                 'choice_label' => 'id',
+                'label' => 'form.presence.etudiant'
             ])
-            ->add('UE', EntityType::class, [
-                'class' => UE::class,
-                'choice_label' => 'id',
-            ])
-            ->add('PlanningCours', EntityType::class, [
+            ->add('planningCours', EntityType::class, [
                 'class' => PlanningCours::class,
                 'choice_label' => 'id',
+                'label' => 'form.presence.planningCours'
             ])
         ;
     }

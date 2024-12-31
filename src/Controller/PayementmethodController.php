@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/payementmethod')]
-class PayementmethodController extends AbstractController
+final class PayementmethodController extends AbstractController
 {
-    #[Route('/', name: 'app_payementmethod_index', methods: ['GET'])]
+    #[Route(name: 'app_payementmethod_index', methods: ['GET'])]
     public function index(PayementmethodRepository $payementmethodRepository): Response
     {
         return $this->render('payementmethod/index.html.twig', [

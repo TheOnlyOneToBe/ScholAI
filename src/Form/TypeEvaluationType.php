@@ -12,7 +12,15 @@ class TypeEvaluationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre')
+            ->add('nomType', null, [
+                'label' => 'form.type_evaluation.nomType'
+            ])
+            ->add('description', null, [
+                'label' => 'form.type_evaluation.description'
+            ])
+            ->add('coefficient', null, [
+                'label' => 'form.type_evaluation.coefficient'
+            ])
         ;
     }
 

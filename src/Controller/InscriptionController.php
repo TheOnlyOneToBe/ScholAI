@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/inscription')]
-class InscriptionController extends AbstractController
+final class InscriptionController extends AbstractController
 {
-    #[Route('/', name: 'app_inscription_index', methods: ['GET'])]
+    #[Route(name: 'app_inscription_index', methods: ['GET'])]
     public function index(InscriptionRepository $inscriptionRepository): Response
     {
         return $this->render('inscription/index.html.twig', [

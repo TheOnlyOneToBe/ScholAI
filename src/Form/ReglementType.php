@@ -16,21 +16,27 @@ class ReglementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('montant_reglee')
+            ->add('montant_reglee', null, [
+                'label' => 'form.reglement.montant'
+            ])
             ->add('datereglement', null, [
                 'widget' => 'single_text',
+                'label' => 'form.reglement.dateReglement'
             ])
             ->add('inscription', EntityType::class, [
                 'class' => Inscription::class,
                 'choice_label' => 'id',
+                'label' => 'form.reglement.inscription'
             ])
             ->add('libelle_reglement', EntityType::class, [
                 'class' => PayementReason::class,
                 'choice_label' => 'id',
+                'label' => 'form.reglement.payementreason'
             ])
             ->add('payementmethod', EntityType::class, [
                 'class' => PayementMethod::class,
                 'choice_label' => 'id',
+                'label' => 'form.reglement.payementmethod'
             ])
         ;
     }

@@ -16,19 +16,26 @@ class UEType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('volumeHoraire')
-            ->add('statut')
+            ->add('volumeHoraire', null, [
+                'label' => 'form.ue.volumeHoraire'
+            ])
+            ->add('statut', null, [
+                'label' => 'form.ue.statut'
+            ])
             ->add('matiere', EntityType::class, [
                 'class' => Cours::class,
                 'choice_label' => 'id',
+                'label' => 'form.ue.matiere'
             ])
             ->add('profeseur', EntityType::class, [
                 'class' => Professeur::class,
                 'choice_label' => 'id',
+                'label' => 'form.ue.profeseur'
             ])
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'choice_label' => 'id',
+                'label' => 'form.ue.semestre'
             ])
         ;
     }

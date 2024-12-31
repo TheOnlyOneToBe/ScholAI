@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/reglement')]
-class ReglementController extends AbstractController
+final class ReglementController extends AbstractController
 {
-    #[Route('/', name: 'app_reglement_index', methods: ['GET'])]
+    #[Route(name: 'app_reglement_index', methods: ['GET'])]
     public function index(ReglementRepository $reglementRepository): Response
     {
         return $this->render('reglement/index.html.twig', [

@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/incident')]
-class IncidentController extends AbstractController
+final class IncidentController extends AbstractController
 {
-    #[Route('/', name: 'app_incident_index', methods: ['GET'])]
+    #[Route(name: 'app_incident_index', methods: ['GET'])]
     public function index(IncidentRepository $incidentRepository): Response
     {
         return $this->render('incident/index.html.twig', [

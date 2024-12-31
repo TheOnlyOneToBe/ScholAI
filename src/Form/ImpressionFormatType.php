@@ -12,10 +12,14 @@ class ImpressionFormatType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomFormat')
+            ->add('nomFormat', null, [
+                'label' => 'form.impression_format.nomFormat'
+            ])
             ->add('largeurPage')
             ->add('longueurPage')
-            ->add('description')
+            ->add('description', null, [
+                'label' => 'form.impression_format.description'
+            ])
         ;
     }
 

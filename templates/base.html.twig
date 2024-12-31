@@ -1,151 +1,17 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Schol - Gestion Scolaire{% endblock %}</title>
-        
-        {# Tailwind CSS #}
-        <script src="https://cdn.tailwindcss.com"></script>
-        
-        {# jQuery #}
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        
-        {# Select2 #}
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        
-        {# Font Awesome #}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        
-        {# Alpine.js #}
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
-        <style>
-            [x-cloak] { display: none !important; }
-            
-            /* Select2 customization */
-            .select2-container .select2-selection--single {
-                height: 38px;
-                padding-top: 4px;
-            }
-            
-            .select2-container--default .select2-selection--single {
-                border: 1px solid #d1d5db;
-                border-radius: 0.375rem;
-            }
-            
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: 36px;
-            }
-            
-            /* Form styles */
-            .form-control {
-                width: 100%;
-                border-radius: 0.375rem;
-                border-color: #d1d5db;
-                padding: 0.5rem 0.75rem;
-            }
-            
-            .form-control:focus {
-                outline: none;
-                border-color: #6366f1;
-                box-shadow: 0 0 0 1px #6366f1;
-            }
-            
-            /* Alert styles */
-            .alert-success {
-                background-color: #ecfdf5;
-                color: #047857;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border-radius: 0.375rem;
-            }
-            
-            .alert-danger {
-                background-color: #fef2f2;
-                color: #b91c1c;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border-radius: 0.375rem;
-            }
-            
-            .invalid-feedback {
-                color: #dc2626;
-                font-size: 0.875rem;
-                margin-top: 0.5rem;
-            }
-        </style>
         {% endblock %}
 
         {% block javascripts %}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize Select2
-                if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
-                    $('.select2').select2({
-                        width: '100%'
-                    });
-                }
-            });
-        </script>
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="bg-gray-100">
-        <div x-data="{ sidebarOpen: false }">
-            <!-- Sidebar Mobile Overlay -->
-            <div x-show="sidebarOpen" 
-                 class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 transition-opacity lg:hidden" 
-                 @click="sidebarOpen = false"
-                 x-cloak></div>
-
-            <!-- Sidebar for mobile -->
-            <div x-show="sidebarOpen" 
-                 class="fixed inset-y-0 left-0 z-50 w-64 transform overflow-y-auto bg-white transition lg:hidden"
-                 x-cloak>
-                {% include 'components/_sidebar.html.twig' %}
-            </div>
-
-            <!-- Sidebar for desktop -->
-            <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-                {% include 'components/_sidebar.html.twig' %}
-            </div>
-
-            <!-- Main Content -->
-            <div class="lg:pl-72">
-                <!-- Top Navigation -->
-                <div class="sticky top-0 z-40 bg-white shadow">
-                    {% include 'components/_navbar.html.twig' %}
-                </div>
-
-                <!-- Main Content Area -->
-                <main class="py-6">
-                    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <!-- Flash Messages -->
-                        <div class="container mt-4">
-                            {% for label, messages in app.flashes %}
-                                {% for message in messages %}
-                                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                                        {{ message }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                {% endfor %}
-                            {% endfor %}
-
-                            <!-- Page Content -->
-                            {% block body %}{% endblock %}
-                        </div>
-                    </div>
-                </main>
-            </div>
-
-            <!-- Mobile menu button -->
-            <button type="button"
-                    @click="sidebarOpen = !sidebarOpen"
-                    class="fixed bottom-4 right-4 h-14 w-14 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 lg:hidden">
-                <i class="fas" :class="{ 'fa-bars': !sidebarOpen, 'fa-times': sidebarOpen }"></i>
-            </button>
-        </div>
+    <body>
+        {% block body %}{% endblock %}
     </body>
 </html>

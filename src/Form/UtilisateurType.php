@@ -16,25 +16,50 @@ class UtilisateurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('email')
-            ->add('motdepasse')
-            ->add('numerotelephone')
-            ->add('cni')
+            ->add('nom', null, [
+                'label' => 'form.utilisateur.nom'
+            ])
+            ->add('prenom', null, [
+                'label' => 'form.utilisateur.prenom'
+            ])
+            ->add('email', null, [
+                'label' => 'form.utilisateur.email'
+            ])
+            ->add('motdepasse', null, [
+                'label' => 'form.utilisateur.motdepasse'
+            ])
+            ->add('numerotelephone', null, [
+                'label' => 'form.utilisateur.numerotelephone'
+            ])
+            ->add('cni', null, [
+                'label' => 'form.utilisateur.cni'
+            ])
             ->add('dateNaissance', null, [
                 'widget' => 'single_text',
+                'label' => 'form.utilisateur.dateNaissance'
             ])
-            ->add('lieuNaissance')
-            ->add('sexe')
-            ->add('adresse')
-            ->add('profession')
-            ->add('photoProfil')
+            ->add('lieuNaissance', null, [
+                'label' => 'form.utilisateur.lieuNaissance'
+            ])
+            ->add('sexe', null, [
+                'label' => 'form.utilisateur.sexe'
+            ])
+            ->add('adresse', null, [
+                'label' => 'form.utilisateur.adresse'
+            ])
+            ->add('profession', null, [
+                'label' => 'form.utilisateur.profession'
+            ])
+            ->add('photoProfil', null, [
+                'label' => 'form.utilisateur.photoProfil'
+            ])
             ->add('dateCreation', null, [
                 'widget' => 'single_text',
+                'label' => 'form.utilisateur.dateCreation'
             ])
             ->add('dateModification', null, [
                 'widget' => 'single_text',
+                'label' => 'form.utilisateur.dateModification'
             ])
             ->add('professeur', EntityType::class, [
                 'class' => Professeur::class,

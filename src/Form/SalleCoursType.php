@@ -14,11 +14,19 @@ class SalleCoursType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('NomSalle')
-            ->add('capacite')
+            ->add('nomSalle', null, [
+                'label' => 'form.salle_cours.nomSalle'
+            ])
+            ->add('capacite', null, [
+                'label' => 'form.salle_cours.capacite'
+            ])
+            ->add('description', null, [
+                'label' => 'form.salle_cours.description'
+            ])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'id',
+                'label' => 'form.salle_cours.campus'
             ])
         ;
     }

@@ -15,16 +15,21 @@ class FiliereCycleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description')
-            ->add('fraisInscription')
-            ->add('montantPension')
             ->add('filiere', EntityType::class, [
                 'class' => Filiere::class,
                 'choice_label' => 'id',
+                'label' => 'form.filiere_cycle.filiere'
             ])
-            ->add('Cycle', EntityType::class, [
+            ->add('cycle', EntityType::class, [
                 'class' => Cycle::class,
                 'choice_label' => 'id',
+                'label' => 'form.filiere_cycle.cycle'
+            ])
+            ->add('fraisInscription', null, [
+                'label' => 'form.filiere_cycle.fraisInscription'
+            ])
+            ->add('montantPension', null, [
+                'label' => 'form.filiere_cycle.montantPension'
             ])
         ;
     }

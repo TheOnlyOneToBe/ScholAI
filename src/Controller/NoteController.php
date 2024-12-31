@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/note')]
-class NoteController extends AbstractController
+final class NoteController extends AbstractController
 {
-    #[Route('/', name: 'app_note_index', methods: ['GET'])]
+    #[Route(name: 'app_note_index', methods: ['GET'])]
     public function index(NoteRepository $noteRepository): Response
     {
         return $this->render('note/index.html.twig', [

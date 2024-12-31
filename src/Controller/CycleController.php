@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/cycle')]
-class CycleController extends AbstractController
+final class CycleController extends AbstractController
 {
-    #[Route('/', name: 'app_cycle_index', methods: ['GET'])]
+    #[Route(name: 'app_cycle_index', methods: ['GET'])]
     public function index(CycleRepository $cycleRepository): Response
     {
         return $this->render('cycle/index.html.twig', [

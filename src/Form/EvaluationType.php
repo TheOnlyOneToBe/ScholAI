@@ -18,20 +18,28 @@ class EvaluationType extends AbstractType
         $builder
             ->add('dateDebut', null, [
                 'widget' => 'single_text',
+                'label' => 'form.evaluation.dateDebut'
             ])
-            ->add('tempsEvaluation')
-            ->add('statut')
+            ->add('tempsEvaluation', null, [
+                'label' => 'form.evaluation.tempsEvaluation'
+            ])
+            ->add('statut', null, [
+                'label' => 'form.evaluation.statut'
+            ])
             ->add('UE', EntityType::class, [
                 'class' => UE::class,
                 'choice_label' => 'id',
+                'label' => 'form.evaluation.UE'
             ])
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'choice_label' => 'id',
+                'label' => 'form.evaluation.semestre'
             ])
             ->add('type', EntityType::class, [
                 'class' => TypeEvaluation::class,
                 'choice_label' => 'id',
+                'label' => 'form.evaluation.typeEvaluation'
             ])
         ;
     }

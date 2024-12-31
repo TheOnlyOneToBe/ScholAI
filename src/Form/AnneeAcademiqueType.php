@@ -12,13 +12,20 @@ class AnneeAcademiqueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('YearStart', null, [
-                'widget' => 'single_text',
+            ->add('annee', null, [
+                'label' => 'form.annee_academique.annee'
             ])
-            ->add('YearEnd', null, [
+            ->add('dateDebut', null, [
                 'widget' => 'single_text',
+                'label' => 'form.annee_academique.dateDebut'
             ])
-            ->add('isCurrent')
+            ->add('dateFin', null, [
+                'widget' => 'single_text',
+                'label' => 'form.annee_academique.dateFin'
+            ])
+            ->add('statut', null, [
+                'label' => 'form.annee_academique.statut'
+            ])
         ;
     }
 

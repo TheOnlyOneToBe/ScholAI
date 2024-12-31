@@ -1,0 +1,200 @@
+# Form Labels
+form:
+  tuteur_etudiant:
+    nom: 'Nom'
+    prenom: 'Prénom'
+    sexe: 'Sexe'
+    numTelephone: 'Numéro de téléphone'
+    typeTuteur: 'Type de tuteur'
+    etudiant: 'Étudiant'
+  payementmethod:
+    PayementName: 'Méthode de paiement'
+  inscription:
+    statut: 'Statut'
+    isSuspended: 'Est suspendu'
+    dateInscription: "Date d'inscription"
+    etudiant: 'Étudiant'
+    filiereCycle: 'Filière et cycle'
+    semestre: 'Semestre'
+    annee: 'Année académique'
+  ue:
+    volumeHoraire: 'Volume horaire'
+    statut: 'Statut'
+    matiere: 'Matière'
+    profeseur: 'Professeur'
+    semestre: 'Semestre'
+  utilisateur:
+    nom: 'Nom'
+    prenom: 'Prénom'
+    email: 'Email'
+    motdepasse: 'Mot de passe'
+    numerotelephone: 'Numéro de téléphone'
+    cni: 'CNI'
+    dateNaissance: 'Date de naissance'
+    lieuNaissance: 'Lieu de naissance'
+    sexe: 'Sexe'
+    adresse: 'Adresse'
+    profession: 'Profession'
+    photoProfil: 'Photo de profil'
+    dateCreation: 'Date de création'
+    dateModification: 'Date de modification'
+  role:
+    nomRole: 'Nom du rôle'
+  professeur:
+    nom: 'Nom'
+    prenom: 'Prénom'
+    email: 'Email'
+    numeroTelephone: 'Numéro de téléphone'
+    cni: 'CNI'
+    dateNaissance: 'Date de naissance'
+    nationalite: 'Nationalité'
+    sexe: 'Sexe'
+    adresse: 'Adresse'
+    photoProfil: 'Photo de profil'
+  bourse:
+    montant: 'Montant'
+    description: 'Description'
+    dateLimite: 'Date limite'
+    statut: 'Statut'
+  semestre:
+    numSemestre: 'Numéro du semestre'
+    date_debut: 'Date de début'
+    dateFin: 'Date de fin'
+    anneeacademique: 'Année académique'
+  evaluation:
+    dateDebut: "Date de début"
+    tempsEvaluation: "Temps d'évaluation"
+    statut: 'Statut'
+    UE: 'Unité d'enseignement'
+    semestre: 'Semestre'
+    typeEvaluation: "Type d'évaluation"
+  filiere:
+    nomFiliere: 'Nom de la filière'
+    description: 'Description'
+    departement: 'Département'
+  cycle:
+    nomCycle: 'Nom du cycle'
+    description: 'Description'
+  cours:
+    nomCours: 'Nom du cours'
+    code: 'Code'
+    description: 'Description'
+    credit: 'Crédit'
+    volumeHoraire: 'Volume horaire'
+  departement:
+    nomDepartement: 'Nom du département'
+    description: 'Description'
+    campus: 'Campus'
+  annee_academique:
+    annee: 'Année'
+    dateDebut: 'Date de début'
+    dateFin: 'Date de fin'
+    statut: 'Statut'
+  antecedent_academique:
+    etablissement: 'Établissement'
+    diplome: 'Diplôme'
+    anneeObtention: "Année d'obtention"
+    moyenne: 'Moyenne'
+    etudiant: 'Étudiant'
+  chef_departement:
+    dateDebut: 'Date de début'
+    dateFin: 'Date de fin'
+    professeur: 'Professeur'
+    departement: 'Département'
+  filiere_cycle:
+    filiere: 'Filière'
+    cycle: 'Cycle'
+    fraisInscription: "Frais d'inscription"
+    fraisScolarite: 'Frais de scolarité'
+  impression_format:
+    nomFormat: 'Nom du format'
+    description: 'Description'
+  incident:
+    titre: 'Titre'
+    description: 'Description'
+    dateIncident: "Date de l'incident"
+    statut: 'Statut'
+    etudiant: 'Étudiant'
+  note:
+    valeur: 'Note'
+    appreciation: 'Appréciation'
+    evaluation: 'Évaluation'
+    etudiant: 'Étudiant'
+  payementreason:
+    raisonPaiement: 'Raison du paiement'
+    description: 'Description'
+  planning_cours:
+    dateDebut: 'Date de début'
+    dateFin: 'Date de fin'
+    ue: "Unité d'enseignement"
+    salleCours: 'Salle de cours'
+    professeur: 'Professeur'
+  presence:
+    datePresence: 'Date de présence'
+    statut: 'Statut'
+    etudiant: 'Étudiant'
+    planningCours: 'Planning des cours'
+  reglement:
+    montant: 'Montant'
+    dateReglement: 'Date de règlement'
+    inscription: 'Inscription'
+    payementmethod: 'Méthode de paiement'
+    payementreason: 'Raison du paiement'
+  salle_cours:
+    nomSalle: 'Nom de la salle'
+    capacite: 'Capacité'
+    description: 'Description'
+    campus: 'Campus'
+  type_evaluation:
+    nomType: "Type d'évaluation"
+    description: 'Description'
+    coefficient: 'Coefficient'
+
+# Flash Messages
+flash:
+  success:
+    created: '%entity% créé avec succès'
+    updated: '%entity% mis à jour avec succès'
+    deleted: '%entity% supprimé avec succès'
+  error:
+    not_found: '%entity% non trouvé'
+    create_error: 'Erreur lors de la création de %entity%'
+    update_error: 'Erreur lors de la mise à jour de %entity%'
+    delete_error: 'Erreur lors de la suppression de %entity%'
+    access_denied: 'Accès refusé'
+  warning:
+    already_exists: '%entity% existe déjà'
+    required_fields: 'Veuillez remplir tous les champs requis'
+  info:
+    no_records: 'Aucun enregistrement trouvé'
+
+# Entity Names
+entity:
+  annee_academique: 'Année académique'
+  antecedent_academique: 'Antécédent académique'
+  bourse: 'Bourse'
+  campus: 'Campus'
+  chef_departement: 'Chef de département'
+  cours: 'Cours'
+  cycle: 'Cycle'
+  departement: 'Département'
+  evaluation: 'Évaluation'
+  filiere: 'Filière'
+  filiere_cycle: 'Filière-Cycle'
+  impression_format: 'Format d''impression'
+  incident: 'Incident'
+  inscription: 'Inscription'
+  note: 'Note'
+  payement_method: 'Méthode de paiement'
+  payement_reason: 'Raison de paiement'
+  planning_cours: 'Planning des cours'
+  presence: 'Présence'
+  professeur: 'Professeur'
+  reglement: 'Règlement'
+  role: 'Rôle'
+  salle_cours: 'Salle de cours'
+  semestre: 'Semestre'
+  tuteur_etudiant: 'Tuteur d''étudiant'
+  type_evaluation: 'Type d''évaluation'
+  ue: 'UE'
+  utilisateur: 'Utilisateur'

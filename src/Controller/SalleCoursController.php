@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sallecours')]
-class SalleCoursController extends AbstractController
+#[Route('/salle')]
+final class SalleCoursController extends AbstractController
 {
-    #[Route('/', name: 'app_salle_cours_index', methods: ['GET'])]
+    #[Route(name: 'app_salle_cours_index', methods: ['GET'])]
     public function index(SalleCoursRepository $salleCoursRepository): Response
     {
         return $this->render('salle_cours/index.html.twig', [

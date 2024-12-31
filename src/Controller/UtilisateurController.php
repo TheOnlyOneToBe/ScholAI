@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/utilisateur')]
-class UtilisateurController extends AbstractController
+final class UtilisateurController extends AbstractController
 {
-    #[Route('/', name: 'app_utilisateur_index', methods: ['GET'])]
+    #[Route(name: 'app_utilisateur_index', methods: ['GET'])]
     public function index(UtilisateurRepository $utilisateurRepository): Response
     {
         return $this->render('utilisateur/index.html.twig', [

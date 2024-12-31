@@ -9,71 +9,134 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\Trait\FlashMessageTrait;
+use App\Controller\Trait\ErrorHandlerTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/cours')]
 class CoursController extends AbstractController
 {
+    use FlashMessageTrait;
+    use ErrorHandlerTrait;
+
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     #[Route('/', name: 'app_cours_index', methods: ['GET'])]
     public function index(CoursRepository $coursRepository): Response
     {
+        $cours = $coursRepository->findAll();
+        
+        if (empty($cours)) {
+            $this->addInfoFlash($this->translator->trans('flash.info.no_records'));
+        }
+
         return $this->render('cours/index.html.twig', [
-            'cours' => $coursRepository->findAll(),
+            'cours' => $cours,
         ]);
     }
 
     #[Route('/new', name: 'app_cours_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $cour = new Cours();
-        $form = $this->createForm(CoursType::class, $cour);
-        $form->handleRequest($request);
+        try {
+            $cours = new Cours();
+            $form = $this->createForm(CoursType::class, $cours);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($cour);
-            $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($cours);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
+                $this->addSuccessFlash($this->translator->trans('flash.success.created', [
+                    '%entity%' => $this->translator->trans('entity.cours')
+                ]));
+
+                return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('cours/new.html.twig', [
+                'cours' => $cours,
+                'form' => $form,
+            ]);
+        } catch (\Exception $e) {
+            $this->addErrorFlash($this->translator->trans('flash.error.create_error', [
+                '%entity%' => $this->translator->trans('entity.cours')
+            ]));
+            return $this->redirectToRoute('app_cours_index');
         }
-
-        return $this->render('cours/new.html.twig', [
-            'cour' => $cour,
-            'form' => $form,
-        ]);
     }
 
     #[Route('/{id}', name: 'app_cours_show', methods: ['GET'])]
-    public function show(Cours $cour): Response
+    public function show(Cours $cours = null): Response
     {
+        if (!$cours) {
+            $this->handleNotFoundException('cours');
+        }
+
         return $this->render('cours/show.html.twig', [
-            'cour' => $cour,
+            'cours' => $cours,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_cours_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Cours $cour, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Cours $cours = null, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(CoursType::class, $cour);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
+        if (!$cours) {
+            $this->handleNotFoundException('cours');
         }
 
-        return $this->render('cours/edit.html.twig', [
-            'cour' => $cour,
-            'form' => $form,
-        ]);
+        try {
+            $form = $this->createForm(CoursType::class, $cours);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
+
+                $this->addSuccessFlash($this->translator->trans('flash.success.updated', [
+                    '%entity%' => $this->translator->trans('entity.cours')
+                ]));
+
+                return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('cours/edit.html.twig', [
+                'cours' => $cours,
+                'form' => $form,
+            ]);
+        } catch (\Exception $e) {
+            $this->addErrorFlash($this->translator->trans('flash.error.update_error', [
+                '%entity%' => $this->translator->trans('entity.cours')
+            ]));
+            return $this->redirectToRoute('app_cours_index');
+        }
     }
 
     #[Route('/{id}', name: 'app_cours_delete', methods: ['POST'])]
-    public function delete(Request $request, Cours $cour, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Cours $cours = null, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$cour->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($cour);
-            $entityManager->flush();
+        if (!$cours) {
+            $this->handleNotFoundException('cours');
+        }
+
+        try {
+            if ($this->isCsrfTokenValid('delete'.$cours->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($cours);
+                $entityManager->flush();
+
+                $this->addSuccessFlash($this->translator->trans('flash.success.deleted', [
+                    '%entity%' => $this->translator->trans('entity.cours')
+                ]));
+            }
+        } catch (\Exception $e) {
+            $this->addErrorFlash($this->translator->trans('flash.error.delete_error', [
+                '%entity%' => $this->translator->trans('entity.cours')
+            ]));
         }
 
         return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);

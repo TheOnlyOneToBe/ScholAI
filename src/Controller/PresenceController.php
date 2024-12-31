@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/presence')]
-class PresenceController extends AbstractController
+final class PresenceController extends AbstractController
 {
-    #[Route('/', name: 'app_presence_index', methods: ['GET'])]
+    #[Route(name: 'app_presence_index', methods: ['GET'])]
     public function index(PresenceRepository $presenceRepository): Response
     {
         return $this->render('presence/index.html.twig', [

@@ -12,7 +12,12 @@ class PayementreasonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Raison')
+            ->add('raisonPaiement', null, [
+                'label' => 'form.payementreason.raisonPaiement'
+            ])
+            ->add('description', null, [
+                'label' => 'form.payementreason.description'
+            ])
         ;
     }
 

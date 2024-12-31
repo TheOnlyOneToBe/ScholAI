@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/specialite')]
-class FiliereCycleController extends AbstractController
+final class FiliereCycleController extends AbstractController
 {
-    #[Route('/', name: 'app_filiere_cycle_index', methods: ['GET'])]
+    #[Route(name: 'app_filiere_cycle_index', methods: ['GET'])]
     public function index(FiliereCycleRepository $filiereCycleRepository): Response
     {
         return $this->render('filiere_cycle/index.html.twig', [

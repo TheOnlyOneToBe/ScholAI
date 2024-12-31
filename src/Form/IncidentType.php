@@ -14,15 +14,23 @@ class IncidentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description')
+            ->add('titre', null, [
+                'label' => 'form.incident.titre'
+            ])
+            ->add('description', null, [
+                'label' => 'form.incident.description'
+            ])
             ->add('dateIncident', null, [
                 'widget' => 'single_text',
+                'label' => 'form.incident.dateIncident'
             ])
-            ->add('gravite')
-            ->add('typeIncident')
+            ->add('statut', null, [
+                'label' => 'form.incident.statut'
+            ])
             ->add('etudiant', EntityType::class, [
                 'class' => Etudiant::class,
                 'choice_label' => 'id',
+                'label' => 'form.incident.etudiant'
             ])
         ;
     }
