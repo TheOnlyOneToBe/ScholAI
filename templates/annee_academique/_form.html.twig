@@ -1,34 +1,69 @@
 {% form_theme form 'form/tailwind_layout.html.twig' %}
 
-{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-    <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
-            <div class="md:col-span-1">
-                <h3 class="text-lg font-medium leading-6 text-gray-900">{{ 'form.annee_academique.title'|trans }}</h3>
-                <p class="mt-1 text-sm text-gray-500">{{ 'form.annee_academique.new'|trans }}</p>
+{{ form_start(form, {'attr': {'class': 'max-w-lg mx-auto'}}) }}
+    <div class="bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+        <div class="space-y-8">
+            {# Titre avec icône #}
+            <div class="flex items-center space-x-3 pb-4 border-b border-gray-200">
+                <i class="fas fa-calendar-alt text-2xl text-indigo-600"></i>
+                <h3 class="text-2xl font-semibold text-gray-800">{{ 'form.annee_academique.new'|trans }}</h3>
             </div>
-            <div class="mt-5 md:mt-0 md:col-span-2">
-                <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-6 sm:col-span-3">
-                        {{ form_row(form.YearStart) }}
+            
+            <div class="space-y-6">
+                {# Année de début #}
+                <div class="relative">
+                    {{ form_label(form.YearStart, null, {
+                        'label_attr': {
+                            'class': 'block text-sm font-medium text-gray-700 mb-1'
+                        }
+                    }) }}
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="far fa-calendar text-gray-400"></i>
+                        </div>
+                        {{ form_widget(form.YearStart, {
+                            'attr': {
+                                'class': 'pl-10 h-11 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out',
+                                'style': 'min-width: 250px;'
+                            }
+                        }) }}
                     </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        {{ form_row(form.YearEnd) }}
+                    {{ form_errors(form.YearStart, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+
+                {# Année de fin #}
+                <div class="relative">
+                    {{ form_label(form.YearEnd, null, {
+                        'label_attr': {
+                            'class': 'block text-sm font-medium text-gray-700 mb-1'
+                        }
+                    }) }}
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="far fa-calendar text-gray-400"></i>
+                        </div>
+                        {{ form_widget(form.YearEnd, {
+                            'attr': {
+                                'class': 'pl-10 h-11 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out',
+                                'style': 'min-width: 250px;'
+                            }
+                        }) }}
                     </div>
-                    <div class="col-span-6">
-                        {{ form_row(form.isCurrent) }}
-                    </div>
+                    {{ form_errors(form.YearEnd, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="flex justify-end space-x-3">
-        <a href="{{ path('app_annee_academique_index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-            {{ 'form.common.back'|trans }}
-        </a>
-        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-            {{ button_label|default('form.common.save'|trans) }}
-        </button>
+            {# Boutons d'action #}
+            <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                <button type="button" onclick="history.back()" 
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <i class="fas fa-arrow-left mr-2"></i>{{ 'action.back'|trans }}
+                </button>
+                <button type="submit" 
+                    class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <i class="fas fa-save mr-2"></i>{{ 'action.save'|trans }}
+                </button>
+            </div>
+        </div>
     </div>
 {{ form_end(form) }}

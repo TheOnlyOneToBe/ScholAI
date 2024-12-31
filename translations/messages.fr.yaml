@@ -153,7 +153,21 @@ form:
   annee_academique:
     year_start: 'Année de début'
     year_end: 'Année de fin'
-    is_current: 'Année académique en cours'
+    title: 'Année Académique'
+    new: 'Nouvelle Année Académique'
+    edit: 'Modifier l''Année Académique'
+    form:
+      annee: 'Année Académique'
+      placeholder: 'Ex: 2023-2024'
+      is_current: 'Année en cours'
+    flash:
+      created: 'L''année académique a été créée avec succès'
+      updated: 'L''année académique a été mise à jour avec succès'
+      deleted: 'L''année académique a été supprimée avec succès'
+    error:
+      exists: 'Cette année académique existe déjà'
+      required: 'L''année académique est obligatoire'
+      format: 'Le format doit être AAAA-AAAA (ex: 2023-2024)'
   common:
     back: 'Retour'
     save: 'Enregistrer'

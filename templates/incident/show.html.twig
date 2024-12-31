@@ -1,38 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Incident{% endblock %}
+{% block title %}{{ 'incident.title'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Incident</h1>
+    <h1>{{ 'incident.title'|trans }}</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ incident.id }}</td>
+                <th>{{ 'form.incident.titre'|trans }}</th>
+                <td>{{ incident.titre }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>{{ 'form.incident.description'|trans }}</th>
                 <td>{{ incident.description }}</td>
             </tr>
             <tr>
-                <th>DateIncident</th>
+                <th>{{ 'form.incident.dateIncident'|trans }}</th>
                 <td>{{ incident.dateIncident ? incident.dateIncident|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Gravite</th>
-                <td>{{ incident.gravite }}</td>
+                <th>{{ 'form.incident.gravite'|trans }}</th>
+                <td>{{ incident.gravite ? incident.gravite.value|trans : '' }}</td>
             </tr>
             <tr>
-                <th>TypeIncident</th>
-                <td>{{ incident.typeIncident }}</td>
+                <th>{{ 'form.incident.statut'|trans }}</th>
+                <td>{{ incident.statut }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'form.incident.etudiant'|trans }}</th>
+                <td>{{ incident.etudiant ? incident.etudiant.id : '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_incident_index') }}">back to list</a>
-
-    <a href="{{ path('app_incident_edit', {'id': incident.id}) }}">edit</a>
-
-    {{ include('incident/_delete_form.html.twig') }}
+    <div class="btn-group">
+        <a href="{{ path('app_incident_index') }}" class="btn btn-secondary">{{ 'action.back_to_list'|trans }}</a>
+        <a href="{{ path('app_incident_edit', {'id': incident.id}) }}" class="btn btn-primary">{{ 'action.edit'|trans }}</a>
+        {{ include('incident/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

@@ -12,20 +12,15 @@ class AnneeAcademiqueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('annee', null, [
-                'label' => 'form.annee_academique.annee'
-            ])
-            ->add('dateDebut', null, [
+            ->add('YearStart', null, [
                 'widget' => 'single_text',
-                'label' => 'form.annee_academique.dateDebut'
+                'label' => 'form.annee_academique.year_start',
             ])
-            ->add('dateFin', null, [
+            ->add('YearEnd', null, [
                 'widget' => 'single_text',
-                'label' => 'form.annee_academique.dateFin'
+                'label' => 'form.annee_academique.year_end',
             ])
-            ->add('statut', null, [
-                'label' => 'form.annee_academique.statut'
-            ])
+           
         ;
     }
 
@@ -33,6 +28,7 @@ class AnneeAcademiqueType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => AnneeAcademique::class,
+            'translation_domain' => 'messages'
         ]);
     }
 }
