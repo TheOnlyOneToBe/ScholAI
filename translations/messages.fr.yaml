@@ -85,7 +85,7 @@ form:
     nomDepartement: 'Nom du département'
     description: 'Description'
     campus: 'Campus'
-  annee_academique:
+    annee_academique:
     annee: 'Année'
     dateDebut: 'Date de début'
     dateFin: 'Date de fin'
@@ -115,6 +115,7 @@ form:
     dateIncident: "Date de l'incident"
     statut: 'Statut'
     etudiant: 'Étudiant'
+    gravite: 'Gravité'
   note:
     valeur: 'Note'
     appreciation: 'Appréciation'
@@ -149,97 +150,161 @@ form:
     nomType: "Type d'évaluation"
     description: 'Description'
     coefficient: 'Coefficient'
-
-  common:
-    save: 'Enregistrer'
-    edit: 'Modifier'
-    back: 'Retour'
-    delete: 'Supprimer'
-    actions: 'Actions'
-    confirm_delete: 'Êtes-vous sûr de vouloir supprimer cet élément ?'
-
   annee_academique:
-    title: 'Année Académique'
-    new: 'Nouvelle Année Académique'
-    edit: 'Modifier l''Année Académique'
-    list: 'Liste des Années Académiques'
-    year_start: 'Date de début'
-    year_end: 'Date de fin'
-    is_current: 'Année en cours'
+    year_start: 'Année de début'
+    year_end: 'Année de fin'
+    is_current: 'Année académique en cours'
+  common:
+    back: 'Retour'
+    save: 'Enregistrer'
 
-  antecedent_academique:
-    title: 'Antécédent Académique'
-    new: 'Nouvel Antécédent Académique'
-    edit: 'Modifier l''Antécédent Académique'
-    list: 'Liste des Antécédents Académiques'
-    etablissement: 'Établissement'
-    diplome: 'Diplôme'
-    matricule_diplome: 'Matricule du diplôme'
-    annee_obtention: 'Année d''obtention'
-    etudiant: 'Étudiant'
+# Common Actions
+action:
+  save: 'Enregistrer'
+  edit: 'Modifier'
+  back: 'Retour'
+  delete: 'Supprimer'
+  actions: 'Actions'
+  back_to_list: 'Retour à la liste'
+  update: 'Mettre à jour'
 
-  bourse:
-    title: 'Bourse'
-    new: 'Nouvelle Bourse'
-    edit: 'Modifier la Bourse'
-    list: 'Liste des Bourses'
-    montant: 'Montant'
-    remise: 'Remise (%)'
-    etudiant: 'Étudiant'
-    annee: 'Année Académique'
+# Entity Labels
+entity:
+  annee_academique: 'Année Académique'
+  antecedent_academique: 'Antécédent Académique'
+  bourse: 'Bourse'
+  campus: 'Campus'
+  chef_departement: 'Chef de Département'
+  cours: 'Cours'
+  cycle: 'Cycle'
+  departement: 'Département'
+  evaluation: 'Évaluation'
+  filiere: 'Filière'
+  filiere_cycle: 'Filière-Cycle'
+  impression_format: 'Format d''Impression'
+  incident: 'Incident'
+  inscription: 'Inscription'
+  note: 'Note'
+  payementmethod: 'Méthode de Paiement'
+  payementreason: 'Raison de Paiement'
+  planning_cours: 'Planning des Cours'
+  presence: 'Présence'
+  professeur: 'Professeur'
+  reglement: 'Règlement'
+  role: 'Rôle'
+  salle_cours: 'Salle de Cours'
+  semestre: 'Semestre'
+  tuteur_etudiant: 'Tuteur d''Étudiant'
+  type_evaluation: 'Type d''Évaluation'
+  ue: 'Unité d''Enseignement'
+  utilisateur: 'Utilisateur'
 
-  campus:
-    title: 'Campus'
-    new: 'Nouveau Campus'
-    edit: 'Modifier le Campus'
-    list: 'Liste des Campus'
-    nom_campus: 'Nom du campus'
-    adresse_campus: 'Adresse'
+# Enum translations
+genre:
+  homme: 'Homme'
+  femme: 'Femme'
 
-  chef_departement:
-    title: 'Chef de Département'
-    new: 'Nouveau Chef de Département'
-    edit: 'Modifier le Chef de Département'
-    list: 'Liste des Chefs de Département'
-    professeur: 'Professeur'
-    departement: 'Département'
-    date_debut: 'Date de début'
-    date_fin: 'Date de fin'
-    is_current: 'En poste actuellement'
+incident:
+  gravite:
+    faible: 'Faible'
+    moyenne: 'Moyenne'
+    elevee: 'Élevée'
 
+statut:
+  presence:
+    present: 'Présent'
+    absent: 'Absent'
+    retard: 'En retard'
+    excuse: 'Excusé'
+  
+  inscription:
+    en_cours: 'En cours'
+    validee: 'Validée'
+    annulee: 'Annulée'
+    suspendue: 'Suspendue'
+  
+  evaluation:
+    en_cours: 'En cours'
+    terminee: 'Terminée'
+    annulee: 'Annulée'
+    reportee: 'Reportée'
+
+presence:
+  statut:
+    present: 'Présent'
+    absent: 'Absent'
+    justifie: 'Justifié'
+
+inscription:
+  statut:
+    pending: 'En attente'
+    valide: 'Validé'
+    rejete: 'Rejeté'
+    termine: 'Terminé'
+
+evaluation:
+  status:
+    pending: 'En attente'
+    open: 'Ouverte'
+    closed: 'Fermée'
+
+type:
+  tuteur:
+    pere: 'Père'
+    mere: 'Mère'
+    autre: 'Autre'
+  
   cours:
-    title: 'Cours'
-    new: 'Nouveau Cours'
-    edit: 'Modifier le Cours'
-    list: 'Liste des Cours'
-    code_cours: 'Code du cours'
-    intitule: 'Intitulé'
-    credit: 'Crédit'
-    masse_horaire: 'Masse horaire'
-    coefficient: 'Coefficient'
-    description: 'Description'
-    ue: 'Unité d''enseignement'
-    professeur: 'Professeur'
-    semestre: 'Semestre'
+    presentiel: 'Présentiel'
+    distanciel: 'Distanciel'
+    hybride: 'Hybride'
+  
+  avertissement:
+    comportement: 'Comportement'
+    assiduite: 'Assiduité'
+    academique: 'Académique'
 
-  cycle:
-    title: 'Cycle'
-    new: 'Nouveau Cycle'
-    edit: 'Modifier le Cycle'
-    list: 'Liste des Cycles'
-    nom_cycle: 'Nom du cycle'
-    description: 'Description'
-    duree: 'Durée (en années)'
+tuteur:
+  type:
+    pere: 'Père'
+    mere: 'Mère'
+    legal: 'Tuteur légal'
 
-  departement:
-    title: 'Département'
-    new: 'Nouveau Département'
-    edit: 'Modifier le Département'
-    list: 'Liste des Départements'
-    nom_departement: 'Nom du département'
-    code: 'Code'
-    description: 'Description'
-    campus: 'Campus'
+cours:
+  type:
+    jour: 'Cours de jour'
+    soir: 'Cours du soir'
+
+avertissement:
+  type:
+    disciplinaire: 'Disciplinaire'
+    academique: 'Académique'
+    autre: 'Autre'
+
+# Messages
+message:
+  confirm_delete: 'Êtes-vous sûr de vouloir supprimer cet élément ?'
+
+# Validation Messages
+validation:
+  not_null: 'Ce champ ne peut pas être vide'
+  unique: 'Cette valeur existe déjà'
+  must_be_past_or_today: 'La date doit être aujourd''hui ou dans le passé'
+  must_be_after: 'Cette date doit être après %field%'
+  must_be_before: 'Cette date doit être avant %field%'
+  max_one_year: 'La période ne peut pas dépasser un an'
+  annee_academique:
+    period:
+      unique: 'Cette période académique existe déjà'
+    year_start:
+      not_null: 'L''année de début est obligatoire'
+      not_too_far_future: 'L''année de début ne peut pas être plus loin qu''un an dans le futur'
+    year_end:
+      not_null: 'L''année de fin est obligatoire'
+      must_be_after_start: 'L''année de fin doit être après l''année de début'
+      max_one_year: 'La période académique ne peut pas dépasser un an'
+    is_current:
+      not_null: 'Le statut actuel est obligatoire'
 
 # Flash Messages
 flash:
@@ -248,44 +313,13 @@ flash:
     updated: '%entity% mis à jour avec succès'
     deleted: '%entity% supprimé avec succès'
   error:
-    not_found: '%entity% non trouvé'
     create_error: 'Erreur lors de la création de %entity%'
     update_error: 'Erreur lors de la mise à jour de %entity%'
     delete_error: 'Erreur lors de la suppression de %entity%'
-    access_denied: 'Accès refusé'
-  warning:
-    already_exists: '%entity% existe déjà'
-    required_fields: 'Veuillez remplir tous les champs requis'
-  info:
-    no_records: 'Aucun enregistrement trouvé'
 
-# Entity Names
-entity:
-  annee_academique: 'Année académique'
-  antecedent_academique: 'Antécédent académique'
-  bourse: 'Bourse'
-  campus: 'Campus'
-  chef_departement: 'Chef de département'
-  cours: 'Cours'
-  cycle: 'Cycle'
-  departement: 'Département'
-  evaluation: 'Évaluation'
-  filiere: 'Filière'
-  filiere_cycle: 'Filière-Cycle'
-  impression_format: 'Format d''impression'
-  incident: 'Incident'
-  inscription: 'Inscription'
-  note: 'Note'
-  payement_method: 'Méthode de paiement'
-  payement_reason: 'Raison de paiement'
-  planning_cours: 'Planning des cours'
-  presence: 'Présence'
-  professeur: 'Professeur'
-  reglement: 'Règlement'
-  role: 'Rôle'
-  salle_cours: 'Salle de cours'
-  semestre: 'Semestre'
-  tuteur_etudiant: 'Tuteur d''étudiant'
-  type_evaluation: 'Type d''évaluation'
-  ue: 'UE'
-  utilisateur: 'Utilisateur'
+# Enum Values
+enum:
+  gravite_incident:
+    faible: 'Faible'
+    moyenne: 'Moyenne'
+    elevee: 'Élevée'
