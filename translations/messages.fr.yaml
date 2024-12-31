@@ -172,6 +172,27 @@ form:
     back: 'Retour'
     save: 'Enregistrer'
 
+# Navigation
+nav:
+  guest: 'Invité'
+  not_connected: 'Non connecté'
+  academic_year: 'Année Académique'
+  teachers: 'Professeurs'
+  departments: 'Départements'
+  courses: 'Cours'
+  evaluations: 'Évaluations'
+  management: 'Gestion'
+  users: 'Utilisateurs'
+  campus: 'Campus'
+  programs: 'Filières'
+  course_planning: 'Planning des cours'
+  search: 'Rechercher...'
+  notifications: 'Notifications'
+  profile:
+    title: 'Profil'
+    settings: 'Paramètres'
+    logout: 'Déconnexion'
+
 # Common Actions
 action:
   save: 'Enregistrer'

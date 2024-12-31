@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    {% include 'components/_datepicker.html.twig' %}
     <style>
         .flatpickr-calendar {
             background: #fff;
@@ -40,21 +40,30 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container mx-auto px-4 py-8">
-        <h1>Edit AnneeAcademique</h1>
+    <div class="flex flex-col ml-0 lg:ml-20 transition-all duration-300">
+        <div class="container p-6">
+            <div class="max-w-lg">
+                <div class="bg-white shadow-lg rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
+                        <i class="fas fa-calendar-alt text-2xl text-indigo-600"></i>
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            {{ 'form.annee_academique.edit'|trans }}
+                        </h1>
+                    </div>
+                    {{ include('annee_academique/_form.html.twig', {'button_label': 'Update'}) }}
 
-        {{ include('annee_academique/_form.html.twig', {'button_label': 'Update'}) }}
-
-        <div class="mt-4">
-            <a href="{{ path('app_annee_academique_index') }}" class="text-indigo-600 hover:text-indigo-900">Retour à la liste</a>
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        {{ include('annee_academique/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
         </div>
-
-        {{ include('annee_academique/_delete_form.html.twig') }}
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    {% include 'components/_datepicker.html.twig' %}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     <script>

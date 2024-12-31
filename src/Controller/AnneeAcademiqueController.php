@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AnneeAcademique;
-use App\Form\AnneeAcademiqueType;
+use App\Form\AnneeAcademiqueNoEntityType;
 use App\Repository\AnneeAcademiqueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,31 +47,28 @@ class AnneeAcademiqueController extends AbstractController
     #[Route('/new', name: 'app_annee_academique_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $anneeAcademique = new AnneeAcademique();
-        $anneeAcademique->setCurrent(false); // Définir isCurrent à false par défaut
-        
-        $form = $this->createForm(AnneeAcademiqueType::class, $anneeAcademique);
+        $form = $this->createForm(AnneeAcademiqueNoEntityType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            
+            $anneeAcademique = new AnneeAcademique();
+            $anneeAcademique->setYearStart($data['YearStart']);
+            $anneeAcademique->setYearEnd($data['YearEnd']);
+            $anneeAcademique->setIsCurrent(false);
+
             try {
                 $entityManager->persist($anneeAcademique);
                 $entityManager->flush();
-
-                $this->addSuccessFlash($this->translator->trans('flash.success.created', [
-                    '%entity%' => $this->translator->trans('entity.annee_academique')
-                ]));
-
-                return $this->redirectToRoute('app_annee_academique_index');
+                $this->addSuccessFlash($this->translator->trans('flash.success.item_created'));
+                return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
             } catch (\Exception $e) {
-                $this->addErrorFlash($this->translator->trans('flash.error.create_error', [
-                    '%entity%' => $this->translator->trans('entity.annee_academique')
-                ]));
+                $this->handleException($e);
             }
         }
 
         return $this->render('annee_academique/new.html.twig', [
-            'annee_academique' => $anneeAcademique,
             'form' => $form,
         ]);
     }
@@ -89,58 +86,47 @@ class AnneeAcademiqueController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_annee_academique_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, AnneeAcademique $anneeAcademique = null, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager): Response
     {
-        if (!$anneeAcademique) {
-            $this->handleNotFoundException('annee_academique');
-        }
+        $form = $this->createForm(AnneeAcademiqueNoEntityType::class, [
+            'YearStart' => $anneeAcademique->getYearStart(),
+            'YearEnd' => $anneeAcademique->getYearEnd()
+        ]);
+        
+        $form->handleRequest($request);
 
-        try {
-            $form = $this->createForm(AnneeAcademiqueType::class, $anneeAcademique);
-            $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            
+            $anneeAcademique->setYearStart($data['YearStart']);
+            $anneeAcademique->setYearEnd($data['YearEnd']);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+            try {
                 $entityManager->flush();
-
-                $this->addSuccessFlash($this->translator->trans('flash.success.updated', [
-                    '%entity%' => $this->translator->trans('entity.annee_academique')
-                ]));
-
+                $this->addSuccessFlash($this->translator->trans('flash.success.item_updated'));
                 return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Exception $e) {
+                $this->handleException($e);
             }
-
-            return $this->render('annee_academique/edit.html.twig', [
-                'annee_academique' => $anneeAcademique,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addErrorFlash($this->translator->trans('flash.error.update_error', [
-                '%entity%' => $this->translator->trans('entity.annee_academique')
-            ]));
-            return $this->redirectToRoute('app_annee_academique_index');
         }
+
+        return $this->render('annee_academique/edit.html.twig', [
+            'annee_academique' => $anneeAcademique,
+            'form' => $form,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_annee_academique_delete', methods: ['POST'])]
-    public function delete(Request $request, AnneeAcademique $anneeAcademique = null, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager): Response
     {
-        if (!$anneeAcademique) {
-            $this->handleNotFoundException('annee_academique');
-        }
-
-        try {
-            if ($this->isCsrfTokenValid('delete'.$anneeAcademique->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$anneeAcademique->getId(), $request->request->get('_token'))) {
+            try {
                 $entityManager->remove($anneeAcademique);
                 $entityManager->flush();
-
-                $this->addSuccessFlash($this->translator->trans('flash.success.deleted', [
-                    '%entity%' => $this->translator->trans('entity.annee_academique')
-                ]));
+                $this->addSuccessFlash($this->translator->trans('flash.success.item_deleted'));
+            } catch (\Exception $e) {
+                $this->handleException($e);
             }
-        } catch (\Exception $e) {
-            $this->addErrorFlash($this->translator->trans('flash.error.delete_error', [
-                '%entity%' => $this->translator->trans('entity.annee_academique')
-            ]));
         }
 
         return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
