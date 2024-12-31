@@ -150,6 +150,97 @@ form:
     description: 'Description'
     coefficient: 'Coefficient'
 
+  common:
+    save: 'Enregistrer'
+    edit: 'Modifier'
+    back: 'Retour'
+    delete: 'Supprimer'
+    actions: 'Actions'
+    confirm_delete: 'Êtes-vous sûr de vouloir supprimer cet élément ?'
+
+  annee_academique:
+    title: 'Année Académique'
+    new: 'Nouvelle Année Académique'
+    edit: 'Modifier l''Année Académique'
+    list: 'Liste des Années Académiques'
+    year_start: 'Date de début'
+    year_end: 'Date de fin'
+    is_current: 'Année en cours'
+
+  antecedent_academique:
+    title: 'Antécédent Académique'
+    new: 'Nouvel Antécédent Académique'
+    edit: 'Modifier l''Antécédent Académique'
+    list: 'Liste des Antécédents Académiques'
+    etablissement: 'Établissement'
+    diplome: 'Diplôme'
+    matricule_diplome: 'Matricule du diplôme'
+    annee_obtention: 'Année d''obtention'
+    etudiant: 'Étudiant'
+
+  bourse:
+    title: 'Bourse'
+    new: 'Nouvelle Bourse'
+    edit: 'Modifier la Bourse'
+    list: 'Liste des Bourses'
+    montant: 'Montant'
+    remise: 'Remise (%)'
+    etudiant: 'Étudiant'
+    annee: 'Année Académique'
+
+  campus:
+    title: 'Campus'
+    new: 'Nouveau Campus'
+    edit: 'Modifier le Campus'
+    list: 'Liste des Campus'
+    nom_campus: 'Nom du campus'
+    adresse_campus: 'Adresse'
+
+  chef_departement:
+    title: 'Chef de Département'
+    new: 'Nouveau Chef de Département'
+    edit: 'Modifier le Chef de Département'
+    list: 'Liste des Chefs de Département'
+    professeur: 'Professeur'
+    departement: 'Département'
+    date_debut: 'Date de début'
+    date_fin: 'Date de fin'
+    is_current: 'En poste actuellement'
+
+  cours:
+    title: 'Cours'
+    new: 'Nouveau Cours'
+    edit: 'Modifier le Cours'
+    list: 'Liste des Cours'
+    code_cours: 'Code du cours'
+    intitule: 'Intitulé'
+    credit: 'Crédit'
+    masse_horaire: 'Masse horaire'
+    coefficient: 'Coefficient'
+    description: 'Description'
+    ue: 'Unité d''enseignement'
+    professeur: 'Professeur'
+    semestre: 'Semestre'
+
+  cycle:
+    title: 'Cycle'
+    new: 'Nouveau Cycle'
+    edit: 'Modifier le Cycle'
+    list: 'Liste des Cycles'
+    nom_cycle: 'Nom du cycle'
+    description: 'Description'
+    duree: 'Durée (en années)'
+
+  departement:
+    title: 'Département'
+    new: 'Nouveau Département'
+    edit: 'Modifier le Département'
+    list: 'Liste des Départements'
+    nom_departement: 'Nom du département'
+    code: 'Code'
+    description: 'Description'
+    campus: 'Campus'
+
 # Flash Messages
 flash:
   success:

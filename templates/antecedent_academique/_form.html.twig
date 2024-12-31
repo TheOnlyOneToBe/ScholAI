@@ -1,4 +1,40 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{% form_theme form 'form/tailwind_layout.html.twig' %}
+
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+            <div class="md:col-span-1">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">{{ 'form.antecedent_academique.title'|trans }}</h3>
+                <p class="mt-1 text-sm text-gray-500">{{ 'form.antecedent_academique.new'|trans }}</p>
+            </div>
+            <div class="mt-5 md:mt-0 md:col-span-2">
+                <div class="grid grid-cols-6 gap-6">
+                    <div class="col-span-6 sm:col-span-3">
+                        {{ form_row(form.etablissement) }}
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        {{ form_row(form.diplome) }}
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        {{ form_row(form.matriculeDiplome) }}
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        {{ form_row(form.anneeObtention) }}
+                    </div>
+                    <div class="col-span-6">
+                        {{ form_row(form.etudiant) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+        <a href="{{ path('app_antecedent_academique_index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            {{ 'form.common.back'|trans }}
+        </a>
+        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            {{ button_label|default('form.common.save'|trans) }}
+        </button>
+    </div>
 {{ form_end(form) }}

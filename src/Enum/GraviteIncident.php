@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum GraviteIncident: string
+enum : string
 {
     case FAIBLE = 'incident.gravite.faible';
     case MOYENNE = 'incident.gravite.moyenne';
