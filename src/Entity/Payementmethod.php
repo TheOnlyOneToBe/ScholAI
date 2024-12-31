@@ -6,8 +6,14 @@ use App\Repository\PayementmethodRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PayementmethodRepository::class)]
+#[UniqueEntity(
+    fields: ['PayementName'],
+    message: 'payementmethod.name.unique'
+)]
 class Payementmethod
 {
     #[ORM\Id]
@@ -16,6 +22,13 @@ class Payementmethod
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: 'payementmethod.name.not_blank')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'payementmethod.name.min_length',
+        maxMessage: 'payementmethod.name.max_length'
+    )]
     private ?string $PayementName = null;
 
     /**

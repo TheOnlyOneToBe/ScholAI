@@ -4,7 +4,7 @@ namespace App\Controller\Trait;
 
 trait FlashMessageTrait
 {
-    private function addFlash(string $type, string $message): void
+    protected function addFlash(string $type, mixed $message): void
     {
         $this->container->get('session')->getFlashBag()->add($type, $message);
     }
@@ -28,4 +28,5 @@ trait FlashMessageTrait
     {
         $this->addFlash('info', $message);
     }
-}
+ }
+// Ok vérifie les entités et creer les ficture un fichier appfixture existe deja je veux que tu me géneres des données pour 04 années une seule doit etre active le reste non active

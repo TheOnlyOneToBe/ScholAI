@@ -31,28 +31,6 @@
 'The file could not be uploaded.': 'Le téléchargement de ce fichier est impossible.'
 'This value should be a valid number.': 'Cette valeur doit être un nombre.'
 'This file is not a valid image.': "Ce fichier n'est pas une image valide."
-'This is not a valid IP address.': "Cette valeur n'est pas une adresse IP valide."
-'This value is not a valid language.': "Cette langue n'est pas valide."
-'This value is not a valid locale.': "Ce paramètre régional n'est pas valide."
-'This value is not a valid country.': "Ce pays n'est pas valide."
-'This value is already used.': 'Cette valeur est déjà utilisée.'
-'The size of the image could not be detected.': "La taille de l'image n'a pas pu être détectée."
-'The image width is too big ({{ width }}px). Allowed maximum width is {{ max_width }}px.': "La largeur de l'image est trop grande ({{ width }}px). La largeur maximale autorisée est de {{ max_width }}px."
-'The image width is too small ({{ width }}px). Minimum width expected is {{ min_width }}px.': "La largeur de l'image est trop petite ({{ width }}px). La largeur minimale attendue est de {{ min_width }}px."
-'The image height is too big ({{ height }}px). Allowed maximum height is {{ max_height }}px.': "La hauteur de l'image est trop grande ({{ height }}px). La hauteur maximale autorisée est de {{ max_height }}px."
-'The image height is too small ({{ height }}px). Minimum height expected is {{ min_height }}px.': "La hauteur de l'image est trop petite ({{ height }}px). La hauteur minimale attendue est de {{ min_height }}px."
-"This value should be the user's current password.": "Cette valeur doit être le mot de passe actuel de l'utilisateur."
-'This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.': 'Cette chaîne doit avoir exactement {{ limit }} caractère.|Cette chaîne doit avoir exactement {{ limit }} caractères.'
-'The file was only partially uploaded.': 'Le fichier a été partiellement transféré.'
-'No file was uploaded.': "Aucun fichier n'a été transféré."
-'No temporary folder was configured in php.ini.': "Aucun répertoire temporaire n'a été configuré dans le php.ini, ou le répertoire configuré n'existe pas."
-'Cannot write temporary file to disk.': "Impossible d'écrire le fichier temporaire sur le disque."
-'A PHP extension caused the upload to fail.': 'Une extension PHP a empêché le transfert du fichier.'
-'This collection should contain {{ limit }} element or more.|This collection should contain {{ limit }} elements or more.': 'Cette collection doit contenir {{ limit }} élément ou plus.|Cette collection doit contenir {{ limit }} éléments ou plus.'
-'This collection should contain {{ limit }} element or less.|This collection should contain {{ limit }} elements or less.': 'Cette collection doit contenir {{ limit }} élément ou moins.|Cette collection doit contenir {{ limit }} éléments ou moins.'
-'This collection should contain exactly {{ limit }} element.|This collection should contain exactly {{ limit }} elements.': 'Cette collection doit contenir exactement {{ limit }} élément.|Cette collection doit contenir exactement {{ limit }} éléments.'
-'Invalid card number.': 'Numéro de carte invalide.'
-'Unsupported card type or invalid card number.': 'Type de carte non supporté ou numéro invalide.'
 'This is not a valid International Bank Account Number (IBAN).': "Cette valeur n'est pas un Numéro de Compte Bancaire International (IBAN) valide."
 'This value is not a valid ISBN-10.': "Cette valeur n'est pas un code ISBN-10 valide."
 'This value is not a valid ISBN-13.': "Cette valeur n'est pas un code ISBN-13 valide."
@@ -222,41 +200,48 @@ campus:
 
 # Messages de validation pour l'entité Etudiant
 etudiant:
-  sexe:
-    not_null: 'Le sexe doit être spécifié'
-  date_naissance:
-    not_null: 'La date de naissance est requise'
-    less_than_today: 'La date de naissance doit être antérieure à aujourd''hui'
-  adresse:
-    not_blank: 'L''adresse ne peut pas être vide'
-    min_length: 'L''adresse doit contenir au moins {{ limit }} caractères'
-    max_length: 'L''adresse ne peut pas dépasser {{ limit }} caractères'
-  nom:
-    not_blank: 'Le nom ne peut pas être vide'
-    min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
-    max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
-  prenom:
-    not_blank: 'Le prénom ne peut pas être vide'
-    min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
-    max_length: 'Le prénom ne peut pas dépasser {{ limit }} caractères'
-  email:
-    not_blank: 'L''email ne peut pas être vide'
-    invalid: 'L''email n''est pas valide'
-  telephone:
-    not_blank: 'Le numéro de téléphone ne peut pas être vide'
-    invalid: 'Le numéro de téléphone n''est pas valide'
+    sexe:
+        not_null: 'Le sexe doit être spécifié'
+    date_naissance:
+        not_null: 'La date de naissance est requise'
+        less_than_today: 'La date de naissance doit être dans le passé'
+    adresse:
+        not_blank: 'L''adresse ne peut pas être vide'
+        min_length: 'L''adresse doit contenir au moins {{ limit }} caractères'
+        max_length: 'L''adresse ne peut pas dépasser {{ limit }} caractères'
+    registration_allowed:
+        not_null: 'Le statut d''inscription doit être spécifié'
+    nom:
+        not_blank: 'Le nom ne peut pas être vide'
+        min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
+    prenom:
+        not_blank: 'Le prénom ne peut pas être vide'
+        min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le prénom ne peut pas dépasser {{ limit }} caractères'
+    email:
+        not_blank: 'L''email ne peut pas être vide'
+        invalid: 'L''email n''est pas valide'
+    telephone:
+        not_blank: 'Le numéro de téléphone ne peut pas être vide'
+        invalid: 'Le numéro de téléphone n''est pas valide'
+    cni:
+        invalid: 'Le numéro CNI doit être au format AA123456'
 
 # Messages de validation pour l'entité AnneeAcademique
 annee_academique:
-  year_start:
-    not_null: 'La date de début d''année est requise'
-  year_end:
-    not_null: 'La date de fin d''année est requise'
-    must_be_after_start: 'La date de fin doit être postérieure à la date de début'
-  is_current:
-    not_null: 'Le statut actuel de l''année académique doit être spécifié'
-  year_range:
-    too_long: 'La durée de l''année académique ne peut pas dépasser 1 an'
+    period:
+        unique: 'Une année académique existe déjà pour cette période'
+    year_start:
+        not_null: 'La date de début d''année doit être spécifiée'
+        not_too_far_future: 'La date de début ne peut pas être à plus d''un an dans le futur'
+    year_end:
+        not_null: 'La date de fin d''année doit être spécifiée'
+        must_be_after_start: 'La date de fin doit être postérieure à la date de début'
+        max_one_year: 'L''année académique ne peut pas durer plus d''un an'
+    is_current:
+        not_null: 'Le statut "année courante" doit être spécifié'
+        only_one: 'Il ne peut y avoir qu''une seule année académique courante'
 
 # Messages de validation pour l'entité AntecedentAcademique
 antecedent_academique:
@@ -358,26 +343,26 @@ note:
 # Messages de validation pour l'entité Professeur
 professeur:
     nom:
-        not_blank: 'Le nom du professeur ne peut pas être vide'
-        min_length: 'Le nom du professeur doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le nom du professeur ne peut pas dépasser {{ limit }} caractères'
+        not_blank: 'Le nom ne peut pas être vide'
+        min_length: 'Le nom doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom ne peut pas dépasser {{ limit }} caractères'
     prenom:
-        not_blank: 'Le prénom du professeur ne peut pas être vide'
-        min_length: 'Le prénom du professeur doit contenir au moins {{ limit }} caractères'
-        max_length: 'Le prénom du professeur ne peut pas dépasser {{ limit }} caractères'
+        not_blank: 'Le prénom ne peut pas être vide'
+        min_length: 'Le prénom doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le prénom ne peut pas dépasser {{ limit }} caractères'
     email:
         not_blank: 'L''email ne peut pas être vide'
         invalid: 'L''email n''est pas valide'
-        unique: 'Cet email est déjà utilisé'
+        unique: 'Cet email est déjà utilisé par un autre professeur'
     numero_telephone:
         not_blank: 'Le numéro de téléphone ne peut pas être vide'
         invalid_format: 'Le numéro de téléphone n''est pas valide'
     cni:
         not_blank: 'Le numéro CNI ne peut pas être vide'
-        invalid_format: 'Le numéro CNI n''est pas valide'
-        unique: 'Ce numéro CNI est déjà utilisé'
+        invalid_format: 'Le numéro CNI n''est pas dans un format valide'
+        unique: 'Ce numéro CNI est déjà utilisé par un autre professeur'
     date_naissance:
-        not_null: 'La date de naissance est requise'
+        not_null: 'La date de naissance doit être spécifiée'
         must_be_past: 'La date de naissance doit être dans le passé'
         must_be_adult: 'Le professeur doit avoir au moins 18 ans'
     nationalite:
@@ -485,7 +470,7 @@ ue:
         not_blank: 'Le statut doit être spécifié'
         invalid_choice: 'Le statut doit être "En cours", "Terminé", "Planifié" ou "Annulé"'
     matiere_semestre:
-        unique: 'Cette matière est déjà enseignée dans ce semestre'
+        unique: 'Cette matière est déjà programmée pour ce semestre'
 
 # Messages de validation pour l'entité Role
 role:
@@ -552,3 +537,69 @@ utilisateur:
         not_blank: 'La profession ne peut pas être vide'
         min_length: 'La profession doit contenir au moins {{ limit }} caractères'
         max_length: 'La profession ne peut pas dépasser {{ limit }} caractères'
+
+# Messages de validation pour l'entité Cours
+cours:
+    nom_cours:
+        not_blank: 'Le nom du cours ne peut pas être vide'
+        min_length: 'Le nom du cours doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom du cours ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Ce nom de cours existe déjà'
+    descriptif:
+        min_length: 'Le descriptif doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le descriptif ne peut pas dépasser {{ limit }} caractères'
+    type_cours:
+        not_blank: 'Le type de cours doit être spécifié'
+        invalid_choice: 'Le type de cours doit être CM, TD ou TP'
+
+# Messages de validation pour l'entité Evaluation
+evaluation:
+    ue:
+        not_null: 'L''UE doit être spécifiée'
+    semestre:
+        not_null: 'Le semestre doit être spécifié'
+    date_debut:
+        not_null: 'La date de début doit être spécifiée'
+        must_be_future: 'La date de début doit être dans le futur'
+    temps_evaluation:
+        not_null: 'Le temps d''évaluation doit être spécifié'
+        must_be_positive: 'Le temps d''évaluation doit être positif'
+        max_duration: 'Le temps d''évaluation ne peut pas dépasser {{ value }} minutes'
+    statut:
+        not_null: 'Le statut doit être spécifié'
+    type:
+        not_null: 'Le type d''évaluation doit être spécifié'
+
+# Messages de validation pour l'entité Reglement
+reglement:
+    inscription:
+        not_null: 'L''inscription doit être spécifiée'
+    libelle_reglement:
+        not_null: 'Le libellé du règlement doit être spécifié'
+    payementmethod:
+        not_null: 'La méthode de paiement doit être spécifiée'
+    montant_reglee:
+        not_null: 'Le montant réglé doit être spécifié'
+        must_be_positive: 'Le montant réglé doit être positif'
+        max_amount: 'Le montant réglé ne peut pas dépasser {{ value }} FCFA'
+        exceeds_expected: 'Le montant total payé ({{ total }}) dépasse le montant attendu ({{ expected }})'
+    datereglement:
+        not_null: 'La date de règlement doit être spécifiée'
+        must_be_past_or_today: 'La date de règlement doit être aujourd''hui ou dans le passé'
+        must_be_within_academic_year: 'La date de règlement doit être dans l''année académique de l''inscription'
+
+# Messages de validation pour l'entité PayementMethod
+payementmethod:
+    name:
+        not_blank: 'Le nom de la méthode de paiement ne peut pas être vide'
+        min_length: 'Le nom de la méthode de paiement doit contenir au moins {{ limit }} caractères'
+        max_length: 'Le nom de la méthode de paiement ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Cette méthode de paiement existe déjà'
+
+# Messages de validation pour l'entité PayementReason
+payementreason:
+    raison:
+        not_blank: 'La raison du paiement ne peut pas être vide'
+        min_length: 'La raison du paiement doit contenir au moins {{ limit }} caractères'
+        max_length: 'La raison du paiement ne peut pas dépasser {{ limit }} caractères'
+        unique: 'Cette raison de paiement existe déjà'

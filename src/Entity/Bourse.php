@@ -38,6 +38,10 @@ class Bourse
     #[Assert\NotNull(message: 'bourse.etudiant.not_null')]
     private ?Etudiant $etudiant = null;
 
+    #[ORM\ManyToOne(inversedBy: 'bourses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?AnneeAcademique $annee = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +79,18 @@ class Bourse
     public function setEtudiant(?Etudiant $etudiant): static
     {
         $this->etudiant = $etudiant;
+
+        return $this;
+    }
+
+    public function getAnnee(): ?AnneeAcademique
+    {
+        return $this->annee;
+    }
+
+    public function setAnnee(?AnneeAcademique $annee): static
+    {
+        $this->annee = $annee;
 
         return $this;
     }

@@ -8,9 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: AnneeAcademiqueRepository::class)]
+#[UniqueEntity(
+    fields: ['YearStart', 'YearEnd'],
+    message: 'annee_academique.period.unique'
+)]
 class AnneeAcademique
 {
     #[ORM\Id]
@@ -20,6 +25,10 @@ class AnneeAcademique
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotNull(message: 'annee_academique.year_start.not_null')]
+    #[Assert\LessThanOrEqual(
+        'today + 1 year',
+        message: 'annee_academique.year_start.not_too_far_future'
+    )]
     private ?\DateTimeInterface $YearStart = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -27,6 +36,10 @@ class AnneeAcademique
     #[Assert\GreaterThan(
         propertyPath: 'YearStart',
         message: 'annee_academique.year_end.must_be_after_start'
+    )]
+    #[Assert\Expression(
+        "this.getYearEnd() <= this.getYearStart().modify('+1 year')",
+        message: 'annee_academique.year_end.max_one_year'
     )]
     private ?\DateTimeInterface $YearEnd = null;
 
@@ -46,10 +59,17 @@ class AnneeAcademique
     #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'annee', orphanRemoval: true)]
     private Collection $inscriptions;
 
+    /**
+     * @var Collection<int, Bourse>
+     */
+    #[ORM\OneToMany(targetEntity: Bourse::class, mappedBy: 'annee', orphanRemoval: true)]
+    private Collection $bourses;
+
     public function __construct()
     {
         $this->semestres = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->bourses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -136,6 +156,21 @@ class AnneeAcademique
         }
     }
 
+    #[Assert\Callback]
+    public function validateCurrentYear(ExecutionContextInterface $context): void
+    {
+        if ($this->isCurrent) {
+            $repository = $context->getRoot()->getRepository(AnneeAcademique::class);
+            $existingCurrent = $repository->findOneBy(['isCurrent' => true]);
+            
+            if ($existingCurrent && $existingCurrent !== $this) {
+                $context->buildViolation('annee_academique.is_current.only_one')
+                    ->atPath('isCurrent')
+                    ->addViolation();
+            }
+        }
+    }
+
     /**
      * @return Collection<int, Inscription>
      */
@@ -160,6 +195,36 @@ class AnneeAcademique
             // set the owning side to null (unless already changed)
             if ($inscription->getAnnee() === $this) {
                 $inscription->setAnnee(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bourse>
+     */
+    public function getBourses(): Collection
+    {
+        return $this->bourses;
+    }
+
+    public function addBourse(Bourse $bourse): static
+    {
+        if (!$this->bourses->contains($bourse)) {
+            $this->bourses->add($bourse);
+            $bourse->setAnnee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBourse(Bourse $bourse): static
+    {
+        if ($this->bourses->removeElement($bourse)) {
+            // set the owning side to null (unless already changed)
+            if ($bourse->getAnnee() === $this) {
+                $bourse->setAnnee(null);
             }
         }
 
