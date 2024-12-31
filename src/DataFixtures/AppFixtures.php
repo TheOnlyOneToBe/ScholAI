@@ -18,8 +18,8 @@ use App\Entity\ImpressionFormat;
 use App\Entity\Incident;
 use App\Entity\Inscription;
 use App\Entity\Note;
-use App\Entity\Payementmethod;
-use App\Entity\Payementreason;
+use App\Entity\PayementMethod;
+use App\Entity\PayementReason;
 use App\Entity\PlanningCours;
 use App\Entity\Presence;
 use App\Entity\Professeur;
@@ -108,12 +108,23 @@ class AppFixtures extends Fixture
             $campuses[] = $campus;
         }
 
-        // 4. Création de l'année académique
-        $anneeActive = new AnneeAcademique();
-        $anneeActive->setYearStart(new \DateTime('2023-09-01'))
-                   ->setYearEnd(new \DateTime('2024-07-31'))
-                   ->setCurrent(true);
-        $manager->persist($anneeActive);
+        // 4. Création des années académiques
+        $annees = [];
+        $anneesData = [
+            ['2020-09-01', '2021-07-31', false],
+            ['2021-09-01', '2022-07-31', false],
+            ['2022-09-01', '2023-07-31', false],
+            ['2023-09-01', '2024-07-31', true]  // Année courante
+        ];
+
+        foreach ($anneesData as [$start, $end, $isCurrent]) {
+            $annee = new AnneeAcademique();
+            $annee->setYearStart(new \DateTime($start))
+                  ->setYearEnd(new \DateTime($end))
+                  ->setCurrent($isCurrent);
+            $manager->persist($annee);
+            $annees[] = $annee;
+        }
 
         // 5. Création des départements
         $departements = [];
@@ -167,7 +178,7 @@ class AppFixtures extends Fixture
             $semestre->setNumSemestre($num)
                     ->setDateDebut(new \DateTime($debut))
                     ->setDateFin(new \DateTime($fin))
-                    ->setAnneeacademique($anneeActive);
+                    ->setAnneeacademique($annees[3]);
             $manager->persist($semestre);
             $semestres[] = $semestre;
         }
@@ -298,7 +309,7 @@ class AppFixtures extends Fixture
             }
         }
 
-        // 17. Création des étudiants
+        // 17. Création des étudiants et leurs bourses
         $etudiants = [];
         for ($i = 0; $i < 100; $i++) {
             $etudiant = new Etudiant();
@@ -314,8 +325,9 @@ class AppFixtures extends Fixture
                     ->setDateCreation(new \DateTime())
                     ->setDateModification(new \DateTime())
                     ->setRegistrationAllowed(true);
+
             // Optionnellement lier à un utilisateur
-            if ($this->faker->boolean(30)) { // 30% de chance d'avoir un utilisateur
+            if ($this->faker->boolean(30)) {
                 $etudiant->addUtilisateur($users['ROLE_ETUDIANT']);
             }
             $manager->persist($etudiant);
@@ -330,13 +342,16 @@ class AppFixtures extends Fixture
                       ->setAnneeObtention($this->faker->dateTimeBetween('-5 years', '-1 year'));
             $manager->persist($antecedent);
 
-            // Attribution de bourses à certains étudiants (30% de chance)
-            if ($this->faker->boolean(30)) {
-                $bourse = new Bourse();
-                $bourse->setEtudiant($etudiant)
-                       ->setMontant($this->faker->numberBetween(100000, 500000))
-                       ->setRemise($this->faker->numberBetween(0, 50));
-                $manager->persist($bourse);
+            // Attribution de bourses (30% de chance pour chaque année)
+            foreach ($annees as $annee) {
+                if ($this->faker->boolean(30)) {
+                    $bourse = new Bourse();
+                    $bourse->setEtudiant($etudiant)
+                           ->setAnnee($annee)
+                           ->setMontant($this->faker->numberBetween(100000, 500000))
+                           ->setRemise($this->faker->numberBetween(10, 100));
+                    $manager->persist($bourse);
+                }
             }
         }
 
@@ -359,7 +374,7 @@ class AppFixtures extends Fixture
                        ->setDateInscription(new \DateTime())
                        ->setStatut($this->faker->randomElement(StatutInscription::cases()))
                        ->setSuspended(false)
-                       ->setAnnee($anneeActive);
+                       ->setAnnee($annees[3]);
             $manager->persist($inscription);
             $inscriptions[] = $inscription;
         }
@@ -434,7 +449,7 @@ class AppFixtures extends Fixture
 
         // 25. Création des raisons de paiement
         $payementReasons = [];
-        $raisons = ['Frais de scolarité', 'Frais d\'inscription', 'Frais d\'examen', 'Frais de bibliothèque'];
+        $raisons = ['Frais de scolarité', 'Frais d\'examen', 'Frais de bibliothèque'];
         foreach ($raisons as $raison) {
             $payementReason = new Payementreason();
             $payementReason->setRaison($raison);

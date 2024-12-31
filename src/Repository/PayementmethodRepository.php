@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Payementmethod;
+use App\Entity\PayementMethod;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

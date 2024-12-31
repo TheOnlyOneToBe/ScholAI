@@ -90,7 +90,7 @@ class Professeur
     )]
     private ?string $nationalite = null;
 
-    #[ORM\Column(length: 10, enumType: Genre::class)]
+    #[ORM\Column(length: 12, enumType: Genre::class)]
     #[Assert\NotNull(message: 'professeur.sexe.not_null')]
     private ?Genre $sexe = null;
 

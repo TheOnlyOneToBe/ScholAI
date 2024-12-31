@@ -65,7 +65,7 @@ form:
     dateDebut: "Date de début"
     tempsEvaluation: "Temps d'évaluation"
     statut: 'Statut'
-    UE: 'Unité d'enseignement'
+    ue: "Unité d'enseignement"
     semestre: 'Semestre'
     typeEvaluation: "Type d'évaluation"
   filiere:

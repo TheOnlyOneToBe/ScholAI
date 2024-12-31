@@ -19,6 +19,7 @@
             <tr>
                 <td>{{ reglement.id }}</td>
                 <td>{{ reglement.montantReglee }}</td>
+                <td>{{reglement.inscription.etudiant.nom}}</td>
                 <td>{{ reglement.datereglement ? reglement.datereglement|date('Y-m-d') : '' }}</td>
                 <td>
                     <a href="{{ path('app_reglement_show', {'id': reglement.id}) }}">show</a>

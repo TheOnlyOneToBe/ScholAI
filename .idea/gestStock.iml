@@ -269,6 +269,9 @@
       <excludeFolder url="file://$MODULE_DIR$/gestStock/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/kwn/number-to-words" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/oro/doctrine-extensions" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/data-fixtures" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fakerphp/faker" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

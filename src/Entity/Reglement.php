@@ -128,7 +128,7 @@ class Reglement
         
         // Calculate total amount due based on payment reason
         $totalDue = 0;
-        if ($this->libelle_reglement->getRaison() === 'pension') {
+        if ($this->libelle_reglement->getRaison() === 'Frais de scolarité') {
             // For pension, total due is inscription + pension
             $totalDue = $fraisInscription + $montantPension;
             
@@ -142,7 +142,7 @@ class Reglement
                 }
             }
         } else {
-            $totalDue = $this->libelle_reglement->getMontantAttendu();
+            $totalDue = $fraisInscription + $montantPension;
         }
 
         // Calculate total amount already paid for this type of payment

@@ -94,7 +94,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $lieuNaissance = null;
 
-    #[ORM\Column(length: 10, enumType: Genre::class)]
+    #[ORM\Column(length: 12, enumType:Genre::class )]
     #[Assert\NotNull(message: 'utilisateur.sexe.not_null')]
     private ?Genre $sexe = null;
 
