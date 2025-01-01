@@ -45,8 +45,8 @@
             {% endfor %}
         {% endfor %}
 
-        <div class="p-4 lg:ml-64 mt-14">
-            <main class="p-4 h-auto pt-20 lg:ml-64 transition-all duration-200">
+        <div class="p-1 lg:ml-60 mt-14">
+            <main class="p-1 h-auto pt-20 lg:ml-16 transition-all duration-200">
                 {% block body %}{% endblock %}
             </main>
         </div>
@@ -113,5 +113,56 @@
             </script>
         {% endblock %}
 
+        {# Flash Messages Handler #}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                $('.flash-message').each(function() {
+                    const type = $(this).data('type');
+                    const message = $(this).text().trim();
+                    let icon, color;
+
+                    switch(type) {
+                        case 'success':
+                            icon = 'success';
+                            color = '#48bb78'; // Green
+                            break;
+                        case 'error':
+                            icon = 'error';
+                            color = '#f56565'; // Red
+                            break;
+                        case 'warning':
+                            icon = 'warning';
+                            color = '#ed8936'; // Orange
+                            break;
+                        case 'info':
+                            icon = 'info';
+                            color = '#4299e1'; // Blue
+                            break;
+                        default:
+                            icon = 'info';
+                            color = '#4299e1'; // Blue
+                    }
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+
+                    Toast.fire({
+                        icon: icon,
+                        title: message,
+                        background: '#fff',
+                        iconColor: color,
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
