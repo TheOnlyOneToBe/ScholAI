@@ -7,6 +7,7 @@ use App\Form\AnneeAcademiqueType;
 use App\Repository\AnneeAcademiqueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -155,6 +156,27 @@ class AnneeAcademiqueController extends AbstractController
         }
 
         return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/toggle-status', name: 'app_annee_academique_toggle_status', methods: ['POST'])]
+    public function toggleStatus(Request $request, AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $submittedToken = $request->headers->get('X-CSRF-TOKEN');
+        if (!$this->isCsrfTokenValid('toggle-status', $submittedToken)) {
+            return new JsonResponse(['message' => 'Token CSRF invalide'], 401);
+        }
+
+        // Désactive toutes les années
+        $allAnnees = $entityManager->getRepository(AnneeAcademique::class)->findAll();
+        foreach ($allAnnees as $annee) {
+            $annee->setCurrent(false);
+        }
+        
+        // Active l'année sélectionnée
+        $anneeAcademique->setCurrent(true);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     private function hasDependendencies(AnneeAcademique $anneeAcademique): bool

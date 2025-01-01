@@ -20,6 +20,53 @@
                 max-width: 95%;
             }
         }
+        /* Style pour le switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e0;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #48bb78;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        .switch.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .switch.disabled .slider {
+            cursor: not-allowed;
+        }
     </style>
 {% endblock %}
 
@@ -56,15 +103,10 @@
                                         {{ annee_academique.YearStart ? annee_academique.YearStart|date('Y') : '' }} - {{ annee_academique.YearEnd ? annee_academique.YearEnd|date('Y') : '' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {% if annee_academique.isCurrent %}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Année courante
-                                            </span>
-                                        {% else %}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                Inactive
-                                            </span>
-                                        {% endif %}
+                                        <label class="switch" data-id="{{ annee_academique.id }}">
+                                            <input type="checkbox" {% if annee_academique.isCurrent %}checked{% endif %}>
+                                            <span class="slider"></span>
+                                        </label>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}" 
@@ -109,6 +151,41 @@
                         orderable: false
                     }
                 ]
+            });
+
+            // Gestion des switches
+            $('.switch input[type="checkbox"]').on('change', function(e) {
+                const $switch = $(this).closest('.switch');
+                const id = $switch.data('id');
+                const $allSwitches = $('.switch');
+                
+                // Désactiver tous les switches pendant la requête
+                $allSwitches.addClass('disabled');
+                $allSwitches.find('input').prop('disabled', true);
+
+                $.ajax({
+                    url: '{{ path('app_annee_academique_toggle_status', {'id': 'ID'}) }}'.replace('ID', id),
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token('toggle-status') }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Active le switch cliqué et désactive les autres
+                            $allSwitches.find('input').prop('checked', false);
+                            $switch.find('input').prop('checked', true);
+                        }
+                    },
+                    error: function() {
+                        // En cas d'erreur, recharger la page pour avoir l'état correct
+                        window.location.reload();
+                    },
+                    complete: function() {
+                        // Réactiver tous les switches
+                        $allSwitches.removeClass('disabled');
+                        $allSwitches.find('input').prop('disabled', false);
+                    }
+                });
             });
         });
     </script>
