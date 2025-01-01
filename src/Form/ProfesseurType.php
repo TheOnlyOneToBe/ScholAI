@@ -4,8 +4,10 @@ namespace App\Form;
 
 use App\Entity\Departement;
 use App\Entity\Professeur;
+use App\Enum\Genre;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -36,7 +38,8 @@ class ProfesseurType extends AbstractType
             ->add('nationalite', null, [
                 'label' => 'form.professeur.nationalite'
             ])
-            ->add('sexe', null, [
+            ->add('sexe', EnumType::class, [
+                'class'=>Genre::class,
                 'label' => 'form.professeur.sexe'
             ])
             ->add('adresse', null, [

@@ -1,68 +1,60 @@
-<nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0">
-    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+<nav class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 border-b border-blue-700 fixed w-full z-30 top-0 shadow-lg">
+    <div class="px-3 py-2.5 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
             <div class="flex items-center justify-start">
-                <button id="toggleSidebarMobile" aria-expanded="true" aria-controls="sidebar" class="lg:hidden mr-2 text-gray-600 hover:text-gray-900 cursor-pointer p-2 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 rounded">
+                <button id="toggleSidebarMobile" aria-expanded="true" aria-controls="sidebar" class="lg:hidden mr-2 text-white hover:text-indigo-100 cursor-pointer p-2 hover:bg-indigo-500/50 focus:bg-indigo-500/50 focus:ring-2 focus:ring-indigo-400 rounded-lg transition-all duration-200">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                     </svg>
                 </button>
-                <button id="toggleSidebar" class="hidden lg:block mr-2 text-gray-600 hover:text-gray-900 cursor-pointer p-2 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 rounded">
+                <button id="toggleSidebar" class="hidden lg:block mr-2 text-white hover:text-indigo-100 cursor-pointer p-2 hover:bg-indigo-500/50 focus:bg-indigo-500/50 focus:ring-2 focus:ring-indigo-400 rounded-lg transition-all duration-200">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                     </svg>
                 </button>
                 <a href="{{ path('app_annee_academique_index') }}" class="text-xl font-bold flex items-center lg:ml-2.5">
-                    <span class="text-indigo-600">Pre</span><span>Skool</span>
+                    <span class="text-white">Pre</span><span class="text-indigo-200">Skool</span>
                 </a>
-                {# Barre de recherche #}
                 <div class="relative lg:ml-64 md:w-96">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
+                        <i class="fas fa-search text-indigo-300"></i>
                     </div>
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 p-2.5" placeholder="{{ 'nav.search'|trans }}">
+                    <input type="text" class="bg-indigo-500/30 border border-indigo-400/50 text-white placeholder-indigo-300 text-sm rounded-lg focus:ring-indigo-300 focus:border-indigo-300 block w-full pl-10 p-2.5 transition-all duration-200" placeholder="{{ 'nav.search'|trans }}">
                 </div>
             </div>
             <div class="flex items-center">
                 <div class="hidden md:flex items-center">
-                    {# Notifications #}
-                    <button type="button" class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100">
+                    <button type="button" class="relative p-2 text-white hover:text-indigo-100 rounded-lg hover:bg-indigo-500/50 transition-all duration-200" id="notification-button">
                         <span class="sr-only">{{ 'nav.notifications'|trans }}</span>
                         <i class="far fa-bell text-xl"></i>
+                        <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full -top-1 -right-1">3</div>
                     </button>
                 </div>
 
-                {# Profile Dropdown #}
                 <div class="relative ml-3">
-                    <button type="button" class="flex items-center space-x-4 hover:text-gray-900 focus:outline-none" id="user-menu-button">
-                        <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="Profile">
+                    <button type="button" class="flex items-center space-x-4 p-2 text-white hover:text-indigo-100 hover:bg-indigo-500/50 rounded-lg transition-all duration-200" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        <img class="h-8 w-8 rounded-full ring-2 ring-indigo-300" src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="Profile">
                         <div class="hidden md:block text-left">
                             {% if app.user %}
-                                <span class="text-sm font-medium text-gray-900">{{ app.user.fullName ?? 'Administrator' }}</span>
-                                <p class="text-sm text-gray-500">{{ app.user.roles[0]|replace({'ROLE_': ''}) }}</p>
+                                <span class="text-sm font-medium text-white">{{ app.user.fullName ?? 'Administrator' }}</span>
+                                <p class="text-sm text-indigo-200">{{ app.user.roles[0]|replace({'ROLE_': ''}) }}</p>
                             {% else %}
-                                <span class="text-sm font-medium text-gray-900">{{ 'nav.guest'|trans }}</span>
-                                <p class="text-sm text-gray-500">{{ 'nav.not_connected'|trans }}</p>
+                                <span class="text-sm font-medium text-white">{{ 'nav.guest'|trans }}</span>
+                                <p class="text-sm text-indigo-200">{{ 'nav.not_connected'|trans }}</p>
                             {% endif %}
                         </div>
+                        <svg class="-mr-1 ml-2 h-5 w-5 text-indigo-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
                     </button>
+
+                    <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition-all duration-200" role="menuitem">{{ 'nav.profile'|trans }}</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 transition-all duration-200" role="menuitem">{{ 'nav.settings'|trans }}</a>
+                        <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-all duration-200" role="menuitem">{{ 'nav.logout'|trans }}</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </nav>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.getElementById('sidebar');
-        const toggleSidebar = document.getElementById('toggleSidebar');
-        const content = document.querySelector('.p-4.lg\\:ml-64');
-
-        toggleSidebar.addEventListener('click', function() {
-            sidebar.classList.toggle('sidebar-collapsed');
-            if (content) {
-                content.classList.toggle('content-expanded');
-            }
-        });
-    });
-</script>
