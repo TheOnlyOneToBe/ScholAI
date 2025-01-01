@@ -38,7 +38,7 @@ class AnneeAcademique
         message: 'annee_academique.year_end.must_be_after_start'
     )]
     #[Assert\Expression(
-        "this.getYearEnd() <= this.getYearStart()",
+        "this.getYearEnd() <= this.getYearStart()+modify(1 year)",
         message: 'annee_academique.year_end.max_one_year'
     )]
     private ?\DateTimeInterface $YearEnd = null;
