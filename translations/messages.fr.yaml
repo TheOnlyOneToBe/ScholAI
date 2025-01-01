@@ -81,10 +81,6 @@ form:
     description: 'Description'
     credit: 'Crédit'
     volumeHoraire: 'Volume horaire'
-  departement:
-    nomDepartement: 'Nom du département'
-    description: 'Description'
-    campus: 'Campus'
     annee_academique:
     annee: 'Année'
     dateDebut: 'Date de début'
@@ -168,13 +164,34 @@ form:
       exists: 'Cette année académique existe déjà'
       required: 'L''année académique est obligatoire'
       format: 'Le format doit être AAAA-AAAA (ex: 2023-2024)'
-
-  common:
-    back: 'Retour'
-    save: 'Enregistrer'
-nav_profile: ""
-nav_settings: "Paramètres"
-nav_logout: "Se déconnecter"
+  departement:
+    title:
+      new: 'Nouveau Département'
+      edit: 'Modifier le Département'
+      list: 'Liste des Départements'
+    form:
+      info: 'Informations du Département'
+      description: 'Renseignez les informations du département. La date de création est obligatoire.'
+      name: 'Nom du département'
+      name_placeholder: 'Ex: Département Informatique'
+      creation_date: 'Date de création'
+      new: 'Créer un nouveau département'
+      edit: 'Modifier le département'
+    flash:
+      success:
+        created: 'Le département "%name%" a été créé avec succès'
+        updated: 'Le département "%name%" a été mis à jour avec succès'
+        deleted: 'Le département a été supprimé avec succès'
+      error:
+        create: 'Erreur lors de la création du département'
+        update: 'Erreur lors de la mise à jour du département'
+        delete: 'Erreur lors de la suppression du département'
+        not_found: 'Département non trouvé'
+        exists: 'Ce département existe déjà'
+        required: 'Le département est obligatoire'
+    name_placeholder: 'Ecrirez le nom du département'
+    name: 'Nom du département'
+    creation_date: ''
 
 # Navigation
 nav:
@@ -208,6 +225,8 @@ action:
   actions: 'Actions'
   back_to_list: 'Retour à la liste'
   update: 'Mettre à jour'
+  create: 'Créer'
+  cancel: 'Annuler'
 
 # Entity Labels
 entity:
@@ -365,6 +384,16 @@ flash:
     create_error: 'Erreur lors de la création de %entity%'
     update_error: 'Erreur lors de la mise à jour de %entity%'
     delete_error: 'Erreur lors de la suppression de %entity%'
+  departement:
+    success:
+      created: 'Le département "%name%" a été créé avec succès'
+      updated: 'Le département "%name%" a été mis à jour avec succès'
+      deleted: 'Le département a été supprimé avec succès'
+    error:
+      create: 'Erreur lors de la création du département'
+      update: 'Erreur lors de la mise à jour du département'
+      delete: 'Erreur lors de la suppression du département'
+      not_found: 'Département non trouvé'
 
 # Enum Values
 enum:

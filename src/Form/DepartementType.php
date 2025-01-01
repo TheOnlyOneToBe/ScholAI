@@ -17,14 +17,6 @@ class DepartementType extends AbstractType
             ->add('nomDepartement', null, [
                 'label' => 'form.departement.nomDepartement'
             ])
-            ->add('description', null, [
-                'label' => 'form.departement.description'
-            ])
-            ->add('campus', EntityType::class, [
-                'class' => Campus::class,
-                'choice_label' => 'id',
-                'label' => 'form.departement.campus'
-            ])
             ->add('dateCreation', null, [
                 'widget' => 'single_text',
             ])
