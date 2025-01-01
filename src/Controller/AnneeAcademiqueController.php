@@ -67,7 +67,7 @@ class AnneeAcademiqueController extends AbstractController
                     $entityManager->flush();
 
                     $this->addSuccessFlash($this->translator->trans('flash.success.item_created', [
-                        'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart() . '-' . $anneeAcademique->getYearEnd()
+                        'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart()->format('Y') . '-' . $anneeAcademique->getYearEnd()->format('Y')
                     ]));
                     return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
                 } catch (\Exception $e) {
@@ -120,7 +120,7 @@ class AnneeAcademiqueController extends AbstractController
 
                 $entityManager->flush();
                 $this->addSuccessFlash($this->translator->trans('flash.success.item_updated', [
-                    'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart() . '-' . $anneeAcademique->getYearEnd()
+                    'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart()->format('Y') . '-' . $anneeAcademique->getYearEnd()->format('Y')
                 ]));
                 return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
             } catch (\Exception $e) {
@@ -147,7 +147,7 @@ class AnneeAcademiqueController extends AbstractController
                 $entityManager->remove($anneeAcademique);
                 $entityManager->flush();
                 $this->addSuccessFlash($this->translator->trans('flash.success.item_deleted', [
-                    'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart() . '-' . $anneeAcademique->getYearEnd()
+                    'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart()->format('Y') . '-' . $anneeAcademique->getYearEnd()->format('Y')
                 ]));
             } catch (\Exception $e) {
                 $this->handleException($e);

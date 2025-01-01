@@ -37,14 +37,9 @@ class AnneeAcademique
         propertyPath: 'YearStart',
         message: 'annee_academique.year_end.must_be_after_start'
     )]
-    #[Assert\Expression(
-        "this.getYearEnd() <= this.getYearStart()+modify(1 year)",
-        message: 'annee_academique.year_end.max_one_year'
-    )]
     private ?\DateTimeInterface $YearEnd = null;
 
     #[ORM\Column]
-
     private ?bool $isCurrent = null;
 
     /**
@@ -150,6 +145,19 @@ class AnneeAcademique
             $diff = $this->YearStart->diff($this->YearEnd);
             if ($diff->y > 1) {
                 $context->buildViolation('annee_academique.year_range.too_long')
+                    ->atPath('YearEnd')
+                    ->addViolation();
+            }
+        }
+    }
+
+    #[Assert\Callback]
+    public function validateYearEndNotTooFar(ExecutionContextInterface $context): void
+    {
+        if ($this->YearStart && $this->YearEnd) {
+            $maxEndDate = (clone $this->YearStart)->modify('+1 year');
+            if ($this->YearEnd > $maxEndDate) {
+                $context->buildViolation('annee_academique.year_end.max_one_year')
                     ->atPath('YearEnd')
                     ->addViolation();
             }

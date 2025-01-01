@@ -66,8 +66,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             const dateConfig = {
                 locale: 'fr',
-                dateFormat: 'Y/m/d',
-                altFormat: 'Y/m/d',
+                dateFormat: 'd/m/Y',
+                altFormat: 'd/m/Y',
                 allowInput: true,
                 disableMobile: false,
                 enableTime: false,
@@ -89,7 +89,7 @@
             // Initialiser le picker pour l'année de fin
             const endYearPicker = flatpickr('#annee_academique_YearEnd', {
                 ...dateConfig,
-                defaultDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                defaultDate: new Date(new Date().setFullYear(new Date().getFullYear()))
             });
         });
     </script>
