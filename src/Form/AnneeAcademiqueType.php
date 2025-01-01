@@ -15,10 +15,20 @@ class AnneeAcademiqueType extends AbstractType
             ->add('YearStart', null, [
                 'widget' => 'single_text',
                 'label' => 'form.annee_academique.year_start',
+                'html5' => false,
+                'format' => 'dd/MM/yyyy',
+                'attr' => [
+                    'class' => 'js-datepicker',
+                ]
             ])
             ->add('YearEnd', null, [
                 'widget' => 'single_text',
                 'label' => 'form.annee_academique.year_end',
+                'html5' => false,
+                'format' => 'dd/MM/yyyy',
+                'attr' => [
+                    'class' => 'js-datepicker',
+                ]
             ])
            
         ;
