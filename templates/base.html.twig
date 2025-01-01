@@ -24,8 +24,9 @@
         {# Font Awesome #}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        {# jQuery #}
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        {# SweetAlert2 #}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         {% block stylesheets %}
             {# Additional stylesheets #}
@@ -35,13 +36,82 @@
         {% include 'partials/_navbar.html.twig' %}
         {% include 'partials/_sidebar.html.twig' %}
 
+        {# Flash Messages #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash-message hidden" data-type="{{ label }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <div class="p-4 lg:ml-64 mt-14">
-            <div class="p-4">
+            <main class="p-4 h-auto pt-20 lg:ml-64 transition-all duration-200">
                 {% block body %}{% endblock %}
-            </div>
+            </main>
         </div>
 
-        {% block javascripts %}{% endblock %}
+        <style>
+            /* Style pour la sidebar en mode compact */
+            #sidebar.compact {
+                width: 5rem;
+            }
+            #sidebar.compact .sidebar-text {
+                display: none;
+            }
+            
+            /* Ajustement du contenu principal */
+            .sidebar-compact {
+                margin-left: 5rem !important;
+            }
+        </style>
+
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+            <script src="{{ asset('js/flash-messages.js') }}"></script>
+            <script>
+                $(document).ready(function() {
+                    // Récupérer l'état initial de la sidebar depuis localStorage
+                    const sidebarState = localStorage.getItem('sidebarState');
+                    if (sidebarState === 'compact') {
+                        $('#sidebar').addClass('compact');
+                        $('main').addClass('sidebar-compact').removeClass('lg:ml-64');
+                    }
+
+                    // Toggle sidebar pour desktop
+                    $('#toggleSidebar').click(function() {
+                        $('#sidebar').toggleClass('compact');
+                        $('main').toggleClass('lg:ml-64 sidebar-compact');
+                        
+                        // Sauvegarder l'état dans localStorage
+                        const isCompact = $('#sidebar').hasClass('compact');
+                        localStorage.setItem('sidebarState', isCompact ? 'compact' : 'expanded');
+                    });
+
+                    // Toggle sidebar pour mobile
+                    $('#toggleSidebarMobile').click(function() {
+                        $('#sidebar').toggleClass('hidden');
+                    });
+
+                    // Toggle menu utilisateur
+                    $('#user-menu-button').click(function(e) {
+                        e.stopPropagation();
+                        $('#user-menu').toggleClass('hidden');
+                    });
+
+                    // Fermer le menu utilisateur en cliquant ailleurs
+                    $(document).click(function() {
+                        $('#user-menu').addClass('hidden');
+                    });
+
+                    // Empêcher la fermeture lors du clic dans le menu
+                    $('#user-menu').click(function(e) {
+                        e.stopPropagation();
+                    });
+                });
+            </script>
+        {% endblock %}
 
     </body>
 </html>

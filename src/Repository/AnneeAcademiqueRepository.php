@@ -8,6 +8,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<AnneeAcademique>
+ *
+ * @method AnneeAcademique|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AnneeAcademique|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AnneeAcademique[]    findAll()
+ * @method AnneeAcademique[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AnneeAcademiqueRepository extends ServiceEntityRepository
 {
@@ -16,28 +21,26 @@ class AnneeAcademiqueRepository extends ServiceEntityRepository
         parent::__construct($registry, AnneeAcademique::class);
     }
 
-    //    /**
-    //     * @return AnneeAcademique[] Returns an array of AnneeAcademique objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function removeCurrentFlag(?int $exceptId = null): void
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->update()
+            ->set('a.current', ':current')
+            ->setParameter('current', false);
 
-    //    public function findOneBySomeField($value): ?AnneeAcademique
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($exceptId !== null) {
+            $qb->where('a.id != :exceptId')
+               ->setParameter('exceptId', $exceptId);
+        }
+
+        $qb->getQuery()->execute();
+    }
+
+    /**
+     * Trouve l'année académique courante
+     */
+    public function findCurrent(): ?AnneeAcademique
+    {
+        return $this->findOneBy(['current' => true]);
+    }
 }

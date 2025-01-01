@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AnneeAcademique;
-use App\Form\AnneeAcademiqueNoEntityType;
+use App\Form\AnneeAcademiqueType;
 use App\Repository\AnneeAcademiqueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,20 +23,24 @@ class AnneeAcademiqueController extends AbstractController
 
     private TranslatorInterface $translator;
     private RequestStack $requestStack;
+    private string $entityName;
 
     public function __construct(TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
+        $this->entityName = $this->translator->trans('entity.annee_academique');
     }
 
     #[Route('/', name: 'app_annee_academique_index', methods: ['GET'])]
     public function index(AnneeAcademiqueRepository $anneeAcademiqueRepository): Response
     {
-        $anneeAcademiques = $anneeAcademiqueRepository->findAll();
+        $anneeAcademiques = $anneeAcademiqueRepository->findBy([], ['YearStart' => 'DESC']);
         
         if (empty($anneeAcademiques)) {
-            $this->addInfoFlash($this->translator->trans('flash.info.no_records'));
+            $this->addInfoFlash($this->translator->trans('flash.info.no_records', [
+                'entity' => $this->entityName
+            ]));
         }
 
         return $this->render('annee_academique/index.html.twig', [
@@ -45,30 +49,44 @@ class AnneeAcademiqueController extends AbstractController
     }
 
     #[Route('/new', name: 'app_annee_academique_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, AnneeAcademiqueRepository $repository): Response
     {
-        $form = $this->createForm(AnneeAcademiqueNoEntityType::class);
+        $anneeAcademique = new AnneeAcademique();
+        $form = $this->createForm(AnneeAcademiqueType::class, $anneeAcademique);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            
-            $anneeAcademique = new AnneeAcademique();
-            $anneeAcademique->setYearStart($data['YearStart']);
-            $anneeAcademique->setYearEnd($data['YearEnd']);
-            $anneeAcademique->setIsCurrent(false);
+        if ($form->isSubmitted()){
+            if($form->isValid()) {
+                try {
+                    // Si c'est marqué comme année courante, désactiver les autres
+                    if ($anneeAcademique->isCurrent()) {
+                        $repository->removeCurrentFlag();
+                    }
+                    $anneeAcademique->setCurrent(false);
+                    $entityManager->persist($anneeAcademique);
+                    $entityManager->flush();
 
-            try {
-                $entityManager->persist($anneeAcademique);
-                $entityManager->flush();
-                $this->addSuccessFlash($this->translator->trans('flash.success.item_created'));
-                return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
-            } catch (\Exception $e) {
-                $this->handleException($e);
+                    $this->addSuccessFlash($this->translator->trans('flash.success.item_created', [
+                        'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart() . '-' . $anneeAcademique->getYearEnd()
+                    ]));
+                    return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
+                } catch (\Exception $e) {
+                    $this->handleException($e);
+                }
+            } else {
+
+                $errors = [];
+                foreach ($form->getErrors(true, true) as $error) {
+                    $errors[] = $error->getMessage();
+                }
+                $this->addFlash('error', implode('</br> ', $errors));
+                $form->clearErrors();
+
             }
         }
 
         return $this->render('annee_academique/new.html.twig', [
+            'annee_academique' => $anneeAcademique,
             'form' => $form,
         ]);
     }
@@ -77,7 +95,9 @@ class AnneeAcademiqueController extends AbstractController
     public function show(AnneeAcademique $anneeAcademique = null): Response
     {
         if (!$anneeAcademique) {
-            $this->handleNotFoundException('annee_academique');
+            throw $this->createNotFoundException($this->translator->trans('error.not_found', [
+                'item' => $this->entityName
+            ]));
         }
 
         return $this->render('annee_academique/show.html.twig', [
@@ -86,24 +106,22 @@ class AnneeAcademiqueController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_annee_academique_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager, AnneeAcademiqueRepository $repository): Response
     {
-        $form = $this->createForm(AnneeAcademiqueNoEntityType::class, [
-            'YearStart' => $anneeAcademique->getYearStart(),
-            'YearEnd' => $anneeAcademique->getYearEnd()
-        ]);
-        
+        $form = $this->createForm(AnneeAcademiqueType::class, $anneeAcademique);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            
-            $anneeAcademique->setYearStart($data['YearStart']);
-            $anneeAcademique->setYearEnd($data['YearEnd']);
-
             try {
+                // Si c'est marqué comme année courante, désactiver les autres
+                if ($anneeAcademique->isCurrent()) {
+                    $repository->removeCurrentFlag($anneeAcademique->getId());
+                }
+
                 $entityManager->flush();
-                $this->addSuccessFlash($this->translator->trans('flash.success.item_updated'));
+                $this->addSuccessFlash($this->translator->trans('flash.success.item_updated', [
+                    'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart() . '-' . $anneeAcademique->getYearEnd()
+                ]));
                 return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
             } catch (\Exception $e) {
                 $this->handleException($e);
@@ -121,14 +139,27 @@ class AnneeAcademiqueController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$anneeAcademique->getId(), $request->request->get('_token'))) {
             try {
+                // Empêcher la suppression de l'année académique courante
+                if ($anneeAcademique->isCurrent()) {
+                    throw new \Exception($this->translator->trans('error.cannot_delete_current_year'));
+                }
+
                 $entityManager->remove($anneeAcademique);
                 $entityManager->flush();
-                $this->addSuccessFlash($this->translator->trans('flash.success.item_deleted'));
+                $this->addSuccessFlash($this->translator->trans('flash.success.item_deleted', [
+                    'entity' => $this->entityName . ' ' . $anneeAcademique->getYearStart() . '-' . $anneeAcademique->getYearEnd()
+                ]));
             } catch (\Exception $e) {
                 $this->handleException($e);
             }
         }
 
         return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function hasDependendencies(AnneeAcademique $anneeAcademique): bool
+    {
+        // Vérifier les relations (à implémenter selon vos besoins)
+        return false;
     }
 }

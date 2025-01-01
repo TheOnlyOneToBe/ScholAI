@@ -38,13 +38,13 @@ class AnneeAcademique
         message: 'annee_academique.year_end.must_be_after_start'
     )]
     #[Assert\Expression(
-        "this.getYearEnd() <= this.getYearStart().modify('+1 year')",
+        "this.getYearEnd() <= this.getYearStart()",
         message: 'annee_academique.year_end.max_one_year'
     )]
     private ?\DateTimeInterface $YearEnd = null;
 
     #[ORM\Column]
-    #[Assert\NotNull(message: 'annee_academique.is_current.not_null')]
+
     private ?bool $isCurrent = null;
 
     /**

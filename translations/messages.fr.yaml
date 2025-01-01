@@ -168,9 +168,13 @@ form:
       exists: 'Cette année académique existe déjà'
       required: 'L''année académique est obligatoire'
       format: 'Le format doit être AAAA-AAAA (ex: 2023-2024)'
+
   common:
     back: 'Retour'
     save: 'Enregistrer'
+nav_profile: ""
+nav_settings: "Paramètres"
+nav_logout: "Se déconnecter"
 
 # Navigation
 nav:
@@ -192,6 +196,8 @@ nav:
     title: 'Profil'
     settings: 'Paramètres'
     logout: 'Déconnexion'
+  settings: 'messages'
+  logout: 'messages'
 
 # Common Actions
 action:
@@ -205,7 +211,7 @@ action:
 
 # Entity Labels
 entity:
-  annee_academique: 'Année Académique'
+  annee_academique: 'Année académique'
   antecedent_academique: 'Antécédent Académique'
   bourse: 'Bourse'
   campus: 'Campus'
@@ -320,6 +326,14 @@ avertissement:
 message:
   confirm_delete: 'Êtes-vous sûr de vouloir supprimer cet élément ?'
 
+# Messages d'erreur
+error:
+  not_found: "L'élément %item% n'a pas été trouvé"
+  foreign_key_constraint: "Impossible de supprimer cet élément car il est utilisé par d'autres enregistrements"
+  cannot_delete_current_year: "Impossible de supprimer l'année académique en cours"
+  year_end_must_be_greater: "L'année de fin doit être supérieure à l'année de début"
+  year_overlap: "Cette période chevauche une année académique existante"
+
 # Validation Messages
 validation:
   not_null: 'Ce champ ne peut pas être vide'
@@ -344,9 +358,9 @@ validation:
 # Flash Messages
 flash:
   success:
-    created: '%entity% créé avec succès'
-    updated: '%entity% mis à jour avec succès'
-    deleted: '%entity% supprimé avec succès'
+    item_created: '%entity% créé(e) avec succès'
+    item_updated: '%entity% mis(e) à jour avec succès'
+    item_deleted: '%entity% supprimé(e) avec succès'
   error:
     create_error: 'Erreur lors de la création de %entity%'
     update_error: 'Erreur lors de la mise à jour de %entity%'
