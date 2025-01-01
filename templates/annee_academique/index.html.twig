@@ -1,39 +1,115 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}AnneeAcademique index{% endblock %}
+{% block title %}Années Académiques{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <style>
+        .content-container {
+            padding-right: 1rem;
+            margin-left: 0;
+        }
+        .dataTables_wrapper {
+            margin-left: 0;
+        }
+        @media (min-width: 1024px) {
+            .main-content {
+                margin-left: 0.5rem;
+                max-width: 95%;
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>AnneeAcademique index</h1>
+    <div class="main-content">
+        <div class="content-container">
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-calendar-alt text-2xl text-indigo-600"></i>
+                            <h1 class="text-2xl font-bold text-gray-900">Années Académiques</h1>
+                        </div>
+                        <a href="{{ path('app_annee_academique_new') }}" 
+                           class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm">
+                            <i class="fas fa-plus mr-2"></i>
+                            Ajouter
+                        </a>
+                    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>YearStart</th>
-                <th>YearEnd</th>
-                <th>IsCurrent</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for annee_academique in annee_academiques %}
-            <tr>
-                <td>{{ annee_academique.id }}</td>
-                <td>{{ annee_academique.YearStart ? annee_academique.YearStart|date('Y') : '' }}</td>
-                <td>{{ annee_academique.YearEnd ? annee_academique.YearEnd|date('Y') : '' }}</td>
-                <td>{{ annee_academique.isCurrent ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}">show</a>
-                    <a href="{{ path('app_annee_academique_edit', {'id': annee_academique.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                    <div class="overflow-x-auto">
+                        <table id="annees-table" class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Année</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            {% for annee_academique in annee_academiques %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ annee_academique.YearStart ? annee_academique.YearStart|date('Y') : '' }} - {{ annee_academique.YearEnd ? annee_academique.YearEnd|date('Y') : '' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% if annee_academique.isCurrent %}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Année courante
+                                            </span>
+                                        {% else %}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                Inactive
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}" 
+                                           class="text-indigo-600 hover:text-indigo-900 mr-3" title="Voir">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_annee_academique_edit', {'id': annee_academique.id}) }}" 
+                                           class="text-blue-600 hover:text-blue-900" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-    <a href="{{ path('app_annee_academique_new') }}">Create new</a>
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.tailwind.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#annees-table').DataTable({
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+                },
+                dom: '<"flex justify-between items-center mb-4"lf>rt<"flex justify-between items-center mt-4"ip>',
+                order: [[0, 'desc']],
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                columnDefs: [
+                    {
+                        targets: -1,
+                        orderable: false
+                    }
+                ]
+            });
+        });
+    </script>
 {% endblock %}
