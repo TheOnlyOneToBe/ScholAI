@@ -3,11 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Departement;
-use App\Entity\Campus;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class DepartementType extends AbstractType
 {
@@ -15,10 +14,18 @@ class DepartementType extends AbstractType
     {
         $builder
             ->add('nomDepartement', null, [
-                'label' => 'form.departement.nomDepartement'
+                'attr' => [
+                    'label'=>'form.departement.form.name',
+                    'placeholder' => 'form.departement.name_placeholder'
+                ]
             ])
-            ->add('dateCreation', null, [
+
+            ->add('dateCreation', DateTimeType::class, [
                 'widget' => 'single_text',
+                'html5' => true,
+                'input' => 'datetime',
+                'label'=>'form.departement.creation_date',
+                
             ])
         ;
     }
@@ -27,6 +34,7 @@ class DepartementType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Departement::class,
+            'translation_domain' => 'messages'
         ]);
     }
 }

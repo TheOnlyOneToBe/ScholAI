@@ -71,12 +71,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr('.js-datepicker', {
-                dateFormat: 'Y-m-d',
+                dateFormat: 'Y-m-d \\ TH:i',
                 locale: 'fr',
                 altInput: true,
-                altFormat: 'j F Y',
-                monthSelectorType: 'static'
+                altFormat: 'j F Y H:i',
+                monthSelectorType: 'static',
+               time_24hr: true,
+               enableTime: true
             });
         });
     </script>
+    <script src="{{ asset('js/departement-form.js') }}"></script>
 {% endblock %}

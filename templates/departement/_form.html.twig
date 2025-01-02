@@ -1,6 +1,8 @@
 {% form_theme form 'form/tailwind_layout.html.twig' %}
 
-{{ form_start(form, {'attr': {'class': 'space-y-4'}}) }}
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
     <div class="space-y-4">
         {# Nom du département #}
         <div>
@@ -22,7 +24,7 @@
 
         {# Date de création #}
         <div>
-            {{ form_label(form.dateCreation, 'form.departement.creation_date'|trans, {
+            {{ form_label(form.dateCreation, 'form.departement.form.creation_date'|trans, {
                 'label_attr': {
                     'class': 'form-label block text-sm font-semibold mb-2 text-gray-700'
                 }
@@ -53,3 +55,19 @@
         </button>
     </div>
 {{ form_end(form) }}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr('.js-datepicker', {
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: 'Y-m-d H:i',
+        locale: 'fr',
+        allowInput: true,
+        defaultHour: new Date().getHours(),
+        defaultMinute: new Date().getMinutes()
+    });
+});
+</script>
+{% endblock %}

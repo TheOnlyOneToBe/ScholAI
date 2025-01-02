@@ -57,7 +57,9 @@ class DepartementController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                
                 try {
+                    
                     $entityManager->persist($departement);
                     $entityManager->flush();
 
