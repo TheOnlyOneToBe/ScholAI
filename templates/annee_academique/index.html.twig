@@ -148,7 +148,10 @@
                             {% for annee_academique in annee_academiques %}
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ annee_academique.YearStart ? annee_academique.YearStart|date('Y') : '' }} - {{ annee_academique.YearEnd ? annee_academique.YearEnd|date('Y') : '' }}
+                                        <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}" 
+                                           class="hover:text-indigo-600 transition-colors duration-200">
+                                            {{ annee_academique.YearStart ? annee_academique.YearStart|date('Y') : '' }} - {{ annee_academique.YearEnd ? annee_academique.YearEnd|date('Y') : '' }}
+                                        </a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <label class="switch" data-id="{{ annee_academique.id }}">
@@ -157,14 +160,20 @@
                                         </label>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}" 
-                                           class="text-indigo-600 hover:text-indigo-900 mr-3" title="Voir">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ path('app_annee_academique_edit', {'id': annee_academique.id}) }}" 
-                                           class="text-blue-600 hover:text-blue-900" title="Modifier">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+                                        <div class="flex items-center justify-end space-x-3">
+                                            <a href="{{ path('app_annee_academique_edit', {'id': annee_academique.id}) }}" 
+                                               class="text-blue-600 hover:text-blue-900" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" action="{{ path('app_annee_academique_delete', {'id': annee_academique.id}) }}" 
+                                                  class="inline-block" 
+                                                  onsubmit="return confirm('{{ 'message.confirm_delete'|trans }}');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ annee_academique.id) }}">
+                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
