@@ -57,18 +57,20 @@
         <div class="container p-4">
             <div class="max-w-lg mx-auto lg:mx-0">
                 <div class="bg-white shadow-lg rounded-lg p-6">
-                    <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
-                        <i class="fas fa-building text-2xl text-indigo-600"></i>
-                        <h1 class="text-2xl font-bold text-gray-900">
-                            {{ 'form.departement.title.edit'|trans }}
-                        </h1>
+                    <div class="flex items-center justify-between space-x-3 mb-6 pb-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-building text-2xl text-indigo-600"></i>
+                            <h1 class="text-2xl font-bold text-gray-900">
+                                {{ 'form.departement.title.edit'|trans }}
+                            </h1>
+                        </div>
+                        {{ include('departement/_delete_form.html.twig') }}
                     </div>
 
                     {{ include('departement/_form.html.twig', {'button_label': 'form.button.update'|trans}) }}
 
                     <div class="mt-6 flex justify-between items-center pt-4 border-t border-gray-200">
                        
-                        {{ include('departement/_delete_form.html.twig') }}
                     </div>
                 </div>
             </div>

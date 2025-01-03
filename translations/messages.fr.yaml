@@ -160,6 +160,7 @@ form:
       created: 'L''année académique a été créée avec succès'
       updated: 'L''année académique a été mise à jour avec succès'
       deleted: 'L''année académique a été supprimée avec succès'
+      confirm: "Etes vous sur de supprimer l'année académique %entity%"
     error:
       exists: 'Cette année académique existe déjà'
       required: 'L''année académique est obligatoire'
@@ -343,7 +344,7 @@ avertissement:
 
 # Messages
 message:
-  confirm_delete: 'Êtes-vous sûr de vouloir supprimer cet élément ?'
+  confirm_delete: 'Êtes-vous sûr de vouloir supprimer cet élément '
 
 # Messages d'erreur
 error:

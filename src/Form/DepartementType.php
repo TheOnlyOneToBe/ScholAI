@@ -25,7 +25,9 @@ class DepartementType extends AbstractType
                 'html5' => true,
                 'input' => 'datetime',
                 'label'=>'form.departement.creation_date',
-                
+                'attr' => [
+                    'max' => date('Y-m-d\TH:i'),
+                ]
             ])
         ;
     }

@@ -164,10 +164,10 @@ class AnneeAcademique
         }
     }
 
-    #[Assert\Callback]
+    /*#[Assert\Callback]
     public function validateCurrentYear(ExecutionContextInterface $context): void
     {
-        if ($this->isCurrent) {
+        /*if ($this->isCurrent) {
             $repository = $context->getRoot()->getRepository(AnneeAcademique::class);
             $existingCurrent = $repository->findOneBy(['isCurrent' => true]);
             
@@ -177,7 +177,7 @@ class AnneeAcademique
                     ->addViolation();
             }
         }
-    }
+    }*/
 
     /**
      * @return Collection<int, Inscription>

@@ -106,30 +106,38 @@ class DepartementController extends AbstractController
             $this->handleNotFoundException('departement');
         }
 
-        try {
-            $form = $this->createForm(DepartementType::class, $departement);
-            $form->handleRequest($request);
+        $form = $this->createForm(DepartementType::class, $departement);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $entityManager->flush();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                try {
+                    $entityManager->flush();
 
-                $this->addSuccessFlash($this->translator->trans('flash.success.updated', [
-                    '%entity%' => $this->translator->trans('entity.departement')
-                ]));
+                    $this->addSuccessFlash($this->translator->trans('flash.success.updated', [
+                        '%entity%' => $this->translator->trans('entity.departement')
+                    ]));
 
-                return $this->redirectToRoute('app_departement_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('app_departement_index', [], Response::HTTP_SEE_OTHER);
+                } catch (\Exception $e) {
+                    $this->addErrorFlash($this->translator->trans('flash.error.update_error', [
+                        '%entity%' => $this->translator->trans('entity.departement')
+                    ]));
+                }
+            } else {
+                $errors = [];
+                foreach ($form->getErrors(true, true) as $error) {
+                    $errors[] = $error->getMessage();
+                }
+                $this->addFlash('error', implode('</br> ', $errors));
+                $form->clearErrors();
             }
-
-            return $this->render('departement/edit.html.twig', [
-                'departement' => $departement,
-                'form' => $form,
-            ]);
-        } catch (\Exception $e) {
-            $this->addErrorFlash($this->translator->trans('flash.error.update_error', [
-                '%entity%' => $this->translator->trans('entity.departement')
-            ]));
-            return $this->redirectToRoute('app_departement_index');
         }
+
+        return $this->render('departement/edit.html.twig', [
+            'departement' => $departement,
+            'form' => $form,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_departement_delete', methods: ['POST'])]

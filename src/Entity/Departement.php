@@ -35,7 +35,7 @@ class Departement
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotNull(message: 'departement.date_creation.not_null')]
     #[Assert\LessThanOrEqual(
-        'today',
+        value: 'now',
         message: 'departement.date_creation.must_be_past_or_today'
     )]
     private ?\DateTimeInterface $dateCreation = null;

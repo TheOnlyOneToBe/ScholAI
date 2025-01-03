@@ -115,9 +115,9 @@ class AnneeAcademiqueController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 // Si c'est marqué comme année courante, désactiver les autres
-                if ($anneeAcademique->isCurrent()) {
+                /*if ($anneeAcademique->isCurrent()) {
                     $repository->removeCurrentFlag($anneeAcademique->getId());
-                }
+                }*/
 
                 $entityManager->flush();
                 $this->addSuccessFlash($this->translator->trans('flash.success.item_updated', [

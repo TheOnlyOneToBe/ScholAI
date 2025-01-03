@@ -7,18 +7,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwind.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
     <style>
-        .content-container {
-            padding-right: 1rem;
-            margin-left: 0;
-        }
-        .dataTables_wrapper {
-            margin-left: 0;
-        }
-        @media (min-width: 1024px) {
-            .main-content {
-                margin-left: 0.5rem;
-                max-width: 95%;
-            }
+        .flatpickr-calendar {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
         }
         /* Style pour le switch */
         .switch {
@@ -71,10 +64,10 @@
 {% endblock %}
 
 {% block body %}
-    <div class="main-content">
-        <div class="content-container">
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                <div class="p-6">
+    <div class="flex flex-col lg:ml-4 transition-all duration-300">
+        <div class="container p-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white shadow-lg rounded-lg p-6">
                     <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                         <div class="flex items-center space-x-3">
                             <i class="fas fa-calendar-alt text-2xl text-indigo-600"></i>
@@ -139,7 +132,7 @@
             $('#annees-table').DataTable({
                 responsive: true,
                 language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
                 },
                 dom: '<"flex justify-between items-center mb-4"lf>rt<"flex justify-between items-center mt-4"ip>',
                 order: [[0, 'desc']],

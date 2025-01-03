@@ -2,9 +2,17 @@
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ departement.id) }}">
     <button class="btn">Delete</button>
 </form> #}
-<form method="post" action="{{ path('app_departement_delete', {'id': departement.id}) }}" onsubmit="return confirm('{{ 'form.departement.flash.error.delete'|trans }}');" class="inline-block">
+<form method="post" action="{{ path('app_departement_delete', {'id': departement.id}) }}" id="delete-form" class="inline-block">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ departement.id) }}">
-    <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center">
+    <button type="button" onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center">
         <i class="fas fa-trash-alt mr-2"></i>
     </button>
 </form>
+
+<script>
+function confirmDelete() {
+    if (confirm('{{ 'message.confirm_delete'|trans }}{{ departement.nomDepartement }} ?')) {
+        document.getElementById('delete-form').submit();
+    }
+}
+</script>
