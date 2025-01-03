@@ -1,0 +1,35 @@
+
+// Gestion des switches
+$('.switch input[type="checkbox"]').on('change', function(e) {
+    const $switch = $(this).closest('.switch');
+    const id = $switch.data('id');
+    const $allSwitches = $('.switch');
+
+    // Désactiver tous les switches pendant la requête
+    $allSwitches.addClass('disabled');
+    $allSwitches.find('input').prop('disabled', true);
+
+    $.ajax({
+        url: '{{ path('app_annee_academique_toggle_status', {'id': 'ID'}) }}'.replace('ID', id),
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token('toggle-status') }}'
+        },
+        success: function(response) {
+            if (response.success) {
+                // Active le switch cliqué et désactive les autres
+                $allSwitches.find('input').prop('checked', false);
+                $switch.find('input').prop('checked', true);
+            }
+        },
+        error: function() {
+            // En cas d'erreur, recharger la page pour avoir l'état correct
+            window.location.reload();
+        },
+        complete: function() {
+            // Réactiver tous les switches
+            $allSwitches.removeClass('disabled');
+            $allSwitches.find('input').prop('disabled', false);
+        }
+    });
+});
