@@ -1,0 +1,14 @@
+$('#data-tables').DataTable({
+    responsive: true,
+        {{ include('core/js/langue.js.twig') }}
+    dom: '<"flex justify-between items-center mb-4"lf>rt<"flex justify-between items-center mt-4"ip>',
+    order: [[0, 'desc']],
+    pageLength: 10,
+    lengthMenu: [5, 10, 25, 50],
+    columnDefs: [
+        {
+            targets: -1,
+            orderable: false
+        }
+    ]
+});
