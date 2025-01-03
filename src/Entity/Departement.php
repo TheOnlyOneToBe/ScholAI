@@ -52,10 +52,17 @@ class Departement
     #[ORM\OneToMany(targetEntity: ChefDepartement::class, mappedBy: 'departement', orphanRemoval: true)]
     private Collection $chefDepartements;
 
+    /**
+     * @var Collection<int, FiliereCycle>
+     */
+    #[ORM\OneToMany(targetEntity: FiliereCycle::class, mappedBy: 'departement')]
+    private Collection $filiereCycles;
+
     public function __construct()
     {
         $this->professeurs = new ArrayCollection();
         $this->chefDepartements = new ArrayCollection();
+        $this->filiereCycles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,6 +148,36 @@ class Departement
             // set the owning side to null (unless already changed)
             if ($chefDepartement->getDepartement() === $this) {
                 $chefDepartement->setDepartement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FiliereCycle>
+     */
+    public function getFiliereCycles(): Collection
+    {
+        return $this->filiereCycles;
+    }
+
+    public function addFiliereCycle(FiliereCycle $filiereCycle): static
+    {
+        if (!$this->filiereCycles->contains($filiereCycle)) {
+            $this->filiereCycles->add($filiereCycle);
+            $filiereCycle->setDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFiliereCycle(FiliereCycle $filiereCycle): static
+    {
+        if ($this->filiereCycles->removeElement($filiereCycle)) {
+            // set the owning side to null (unless already changed)
+            if ($filiereCycle->getDepartement() === $this) {
+                $filiereCycle->setDepartement(null);
             }
         }
 

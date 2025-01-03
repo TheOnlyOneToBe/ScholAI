@@ -63,6 +63,9 @@ class FiliereCycle
     #[ORM\OneToMany(targetEntity: Inscription::class, mappedBy: 'filiereCycle', orphanRemoval: true)]
     private Collection $inscriptions;
 
+    #[ORM\ManyToOne(inversedBy: 'filiereCycles')]
+    private ?Departement $departement = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -159,6 +162,18 @@ class FiliereCycle
                 $inscription->setFiliereCycle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartement(): ?Departement
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?Departement $departement): static
+    {
+        $this->departement = $departement;
 
         return $this;
     }
