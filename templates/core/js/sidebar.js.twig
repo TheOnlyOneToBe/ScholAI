@@ -1,0 +1,37 @@
+// Récupérer l'état initial de la sidebar depuis localStorage
+const sidebarState = localStorage.getItem('sidebarState');
+if (sidebarState === 'compact') {
+    $('#sidebar').addClass('compact');
+    $('main').addClass('sidebar-compact').removeClass('lg:ml-64');
+}
+
+// Toggle sidebar pour desktop
+$('#toggleSidebar').click(function() {
+    $('#sidebar').toggleClass('compact');
+    $('main').toggleClass('lg:ml-64 sidebar-compact');
+
+    // Sauvegarder l'état dans localStorage
+    const isCompact = $('#sidebar').hasClass('compact');
+    localStorage.setItem('sidebarState', isCompact ? 'compact' : 'expanded');
+});
+
+// Toggle sidebar pour mobile
+$('#toggleSidebarMobile').click(function() {
+    $('#sidebar').toggleClass('hidden');
+});
+
+// Toggle menu utilisateur
+$('#user-menu-button').click(function(e) {
+    e.stopPropagation();
+    $('#user-menu').toggleClass('hidden');
+});
+
+// Fermer le menu utilisateur en cliquant ailleurs
+$(document).click(function() {
+    $('#user-menu').addClass('hidden');
+});
+
+// Empêcher la fermeture lors du clic dans le menu
+$('#user-menu').click(function(e) {
+    e.stopPropagation();
+});

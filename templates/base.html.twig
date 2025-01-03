@@ -5,29 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        
-        {# Tailwind CSS #}
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            primary: '#1a56db',
-                            secondary: '#7c3aed',
-                        }
-                    }
-                }
-            }
-        </script>
-
-        {# Font Awesome #}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-        {# SweetAlert2 #}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+        {% include 'core/css/base.css.twig'%}
         {% block stylesheets %}
             {# Additional stylesheets #}
         {% endblock %}
@@ -51,118 +29,9 @@
             </main>
         </div>
 
-        <style>
-            /* Style pour la sidebar en mode compact */
-            #sidebar.compact {
-                width: 5rem;
-            }
-            #sidebar.compact .sidebar-text {
-                display: none;
-            }
-            
-            /* Ajustement du contenu principal */
-            .sidebar-compact {
-                margin-left: 5rem !important;
-            }
-        </style>
-
+        {% include 'core/js/base.js.twig' %}
         {% block javascripts %}
-            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-            <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
-            <script src="{{ asset('js/flash-messages.js') }}"></script>
-            <script>
-                $(document).ready(function() {
-                    // Récupérer l'état initial de la sidebar depuis localStorage
-                    const sidebarState = localStorage.getItem('sidebarState');
-                    if (sidebarState === 'compact') {
-                        $('#sidebar').addClass('compact');
-                        $('main').addClass('sidebar-compact').removeClass('lg:ml-64');
-                    }
-
-                    // Toggle sidebar pour desktop
-                    $('#toggleSidebar').click(function() {
-                        $('#sidebar').toggleClass('compact');
-                        $('main').toggleClass('lg:ml-64 sidebar-compact');
-                        
-                        // Sauvegarder l'état dans localStorage
-                        const isCompact = $('#sidebar').hasClass('compact');
-                        localStorage.setItem('sidebarState', isCompact ? 'compact' : 'expanded');
-                    });
-
-                    // Toggle sidebar pour mobile
-                    $('#toggleSidebarMobile').click(function() {
-                        $('#sidebar').toggleClass('hidden');
-                    });
-
-                    // Toggle menu utilisateur
-                    $('#user-menu-button').click(function(e) {
-                        e.stopPropagation();
-                        $('#user-menu').toggleClass('hidden');
-                    });
-
-                    // Fermer le menu utilisateur en cliquant ailleurs
-                    $(document).click(function() {
-                        $('#user-menu').addClass('hidden');
-                    });
-
-                    // Empêcher la fermeture lors du clic dans le menu
-                    $('#user-menu').click(function(e) {
-                        e.stopPropagation();
-                    });
-                });
-            </script>
         {% endblock %}
 
-        {# Flash Messages Handler #}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                $('.flash-message').each(function() {
-                    const type = $(this).data('type');
-                    const message = $(this).text().trim();
-                    let icon, color;
-
-                    switch(type) {
-                        case 'success':
-                            icon = 'success';
-                            color = '#48bb78'; // Green
-                            break;
-                        case 'error':
-                            icon = 'error';
-                            color = '#f56565'; // Red
-                            break;
-                        case 'warning':
-                            icon = 'warning';
-                            color = '#ed8936'; // Orange
-                            break;
-                        case 'info':
-                            icon = 'info';
-                            color = '#4299e1'; // Blue
-                            break;
-                        default:
-                            icon = 'info';
-                            color = '#4299e1'; // Blue
-                    }
-
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-
-                    Toast.fire({
-                        icon: icon,
-                        title: message,
-                        background: '#fff',
-                        iconColor: color,
-                    });
-                });
-            });
-        </script>
     </body>
 </html>
