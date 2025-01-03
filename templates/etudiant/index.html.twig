@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Etudiant index{% endblock %}
+
+{% block body %}
+    <h1>Etudiant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sexe</th>
+                <th>DateNaissance</th>
+                <th>Adresse</th>
+                <th>IsRegistrationAllowed</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Email</th>
+                <th>NumTelephone</th>
+                <th>LieuNaissance</th>
+                <th>Nationalite</th>
+                <th>StudentPhoto</th>
+                <th>Cni</th>
+                <th>DateCreation</th>
+                <th>DateModification</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for etudiant in etudiants %}
+            <tr>
+                <td>{{ etudiant.id }}</td>
+                <td>{{ etudiant.sexe }}</td>
+                <td>{{ etudiant.dateNaissance ? etudiant.dateNaissance|date('Y-m-d') : '' }}</td>
+                <td>{{ etudiant.adresse }}</td>
+                <td>{{ etudiant.isRegistrationAllowed ? 'Yes' : 'No' }}</td>
+                <td>{{ etudiant.nom }}</td>
+                <td>{{ etudiant.prenom }}</td>
+                <td>{{ etudiant.email }}</td>
+                <td>{{ etudiant.numTelephone }}</td>
+                <td>{{ etudiant.lieuNaissance }}</td>
+                <td>{{ etudiant.nationalite }}</td>
+                <td>{{ etudiant.studentPhoto }}</td>
+                <td>{{ etudiant.cni }}</td>
+                <td>{{ etudiant.dateCreation ? etudiant.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ etudiant.dateModification ? etudiant.dateModification|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_etudiant_show', {'id': etudiant.id}) }}">show</a>
+                    <a href="{{ path('app_etudiant_edit', {'id': etudiant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="16">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_etudiant_new') }}">Create new</a>
+{% endblock %}

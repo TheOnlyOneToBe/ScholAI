@@ -2,65 +2,175 @@
     <div class="relative flex flex-col flex-1 min-h-0">
         <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
             <div class="flex-1 px-3 space-y-4 divide-y divide-gray-200">
-                <ul class="space-y-1">
-                    <li>
-                        <a href="{{ path('app_annee_academique_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                            <i class="fas fa-calendar-alt w-5 h-5 text-orange-500 transition duration-75 group-hover:text-orange-600"></i>
-                            <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.academic_year'|trans }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_professeur_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                            <i class="fas fa-chalkboard-teacher w-5 h-5 text-blue-500 transition duration-75 group-hover:text-blue-600"></i>
-                            <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.teachers'|trans }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_departement_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                            <i class="fas fa-building w-5 h-5 text-purple-500 transition duration-75 group-hover:text-purple-600"></i>
-                            <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.departments'|trans }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_cours_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                            <i class="fas fa-book w-5 h-5 text-green-500 transition duration-75 group-hover:text-green-600"></i>
-                            <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.courses'|trans }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_evaluation_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                            <i class="fas fa-file-alt w-5 h-5 text-red-500 transition duration-75 group-hover:text-red-600"></i>
-                            <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.evaluations'|trans }}</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="pt-4">
-                    <div class="px-3">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider sidebar-text">{{ 'nav.management'|trans }}</h3>
-                    </div>
-                    <ul class="pt-2 space-y-1">
+                {# Configuration Académique #}
+                <div class="space-y-1">
+                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider section-title">
+                        Configuration Académique
+                    </h3>
+                    <ul class="space-y-1">
                         <li>
-                            <a href="{{ path('app_utilisateur_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                                <i class="fas fa-users-cog w-5 h-5 text-pink-500 transition duration-75 group-hover:text-pink-600"></i>
-                                <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.users'|trans }}</span>
+                            <a href="{{ path('app_annee_academique_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-calendar-alt w-5 h-5 text-orange-500 transition duration-75 group-hover:text-orange-600"></i>
+                                <span class="ml-3 sidebar-text">Années Académiques</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('app_campus_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                                <i class="fas fa-university w-5 h-5 text-yellow-500 transition duration-75 group-hover:text-yellow-600"></i>
-                                <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.campus'|trans }}</span>
+                            <a href="{{ path('app_semestre_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-clock w-5 h-5 text-blue-500 transition duration-75 group-hover:text-blue-600"></i>
+                                <span class="ml-3 sidebar-text">Semestres</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('app_filiere_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                                <i class="fas fa-graduation-cap w-5 h-5 text-cyan-500 transition duration-75 group-hover:text-cyan-600"></i>
-                                <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.programs'|trans }}</span>
+                            <a href="{{ path('app_cycle_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-graduation-cap w-5 h-5 text-green-500 transition duration-75 group-hover:text-green-600"></i>
+                                <span class="ml-3 sidebar-text">Cycles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {# Structure Pédagogique #}
+                <div class="pt-4 space-y-1">
+                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider section-title">
+                        Structure Pédagogique
+                    </h3>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="{{ path('app_departement_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-building w-5 h-5 text-purple-500 transition duration-75 group-hover:text-purple-600"></i>
+                                <span class="ml-3 sidebar-text">Départements</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('app_planning_cours_index') }}" class="flex items-center p-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
-                                <i class="fas fa-calendar-alt w-5 h-5 text-teal-500 transition duration-75 group-hover:text-teal-600"></i>
-                                <span class="ml-3 sidebar-text whitespace-nowrap">{{ 'nav.course_planning'|trans }}</span>
+                            <a href="{{ path('app_filiere_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-stream w-5 h-5 text-indigo-500 transition duration-75 group-hover:text-indigo-600"></i>
+                                <span class="ml-3 sidebar-text">Filières</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_filiere_cycle_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-code-branch w-5 h-5 text-blue-500 transition duration-75 group-hover:text-blue-600"></i>
+                                <span class="ml-3 sidebar-text">Filières-Cycles</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_u_e_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-book-open w-5 h-5 text-yellow-500 transition duration-75 group-hover:text-yellow-600"></i>
+                                <span class="ml-3 sidebar-text">Unités d'Enseignement</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_cours_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-book w-5 h-5 text-red-500 transition duration-75 group-hover:text-red-600"></i>
+                                <span class="ml-3 sidebar-text">Cours</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {# Gestion des Personnes #}
+                <div class="pt-4 space-y-1">
+                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider section-title">
+                        Gestion des Personnes
+                    </h3>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="{{ path('app_professeur_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-chalkboard-teacher w-5 h-5 text-teal-500 transition duration-75 group-hover:text-teal-600"></i>
+                                <span class="ml-3 sidebar-text">Professeurs</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_etudiant_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-user-graduate w-5 h-5 text-pink-500 transition duration-75 group-hover:text-pink-600"></i>
+                                <span class="ml-3 sidebar-text">Étudiants</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {# Suivi Académique #}
+                <div class="pt-4 space-y-1">
+                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider section-title">
+                        Suivi Académique
+                    </h3>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="{{ path('app_inscription_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-user-plus w-5 h-5 text-cyan-500 transition duration-75 group-hover:text-cyan-600"></i>
+                                <span class="ml-3 sidebar-text">Inscriptions</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_evaluation_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-file-alt w-5 h-5 text-amber-500 transition duration-75 group-hover:text-amber-600"></i>
+                                <span class="ml-3 sidebar-text">Évaluations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_note_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-star w-5 h-5 text-lime-500 transition duration-75 group-hover:text-lime-600"></i>
+                                <span class="ml-3 sidebar-text">Notes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_presence_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-clipboard-check w-5 h-5 text-emerald-500 transition duration-75 group-hover:text-emerald-600"></i>
+                                <span class="ml-3 sidebar-text">Présences</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {# Administration #}
+                <div class="pt-4 space-y-1">
+                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider section-title">
+                        Administration
+                    </h3>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="{{ path('app_campus_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-university w-5 h-5 text-rose-500 transition duration-75 group-hover:text-rose-600"></i>
+                                <span class="ml-3 sidebar-text">Campus</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_salle_cours_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-door-open w-5 h-5 text-fuchsia-500 transition duration-75 group-hover:text-fuchsia-600"></i>
+                                <span class="ml-3 sidebar-text">Salles de cours</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_utilisateur_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-users-cog w-5 h-5 text-sky-500 transition duration-75 group-hover:text-sky-600"></i>
+                                <span class="ml-3 sidebar-text">Utilisateurs</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_role_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-user-shield w-5 h-5 text-violet-500 transition duration-75 group-hover:text-violet-600"></i>
+                                <span class="ml-3 sidebar-text">Rôles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {# Finance #}
+                <div class="pt-4 space-y-1">
+                    <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider section-title">
+                        Finance
+                    </h3>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="{{ path('app_reglement_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-money-bill-wave w-5 h-5 text-green-500 transition duration-75 group-hover:text-green-600"></i>
+                                <span class="ml-3 sidebar-text">Règlements</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_bourse_index') }}" class="flex items-center p-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 group transition-all duration-200">
+                                <i class="fas fa-gift w-5 h-5 text-yellow-500 transition duration-75 group-hover:text-yellow-600"></i>
+                                <span class="ml-3 sidebar-text">Bourses</span>
                             </a>
                         </li>
                     </ul>
@@ -69,5 +179,3 @@
         </div>
     </div>
 </aside>
-
-
