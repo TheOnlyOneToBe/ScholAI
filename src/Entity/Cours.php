@@ -33,7 +33,7 @@ class Cours
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(
-        min: 10,
+        min: 0,
         max: 255,
         minMessage: 'cours.descriptif.min_length',
         maxMessage: 'cours.descriptif.max_length'

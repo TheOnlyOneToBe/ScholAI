@@ -76,11 +76,19 @@ form:
     nomCycle: 'Nom du cycle'
     description: 'Description'
   cours:
+    title:
+      new: 'Nouveau Cours'
+      edit: 'Modifier le Cours'
+      list: 'Liste des Cours'
     nomCours: 'Nom du cours'
-    code: 'Code'
-    description: 'Description'
-    credit: 'Crédit'
-    volumeHoraire: 'Volume horaire'
+    nomCours.placeholder: 'Entrez le nom du cours'
+    typeCours: 'Type de cours'
+    typeCours.placeholder: 'Sélectionnez le type de cours'
+    typeCours.cm: 'Cours Magistral (CM)'
+    typeCours.td: 'Travaux Dirigés (TD)'
+    typeCours.tp: 'Travaux Pratiques (TP)'
+    descriptif: 'Description'
+    descriptif.placeholder: 'Entrez une description du cours'
     annee_academique:
     annee: 'Année'
     dateDebut: 'Date de début'

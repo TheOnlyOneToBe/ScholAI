@@ -1,11 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Cours{% endblock %}
+{% block title %}{{ 'form.cours.title.new'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .form-control:focus {
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5;
+        }
+        .form-select:focus {
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5;
+        }
+        textarea:focus {
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Cours</h1>
+    <div class="flex flex-col lg:ml-4 transition-all duration-300">
+        <div class="container p-4">
+            <div class="max-w-lg mx-auto lg:mx-0">
+                <div class="bg-white shadow-lg rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
+                        <i class="fas fa-book text-2xl text-indigo-600"></i>
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            {{ 'form.cours.title.new'|trans }}
+                        </h1>
+                    </div>
 
-    {{ include('cours/_form.html.twig') }}
-
-    <a href="{{ path('app_cours_index') }}">back to list</a>
+                    {{ include('cours/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
