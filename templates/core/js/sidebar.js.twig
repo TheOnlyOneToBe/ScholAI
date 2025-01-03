@@ -1,37 +1,61 @@
-// Récupérer l'état initial de la sidebar depuis localStorage
-const sidebarState = localStorage.getItem('sidebarState');
-if (sidebarState === 'compact') {
-    $('#sidebar').addClass('compact');
-    $('main').addClass('sidebar-compact').removeClass('lg:ml-64');
-}
+<script>
+$(document).ready(function() {
+    // Récupérer l'état initial de la sidebar depuis localStorage
+    const sidebarState = localStorage.getItem('sidebarState');
+    if (sidebarState === 'compact') {
+        $('#sidebar').addClass('compact');
+        $('main').removeClass('lg:ml-64').addClass('lg:ml-20');
+    }
 
-// Toggle sidebar pour desktop
-$('#toggleSidebar').click(function() {
-    $('#sidebar').toggleClass('compact');
-    $('main').toggleClass('lg:ml-64 sidebar-compact');
+    // Toggle sidebar pour desktop
+    $('#toggleSidebar').click(function() {
+        $('#sidebar').toggleClass('compact');
+        
+        // Gérer les marges
+        if ($('#sidebar').hasClass('compact')) {
+            $('main').removeClass('lg:ml-64').addClass('lg:ml-20');
+        } else {
+            $('main').removeClass('lg:ml-20').addClass('lg:ml-64');
+        }
 
-    // Sauvegarder l'état dans localStorage
-    const isCompact = $('#sidebar').hasClass('compact');
-    localStorage.setItem('sidebarState', isCompact ? 'compact' : 'expanded');
+        // Sauvegarder l'état dans localStorage
+        localStorage.setItem('sidebarState', $('#sidebar').hasClass('compact') ? 'compact' : 'expanded');
+    });
+
+    // Toggle sidebar pour mobile
+    $('#toggleSidebarMobile').click(function() {
+        const sidebar = $('#sidebar');
+        sidebar.toggleClass('hidden');
+        
+        // Mettre à jour l'attribut aria-expanded
+        const isExpanded = !sidebar.hasClass('hidden');
+        $(this).attr('aria-expanded', isExpanded);
+    });
+
+    // Toggle menu utilisateur
+    $('#user-menu-button').click(function(e) {
+        e.stopPropagation();
+        $('#user-menu').toggleClass('hidden');
+    });
+
+    // Fermer le menu utilisateur en cliquant ailleurs
+    $(document).click(function(e) {
+        if (!$(e.target).closest('#user-menu, #user-menu-button').length) {
+            $('#user-menu').addClass('hidden');
+        }
+    });
+
+    // Fermer la sidebar mobile en cliquant en dehors sur mobile
+    $(document).click(function(e) {
+        const sidebar = $('#sidebar');
+        const toggleButton = $('#toggleSidebarMobile');
+        
+        if (!sidebar.hasClass('hidden') && 
+            !$(e.target).closest('#sidebar, #toggleSidebarMobile').length && 
+            window.innerWidth < 1024) {
+            sidebar.addClass('hidden');
+            toggleButton.attr('aria-expanded', 'false');
+        }
+    });
 });
-
-// Toggle sidebar pour mobile
-$('#toggleSidebarMobile').click(function() {
-    $('#sidebar').toggleClass('hidden');
-});
-
-// Toggle menu utilisateur
-$('#user-menu-button').click(function(e) {
-    e.stopPropagation();
-    $('#user-menu').toggleClass('hidden');
-});
-
-// Fermer le menu utilisateur en cliquant ailleurs
-$(document).click(function() {
-    $('#user-menu').addClass('hidden');
-});
-
-// Empêcher la fermeture lors du clic dans le menu
-$('#user-menu').click(function(e) {
-    e.stopPropagation();
-});
+</script>
