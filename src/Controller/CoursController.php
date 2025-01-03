@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Trait\FlashMessageTrait;
 use App\Controller\Trait\ErrorHandlerTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[Route('/cours')]
 class CoursController extends AbstractController
@@ -21,10 +22,12 @@ class CoursController extends AbstractController
     use ErrorHandlerTrait;
 
     private TranslatorInterface $translator;
+    private RequestStack $requestStack;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack)
     {
         $this->translator = $translator;
+        $this->requestStack = $requestStack;
     }
 
     #[Route('/', name: 'app_cours_index', methods: ['GET'])]
@@ -44,12 +47,13 @@ class CoursController extends AbstractController
     #[Route('/new', name: 'app_cours_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        try {
+
             $cours = new Cours();
             $form = $this->createForm(CoursType::class, $cours);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                try {
                 $entityManager->persist($cours);
                 $entityManager->flush();
 
@@ -59,28 +63,30 @@ class CoursController extends AbstractController
 
                 return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
             }
+                catch (\Exception $e) {
+                    $this->addErrorFlash($this->translator->trans('flash.error.create_error', [
+                        '%entity%' => $this->translator->trans('entity.cours')
+                    ]));
+                    return $this->redirectToRoute('app_cours_index');
+                }
+             }
 
             return $this->render('cours/new.html.twig', [
-                'cours' => $cours,
+                'cour' => $cours,
                 'form' => $form,
             ]);
-        } catch (\Exception $e) {
-            $this->addErrorFlash($this->translator->trans('flash.error.create_error', [
-                '%entity%' => $this->translator->trans('entity.cours')
-            ]));
-            return $this->redirectToRoute('app_cours_index');
-        }
+
     }
 
     #[Route('/{id}', name: 'app_cours_show', methods: ['GET'])]
-    public function show(Cours $cours = null): Response
+    public function show(Cours $cours): Response
     {
         if (!$cours) {
             $this->handleNotFoundException('cours');
         }
 
         return $this->render('cours/show.html.twig', [
-            'cours' => $cours,
+            'cour' => $cours,
         ]);
     }
 

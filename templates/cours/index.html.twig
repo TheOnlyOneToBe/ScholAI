@@ -1,39 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cours index{% endblock %}
+{% block title %}Liste des Cours{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'core/css/datatables.css.twig' %}
+{% endblock %}
 
 {% block body %}
-    <h1>Cours index</h1>
+    <div class="flex flex-col lg:ml-4 transition-all duration-300">
+        <div class="container p-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white shadow-lg rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-book text-2xl text-indigo-600"></i>
+                            <h1 class="text-2xl font-bold text-gray-900">Liste des Cours</h1>
+                        </div>
+                        <a href="{{ path('app_cours_new') }}" 
+                           class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm">
+                            <i class="fas fa-plus mr-2"></i>
+                            Ajouter
+                        </a>
+                    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NomCours</th>
-                <th>Descriptif</th>
-                <th>TypeCours</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for cour in cours %}
-            <tr>
-                <td>{{ cour.id }}</td>
-                <td>{{ cour.nomCours }}</td>
-                <td>{{ cour.descriptif }}</td>
-                <td>{{ cour.typeCours }}</td>
-                <td>
-                    <a href="{{ path('app_cours_show', {'id': cour.id}) }}">show</a>
-                    <a href="{{ path('app_cours_edit', {'id': cour.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_cours_new') }}">Create new</a>
+                    <div class="overflow-x-auto">
+                        <table id="data-tables" class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom du Cours</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            {% for cour in cours %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <a href="{{ path('app_cours_show', {'id': cour.id}) }}" 
+                                           class="hover:text-indigo-600 transition-colors duration-200">
+                                            {{ cour.nomCours }}
+                                        </a>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ cour.typeCours }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">
+                                        {{ cour.descriptif }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-3">
+                                            <a href="{{ path('app_cours_edit', {'id': cour.id}) }}" 
+                                               class="text-blue-600 hover:text-blue-900" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" action="{{ path('app_cours_delete', {'id': cour.id}) }}" 
+                                                  class="inline-block" 
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
+                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                        Aucun cours trouvé
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% include 'core/js/datatables.js.twig' %}
+    <script>
+        $(document).ready(function() {
+            {% include 'core/js/datables.js.twig' %}
+        });
+    </script>
 {% endblock %}

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\PayementMethod;
+use App\Entity\Payementmethod;
 use App\Form\PayementmethodType;
 use App\Repository\PayementmethodRepository;
 use Doctrine\ORM\EntityManagerInterface;

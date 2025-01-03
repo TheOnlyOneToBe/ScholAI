@@ -18,7 +18,7 @@ use App\Entity\ImpressionFormat;
 use App\Entity\Incident;
 use App\Entity\Inscription;
 use App\Entity\Note;
-use App\Entity\PayementMethod;
+use App\Entity\Payementmethod;
 use App\Entity\PayementReason;
 use App\Entity\PlanningCours;
 use App\Entity\Presence;

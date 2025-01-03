@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Inscription;
-use App\Entity\PayementMethod;
+use App\Entity\Payementmethod;
 use App\Entity\PayementReason;
 use App\Entity\Reglement;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
