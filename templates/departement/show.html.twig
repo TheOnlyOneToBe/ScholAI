@@ -1,30 +1,153 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Departement{% endblock %}
+{% block title %}{{ departement.nomDepartement }} - Détails du département{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .stat-card {
+            @apply bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300;
+        }
+        .stat-icon {
+            @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Departement</h1>
+    <div class="container mx-auto px-4 py-8">
+        {# En-tête du département #}
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">{{ departement.nomDepartement }}</h1>
+                    <p class="text-gray-600 mt-2">
+                        <i class="far fa-calendar-alt mr-2"></i>
+                        Créé le {{ departement.dateCreation|date('d/m/Y') }}
+                    </p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{{ path('app_departement_edit', {'id': departement.id}) }}" 
+                       class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200">
+                        <i class="fas fa-edit mr-2"></i>
+                        Modifier
+                    </a>
+                    {{ include('departement/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ departement.id }}</td>
-            </tr>
-            <tr>
-                <th>NomDepartement</th>
-                <td>{{ departement.nomDepartement }}</td>
-            </tr>
-            <tr>
-                <th>DateCreation</th>
-                <td>{{ departement.dateCreation ? departement.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+        {# Statistiques #}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {# Nombre de professeurs #}
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="stat-icon bg-blue-100 text-blue-600">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Professeurs</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ departement.professeurs|length }}</p>
+                    </div>
+                </div>
+            </div>
 
-    <a href="{{ path('app_departement_index') }}">back to list</a>
+            {# Chef de département actuel #}
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="stat-icon bg-purple-100 text-purple-600">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Chef de département</p>
+                        {% set latestChef = null %}
+                        {% set latestDate = null %}
+                        {% for chef in departement.chefDepartements %}
+                            {% if latestDate is null or chef.dateDebutMandat > latestDate %}
+                                {% set latestChef = chef %}
+                                {% set latestDate = chef.dateDebutMandat %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if latestChef %}
+                            <div>
+                                <p class="text-lg font-semibold text-gray-900">
+                                    {{ latestChef.professeur.nom }} {{ latestChef.professeur.prenom }}
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    Depuis le {{ latestChef.dateDebutMandat|date('d/m/Y') }}
+                                </p>
+                            </div>
+                        {% else %}
+                            <p class="text-lg font-semibold text-gray-500">Non assigné</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
-    <a href="{{ path('app_departement_edit', {'id': departement.id}) }}">edit</a>
+            {# Historique des chefs #}
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="stat-icon bg-green-100 text-green-600">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Historique des chefs</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ departement.chefDepartements|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    {{ include('departement/_delete_form.html.twig') }}
+        {# Liste des professeurs #}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800">Liste des professeurs</h2>
+            </div>
+            <div class="divide-y divide-gray-200">
+                {% if departement.professeurs|length > 0 %}
+                    {% for professeur in departement.professeurs %}
+                        <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <i class="fas fa-user text-gray-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-sm font-medium text-gray-900">{{ professeur.nom }} {{ professeur.prenom }}</h3>
+                                        {% if professeur.email is defined %}
+                                            <p class="text-sm text-gray-500">{{ professeur.email }}</p>
+                                        {% endif %}
+                                        {% for chef in departement.chefDepartements %}
+                                            {% if chef.professeur.id == professeur.id %}
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mt-1">
+                                                    <i class="fas fa-crown mr-1"></i>
+                                                    Chef de département
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="px-6 py-4 text-center text-gray-500">
+                        Aucun professeur n'est assigné à ce département
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Bouton retour #}
+        <div class="mt-8 text-center">
+            <a href="{{ path('app_departement_index') }}" 
+               class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Retour à la liste
+            </a>
+        </div>
+    </div>
 {% endblock %}
