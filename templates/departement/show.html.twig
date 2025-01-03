@@ -253,6 +253,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% set inscriptions = {} %}
+                        {% set statuts = ['EN_ATTENTE', 'VALIDE', 'REJETE', 'TERMINE'] %}
                         
                         {# Initialisation #}
                         {% for filiereCycle in departement.filiereCycles %}
@@ -262,179 +263,68 @@
                                     {% set inscriptions = inscriptions|merge({
                                         (yearId): {
                                             'year': inscription.semestre.anneeacademique,
-                                            'statuts': {
-                                                'en_attente': 0,
-                                                'valide': 0,
-                                                'rejete': 0,
-                                                'termine': 0
-                                            }
+                                            'count': 0
                                         }
                                     }) %}
                                 {% endif %}
-                            {% endfor %}
-                        {% endfor %}
-                        
-                        {# Comptage #}
-                        {% for filiereCycle in departement.filiereCycles %}
-                            {% for inscription in filiereCycle.inscriptions %}
-                                {% set yearId = inscription.semestre.anneeacademique.id %}
-                                {% set statut = inscription.statut %}
-                                {% set data = inscriptions[yearId] %}
-                                
-                                {% if statut.name == 'EN_ATTENTE' %}
-                                    {% set inscriptions = inscriptions|merge({
-                                        (yearId): {
-                                            'year': data.year,
-                                            'statuts': {
-                                                'en_attente': data.statuts.en_attente + 1,
-                                                'valide': data.statuts.valide,
-                                                'rejete': data.statuts.rejete,
-                                                'termine': data.statuts.termine
-                                            }
-                                        }
-                                    }) %}
-                                {% elseif statut.name == 'VALIDE' %}
-                                    {% set inscriptions = inscriptions|merge({
-                                        (yearId): {
-                                            'year': data.year,
-                                            'statuts': {
-                                                'en_attente': data.statuts.en_attente,
-                                                'valide': data.statuts.valide + 1,
-                                                'rejete': data.statuts.rejete,
-                                                'termine': data.statuts.termine
-                                            }
-                                        }
-                                    }) %}
-                                {% elseif statut.name == 'REJETE' %}
-                                    {% set inscriptions = inscriptions|merge({
-                                        (yearId): {
-                                            'year': data.year,
-                                            'statuts': {
-                                                'en_attente': data.statuts.en_attente,
-                                                'valide': data.statuts.valide,
-                                                'rejete': data.statuts.rejete + 1,
-                                                'termine': data.statuts.termine
-                                            }
-                                        }
-                                    }) %}
-                                {% elseif statut.name == 'TERMINE' %}
-                                    {% set inscriptions = inscriptions|merge({
-                                        (yearId): {
-                                            'year': data.year,
-                                            'statuts': {
-                                                'en_attente': data.statuts.en_attente,
-                                                'valide': data.statuts.valide,
-                                                'rejete': data.statuts.rejete,
-                                                'termine': data.statuts.termine + 1
-                                            }
-                                        }
-                                    }) %}
-                                {% endif %}
+                                {% set inscriptions = inscriptions|merge({
+                                    (yearId): {
+                                        'year': inscriptions[yearId].year,
+                                        'count': inscriptions[yearId].count + 1
+                                    }
+                                }) %}
                             {% endfor %}
                         {% endfor %}
 
-                        {# Affichage #}
-                        {% for yearId, data in inscriptions %}
-                            {% set first = true %}
-                            {% set rowCount = 0 %}
-                            {% if data.statuts.en_attente > 0 %}{% set rowCount = rowCount + 1 %}{% endif %}
-                            {% if data.statuts.valide > 0 %}{% set rowCount = rowCount + 1 %}{% endif %}
-                            {% if data.statuts.rejete > 0 %}{% set rowCount = rowCount + 1 %}{% endif %}
-                            {% if data.statuts.termine > 0 %}{% set rowCount = rowCount + 1 %}{% endif %}
-                            
-                            {% if rowCount > 0 %}
-                                {% if data.statuts.en_attente > 0 %}
-                                    <tr>
-                                        {% if first %}
-                                            <td class="px-6 py-4 whitespace-nowrap" {% if rowCount > 1 %}rowspan="{{ rowCount }}"{% endif %}>
-                                                {{ data.year.YearStart|date('Y') }}-{{ data.year.YearEnd|date('Y') }}
-                                                {% if data.year.isCurrent() %}
-                                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Actuelle
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                            {% set first = false %}
-                                        {% endif %}
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                En attente
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ data.statuts.en_attente }}</td>
-                                    </tr>
-                                {% endif %}
-                                
-                                {% if data.statuts.valide > 0 %}
-                                    <tr>
-                                        {% if first %}
-                                            <td class="px-6 py-4 whitespace-nowrap" {% if rowCount > 1 %}rowspan="{{ rowCount }}"{% endif %}>
-                                                {{ data.year.YearStart|date('Y') }}-{{ data.year.YearEnd|date('Y') }}
-                                                {% if data.year.isCurrent() %}
-                                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Actuelle
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                            {% set first = false %}
-                                        {% endif %}
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Validé
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ data.statuts.valide }}</td>
-                                    </tr>
-                                {% endif %}
-                                
-                                {% if data.statuts.rejete > 0 %}
-                                    <tr>
-                                        {% if first %}
-                                            <td class="px-6 py-4 whitespace-nowrap" {% if rowCount > 1 %}rowspan="{{ rowCount }}"{% endif %}>
-                                                {{ data.year.YearStart|date('Y') }}-{{ data.year.YearEnd|date('Y') }}
-                                                {% if data.year.isCurrent() %}
-                                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Actuelle
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                            {% set first = false %}
-                                        {% endif %}
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                Rejeté
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ data.statuts.rejete }}</td>
-                                    </tr>
-                                {% endif %}
-                                
-                                {% if data.statuts.termine > 0 %}
-                                    <tr>
-                                        {% if first %}
-                                            <td class="px-6 py-4 whitespace-nowrap" {% if rowCount > 1 %}rowspan="{{ rowCount }}"{% endif %}>
-                                                {{ data.year.YearStart|date('Y') }}-{{ data.year.YearEnd|date('Y') }}
-                                                {% if data.year.isCurrent() %}
-                                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Actuelle
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                            {% set first = false %}
-                                        {% endif %}
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                Terminé
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ data.statuts.termine }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endif %}
-                        {% else %}
+                        {# Affichage par statut #}
+                        {% for statut in statuts %}
                             <tr>
-                                <td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">Aucune inscription</td>
+                                <td colspan="3" class="px-6 py-4 bg-gray-50">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {% if statut == 'EN_ATTENTE' %}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">En attente</span>
+                                        {% elseif statut == 'VALIDE' %}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Validé</span>
+                                        {% elseif statut == 'REJETE' %}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejeté</span>
+                                        {% elseif statut == 'TERMINE' %}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Terminé</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
                             </tr>
+                            {% set found = false %}
+                            {% for filiereCycle in departement.filiereCycles %}
+                                {% for inscription in filiereCycle.inscriptions %}
+                                    {% if inscription.statut.name == statut %}
+                                        {% set found = true %}
+                                        {% set yearId = inscription.semestre.anneeacademique.id %}
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ inscription.semestre.anneeacademique.YearStart|date('Y') }}-{{ inscription.semestre.anneeacademique.YearEnd|date('Y') }}
+                                                {% if inscription.semestre.anneeacademique.isCurrent() %}
+                                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                        Actuelle
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ inscription.filiereCycle.filiere.code }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            {% if not found %}
+                                <tr>
+                                    <td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">
+                                        Aucune inscription dans ce statut
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
