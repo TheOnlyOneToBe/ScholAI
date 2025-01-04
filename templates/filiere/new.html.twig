@@ -1,11 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Filiere{% endblock %}
+{% block title %}{{ 'form.filiere.title.new'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Create new Filiere</h1>
+    <div class="flex flex-col lg:ml-4 transition-all duration-300">
+        <div class="container p-4">
+            <div class="max-w-lg mx-auto lg:mx-0">
+                <div class="bg-white shadow-lg rounded-lg p-6">
+                    <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
+                        <i class="fas fa-graduation-cap text-2xl text-indigo-600"></i>
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            {{ 'form.filiere.form.new'|trans }}
+                        </h1>
+                    </div>
 
-    {{ include('filiere/_form.html.twig') }}
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="mb-4 p-4 rounded-md {{ label == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
+                                {{ message|raw }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
 
-    <a href="{{ path('app_filiere_index') }}">back to list</a>
+                    {{ include('filiere/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

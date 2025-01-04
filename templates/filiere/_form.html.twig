@@ -6,7 +6,7 @@
     <div class="space-y-4">
         {# Nom de la filière #}
         <div>
-            {{ form_label(form.nomFiliere, 'form.filiere.name'|trans, {
+            {{ form_label(form.nomFiliere, 'form.filiere.form.name'|trans, {
                 'label_attr': {
                     'class': 'form-label block text-sm font-semibold mb-2 text-gray-700'
                 }
@@ -15,7 +15,7 @@
                 {{ form_widget(form.nomFiliere, {
                     'attr': {
                         'class': 'block w-full h-12 px-4 py-3 rounded-lg border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-base transition-all duration-200',
-                        'placeholder': 'form.filiere.name_placeholder'|trans
+                        'placeholder': 'form.filiere.form.name_placeholder'|trans
                     }
                 }) }}
             </div>

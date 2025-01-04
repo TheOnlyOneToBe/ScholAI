@@ -69,9 +69,30 @@ form:
     semestre: 'Semestre'
     typeEvaluation: "Type d'évaluation"
   filiere:
-    nomFiliere: 'Nom de la filière'
-    description: 'Description'
-    departement: 'Département'
+    title:
+      new: 'Nouvelle Filière'
+      edit: 'Modifier la Filière'
+      list: 'Liste des Filières'
+    form:
+      info: 'Informations de la Filière'
+      description: 'Renseignez les informations de la filière.'
+      name: 'Nom de la filière'
+      name_placeholder: 'Ex: Génie Logiciel'
+      new: 'Créer une nouvelle filière'
+      edit: 'Modifier la filière'
+    flash:
+      success:
+        created: 'La filière "%name%" a été créée avec succès'
+        updated: 'La filière "%name%" a été mise à jour avec succès'
+        deleted: 'La filière a été supprimée avec succès'
+      error:
+        create: 'Erreur lors de la création de la filière'
+        update: 'Erreur lors de la mise à jour de la filière'
+        delete: 'Erreur lors de la suppression de la filière'
+        not_found: 'Filière non trouvée'
+        exists: 'Cette filière existe déjà'
+        required: 'La filière est obligatoire'
+    name_placeholder: 'Écrivez le nom de la filière'
   cycle:
     nomCycle: 'Nom du cycle'
     description: 'Description'
