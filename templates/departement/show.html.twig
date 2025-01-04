@@ -286,35 +286,58 @@
                 </div>
             </div>
             <div class="p-6">
-                <div class="overflow-x-auto">
-                    <table class="data-table">
+                <div class="max-w-2xl">
+                    <table class="w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50 text-left">
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Cycle</th>
                                 <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Filière</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Inscrits</th>
                                 <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            {% for filiereCycle in departement.filiereCycles %}
-                                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ filiereCycle.cycle.nomCycle }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ filiereCycle.filiere.nomFiliere }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
-                                        <span class="bg-indigo-50 text-indigo-700 py-1 px-2 rounded-full text-xs font-medium">
-                                            {{ filiereCycle.inscriptions|length }} étudiants
+                            {% set currentFiliere = null %}
+                            {% for filiereCycle in departement.filiereCycles|sort((a, b) => a.filiere.nomFiliere <=> b.filiere.nomFiliere) %}
+                                {% if currentFiliere != filiereCycle.filiere.nomFiliere %}
+                                    {% if not loop.first %}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right">
+                                            <a href="{{ path('app_filiere_show', {'id': previousFiliereCycle.filiere.id}) }}" class="text-indigo-600 hover:text-indigo-900" title="Voir les détails">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                        <td class="px-6 py-2">
+                                            <div class="text-sm text-gray-900 font-bold mb-1">{{ filiereCycle.filiere.nomFiliere }}</div>
+                                            <div class="text-sm text-gray-600 pl-4 flex items-center justify-between py-0.5">
+                                                <span>• {{ filiereCycle.cycle.nomCycle }}</span>
+                                                <span class="bg-indigo-50 text-indigo-700 py-0.5 px-2 rounded-full text-xs font-medium ml-2">
+                                                    {{ filiereCycle.inscriptions|length }} inscrits
+                                                </span>
+                                            </div>
+                                    {% set currentFiliere = filiereCycle.filiere.nomFiliere %}
+                                {% else %}
+                                    <div class="text-sm text-gray-600 pl-4 flex items-center justify-between py-0.5">
+                                        <span>• {{ filiereCycle.cycle.nomCycle }}</span>
+                                        <span class="bg-indigo-50 text-indigo-700 py-0.5 px-2 rounded-full text-xs font-medium ml-2">
+                                            {{ filiereCycle.inscriptions|length }} inscrits
                                         </span>
+                                    </div>
+                                {% endif %}
+                                {% if loop.last %}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-right">
-                                        <a href="{{ path('app_filiere_cycle_show', {'id': filiereCycle.id}) }}" class="text-indigo-600 hover:text-indigo-900" title="Voir les détails">
+                                        <a href="{{ path('app_filiere_show', {'id': filiereCycle.filiere.id}) }}" class="text-indigo-600 hover:text-indigo-900" title="Voir les détails">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
-                                </tr>
+                                    </tr>
+                                {% endif %}
+                                {% set previousFiliereCycle = filiereCycle %}
                             {% else %}
                                 <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                    <td colspan="2" class="px-6 py-4 text-center text-gray-500">
                                         Aucune spécialité enregistrée
                                     </td>
                                 </tr>
