@@ -1,35 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cycle index{% endblock %}
+{% block title %}Liste des Cycles{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'core/css/datatables.css.twig' %}
+{% endblock %}
 
 {% block body %}
-    <h1>Cycle index</h1>
+    <div class="bg-white shadow-lg rounded-lg p-6 ml-4 max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl font-semibold">Liste des Cycles</h1>
+            <a href="{{ path('app_cycle_new') }}" 
+               class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                <i class="fas fa-plus"></i>
+                Ajouter
+            </a>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NomCycle</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for cycle in cycles %}
-            <tr>
-                <td>{{ cycle.id }}</td>
-                <td>{{ cycle.nomCycle }}</td>
-                <td>
-                    <a href="{{ path('app_cycle_show', {'id': cycle.id}) }}">show</a>
-                    <a href="{{ path('app_cycle_edit', {'id': cycle.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <table id="data-tables" class="w-full table-bordered">
+            <thead>
+                <tr class="border-b">
+                    <th class="text-left py-2 text-gray-600 uppercase text-sm font-medium">Nom du cycle</th>
+                    <th class="text-right py-2 text-gray-600 uppercase text-sm font-medium w-20">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y">
+            {% for cycle in cycles %}
+                <tr class="hover:bg-gray-50">
+                    <td class="py-2">
+                        <a href="{{ path('app_cycle_show', {'id': cycle.id}) }}" 
+                           class="hover:text-indigo-600 transition-colors duration-200">
+                            {{ cycle.nomCycle }}
+                        </a>
+                    </td>
+                    <td class="py-2 text-right">
+                        <div class="flex items-center justify-end space-x-3">
+                            <a href="{{ path('app_cycle_edit', {'id': cycle.id}) }}" 
+                               class="text-blue-600 hover:text-blue-900" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{{ path('app_cycle_delete', {'id': cycle.id}) }}" 
+                                  class="inline-block" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cycle ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cycle.id) }}">
+                                <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2" class="py-2 text-center text-gray-500">Aucun cycle enregistré</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
 
-    <a href="{{ path('app_cycle_new') }}">Create new</a>
+{% block javascripts %}
+    {{ parent() }}
+    {% include 'core/js/datatables.js.twig' %}
+    <script>
+        $(document).ready(function() {
+            {% include 'core/js/datables.js.twig' %}
+        });
+    </script>
 {% endblock %}

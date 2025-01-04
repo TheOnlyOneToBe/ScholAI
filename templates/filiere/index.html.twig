@@ -1,35 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Filiere index{% endblock %}
+{% block title %}Liste des Filières{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'core/css/datatables.css.twig' %}
+{% endblock %}
 
 {% block body %}
-    <h1>Filiere index</h1>
+    <div class="bg-white shadow-lg rounded-lg p-6 ml-4 max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl font-semibold">Liste des Filières</h1>
+            <a href="{{ path('app_filiere_new') }}" 
+               class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                <i class="fas fa-plus"></i>
+                Ajouter
+            </a>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NomFiliere</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for filiere in filieres %}
-            <tr>
-                <td>{{ filiere.id }}</td>
-                <td>{{ filiere.nomFiliere }}</td>
-                <td>
-                    <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}">show</a>
-                    <a href="{{ path('app_filiere_edit', {'id': filiere.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="bg-white">
+            <table id="data-tables" class="w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-2 text-gray-600 uppercase text-sm font-medium">Nom de la filière</th>
+                        <th class="text-right py-2 text-gray-600 uppercase text-sm font-medium w-20">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                {% for filiere in filieres %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2">
+                            <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}" 
+                               class="hover:text-indigo-600 transition-colors duration-200">
+                                {{ filiere.nomFiliere }}
+                            </a>
+                        </td>
+                        <td class="py-2 text-right">
+                            <div class="flex items-center justify-end space-x-3">
+                                <a href="{{ path('app_filiere_edit', {'id': filiere.id}) }}" 
+                                   class="text-blue-600 hover:text-blue-900" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="{{ path('app_filiere_delete', {'id': filiere.id}) }}" 
+                                      class="inline-block" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ filiere.id) }}">
+                                    <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="py-2 text-center text-gray-500">Aucune filière enregistrée</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
 
-    <a href="{{ path('app_filiere_new') }}">Create new</a>
+{% block javascripts %}
+    {{ parent() }}
+    {% include 'core/js/datatables.js.twig' %}
+    <script>
+        $(document).ready(function() {
+            {% include 'core/js/datables.js.twig' %}
+        });
+    </script>
 {% endblock %}
