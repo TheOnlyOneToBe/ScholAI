@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Filiere;
-use App\Entity\Departement;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,14 +14,6 @@ class FiliereType extends AbstractType
         $builder
             ->add('nomFiliere', null, [
                 'label' => 'form.filiere.nomFiliere'
-            ])
-            ->add('description', null, [
-                'label' => 'form.filiere.description'
-            ])
-            ->add('departement', EntityType::class, [
-                'class' => Departement::class,
-                'choice_label' => 'id',
-                'label' => 'form.filiere.departement'
             ])
         ;
     }
