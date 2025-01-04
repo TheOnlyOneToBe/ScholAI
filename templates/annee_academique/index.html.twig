@@ -1,81 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Années Académiques{% endblock %}
+{% block title %}{{ 'form.annee_academique.title.list'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     {% include 'core/css/datatables.css.twig' %}
-    <style>
-        {% include 'core/css/calendar.css.twig' %}
-        {% include 'core/css/switch.css.twig' %}
-    </style>
 {% endblock %}
 
 {% block body %}
-    <div class="flex flex-col lg:ml-4 transition-all duration-300">
-        <div class="container p-3">
-            <div class="max-w-6xl mx-auto">
-                <div class="bg-white shadow-lg rounded-lg p-4">
-                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-calendar-alt text-2xl text-indigo-600"></i>
-                            <h1 class="text-2xl font-bold text-gray-900">Années Académiques</h1>
-                        </div>
-                        <a href="{{ path('app_annee_academique_new') }}" 
-                           class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm">
-                            <i class="fas fa-plus mr-2"></i>
-                            Ajouter
-                        </a>
-                    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 ml-4 max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl font-semibold">{{ 'form.annee_academique.title.list'|trans }}</h1>
+            <a href="{{ path('app_annee_academique_new') }}" 
+               class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                <i class="fas fa-plus"></i>
+                {{ 'form.button.add'|trans }}
+            </a>
+        </div>
 
-                    <div class="overflow-x-auto">
-                        <table
-                            id="data-tables" class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Année</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                            {% for annee_academique in annee_academiques %}
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}" 
-                                           class="hover:text-indigo-600 transition-colors duration-200">
-                                            {{ annee_academique.YearStart ? annee_academique.YearStart|date('Y') : '' }} - {{ annee_academique.YearEnd ? annee_academique.YearEnd|date('Y') : '' }}
-                                        </a>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <label class="switch" data-id="{{ annee_academique.id }}">
-                                            <input type="checkbox" {% if annee_academique.isCurrent %}checked{% endif %}>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex items-center justify-end space-x-3">
-                                            <a href="{{ path('app_annee_academique_edit', {'id': annee_academique.id}) }}" 
-                                               class="text-blue-600 hover:text-blue-900" title="Modifier">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form method="post" action="{{ path('app_annee_academique_delete', {'id': annee_academique.id}) }}" 
-                                                  class="inline-block" 
-                                                  onsubmit="return confirm('{{ 'message.confirm_delete'|trans }}');">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ annee_academique.id) }}">
-                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-md {{ label == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
+                    {{ message|raw }}
                 </div>
-            </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="bg-white">
+            <table id="data-tables" class="w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-2 text-gray-600 uppercase text-sm font-medium">{{ 'form.annee_academique.period'|trans }}</th>
+                        <th class="text-center py-2 text-gray-600 uppercase text-sm font-medium">{{ 'form.annee_academique.status'|trans }}</th>
+                        <th class="text-right py-2 text-gray-600 uppercase text-sm font-medium w-20">{{ 'form.button.actions'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                {% for annee_academique in annee_academiques %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-2">
+                            <a href="{{ path('app_annee_academique_show', {'id': annee_academique.id}) }}" 
+                               class="hover:text-indigo-600 transition-colors duration-200">
+                                {{ annee_academique.yearStart|date('Y') }}-{{ annee_academique.yearEnd|date('Y') }}
+                            </a>
+                        </td>
+                        <td class="py-2 text-center">
+                            {% if annee_academique.isCurrent %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    {{ 'form.annee_academique.current'|trans }}
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    {{ 'form.annee_academique.not_current'|trans }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="py-2 text-right">
+                            <div class="flex items-center justify-end space-x-3">
+                                <a href="{{ path('app_annee_academique_edit', {'id': annee_academique.id}) }}" 
+                                   class="text-blue-600 hover:text-blue-900" 
+                                   title="{{ 'form.button.edit'|trans }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="{{ path('app_annee_academique_delete', {'id': annee_academique.id}) }}" 
+                                      class="inline-block" 
+                                      id="delete-form-{{ annee_academique.id }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ annee_academique.id) }}">
+                                    <button type="button" 
+                                            onclick="confirmDelete({{ annee_academique.id }}, '{{ annee_academique.yearStart|date('Y') }}', '{{ annee_academique.yearEnd|date('Y') }}')"
+                                            class="text-red-600 hover:text-red-900" 
+                                            title="{{ 'form.button.delete'|trans }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}
@@ -84,9 +87,50 @@
     {{ parent() }}
     {% include 'core/js/datatables.js.twig' %}
     <script>
+        async function confirmDelete(id, yearStart, yearEnd) {
+            // Première confirmation
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer l'année académique "${yearStart}-${yearEnd}" ?`)) {
+                return;
+            }
+
+            try {
+                // Vérifier les dépendances
+                const response = await fetch(`{{ path('app_annee_academique_check_dependencies', {'id': 'ID'}) }}`.replace('ID', id));
+                const data = await response.json();
+
+                if (data.isCurrent) {
+                    alert('Impossible de supprimer l\'année académique courante.');
+                    return;
+                }
+
+                if (data.hasDependencies) {
+                    // Deuxième confirmation si des dépendances existent
+                    const message = `Cette année académique contient ${data.count} semestre(s). La suppression entrainera également la suppression de ces données.\n\nÊtes-vous vraiment sûr de vouloir continuer ?`;
+                    
+                    if (!confirm(message)) {
+                        return;
+                    }
+                }
+
+                // Si toutes les confirmations sont passées, soumettre le formulaire
+                document.getElementById(`delete-form-${id}`).submit();
+            } catch (error) {
+                console.error('Erreur lors de la vérification des dépendances:', error);
+                alert('Une erreur est survenue lors de la vérification des dépendances.');
+            }
+        }
+
         $(document).ready(function() {
-            {% include 'core/js/datables.js.twig' %}
-            {% include 'core/js/switch.js.twig' %}
+            $('#data-tables').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+                },
+                order: [[0, 'desc']],
+                pageLength: 10,
+                columnDefs: [
+                    { orderable: false, targets: -1 }
+                ]
+            });
         });
     </script>
 {% endblock %}

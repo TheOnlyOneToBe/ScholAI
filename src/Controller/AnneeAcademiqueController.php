@@ -136,23 +136,40 @@ class AnneeAcademiqueController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_annee_academique_delete', methods: ['POST'])]
-    public function delete(Request $request, AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, ?AnneeAcademique $anneeAcademique, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$anneeAcademique->getId(), $request->request->get('_token'))) {
-            try {
-                // Empêcher la suppression de l'année académique courante
-                if ($anneeAcademique->isCurrent()) {
-                    throw new \Exception($this->translator->trans('error.cannot_delete_current_year'));
+        if (!$anneeAcademique) {
+            $this->handleNotFoundException('annee_academique');
+        }
+
+        try {
+            if ($this->isCsrfTokenValid('delete'.$anneeAcademique->getId(), $request->request->get('_token'))) {
+                // Vérifier si l'année est l'année courante
+                if ($anneeAcademique->isIsCurrent()) {
+                    $this->addErrorFlash($this->translator->trans('flash.error.cannot_delete_current_year'));
+                    return $this->redirectToRoute('app_annee_academique_index');
+                }
+
+                // Vérifier si l'année a des semestres associés
+                if (!$anneeAcademique->getSemestres()->isEmpty()) {
+                    $this->addErrorFlash($this->translator->trans('flash.error.delete_error_with_dependencies', [
+                        '%entity%' => $this->translator->trans('entity.annee_academique'),
+                        '%count%' => $anneeAcademique->getSemestres()->count()
+                    ]));
+                    return $this->redirectToRoute('app_annee_academique_index');
                 }
 
                 $entityManager->remove($anneeAcademique);
                 $entityManager->flush();
-                $this->addSuccessFlash($this->translator->trans('flash.success.item_deleted', [
-                    '%entity%' => $this->entityName . ' ' . $anneeAcademique->getYearStart()->format('Y') . '-' . $anneeAcademique->getYearEnd()->format('Y')
+
+                $this->addSuccessFlash($this->translator->trans('flash.success.deleted', [
+                    '%entity%' => $this->translator->trans('entity.annee_academique')
                 ]));
-            } catch (\Exception $e) {
-                $this->handleException($e);
             }
+        } catch (\Exception $e) {
+            $this->addErrorFlash($this->translator->trans('flash.error.delete_error', [
+                '%entity%' => $this->translator->trans('entity.annee_academique')
+            ]));
         }
 
         return $this->redirectToRoute('app_annee_academique_index', [], Response::HTTP_SEE_OTHER);
@@ -177,6 +194,16 @@ class AnneeAcademiqueController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/{id}/check-dependencies', name: 'app_annee_academique_check_dependencies', methods: ['GET'])]
+    public function checkDependencies(AnneeAcademique $anneeAcademique): Response
+    {
+        return $this->json([
+            'hasDependencies' => !$anneeAcademique->getSemestres()->isEmpty(),
+            'count' => $anneeAcademique->getSemestres()->count(),
+            'isCurrent' => $anneeAcademique->isIsCurrent()
+        ]);
     }
 
     private function hasDependendencies(AnneeAcademique $anneeAcademique): bool
