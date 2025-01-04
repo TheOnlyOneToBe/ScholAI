@@ -414,6 +414,7 @@ flash:
     create_error: 'Erreur lors de la création de %entity%'
     update_error: 'Erreur lors de la mise à jour de %entity%'
     delete_error: 'Erreur lors de la suppression de %entity%'
+    delete_error_with_dependencies: 'Impossible de supprimer %entity%. Il/Elle contient %count% élément(s) associé(s).'
   departement:
     success:
       created: 'Le département "%name%" a été créé avec succès'

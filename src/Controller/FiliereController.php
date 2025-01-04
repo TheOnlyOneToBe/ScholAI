@@ -147,6 +147,15 @@ final class FiliereController extends AbstractController
 
         try {
             if ($this->isCsrfTokenValid('delete'.$filiere->getId(), $request->request->get('_token'))) {
+                // Vérifier si la filière a des cycles associés
+                if (!$filiere->getFiliereCycles()->isEmpty()) {
+                    $this->addErrorFlash($this->translator->trans('flash.error.delete_error_with_dependencies', [
+                        '%entity%' => $this->translator->trans('entity.filiere'),
+                        '%count%' => $filiere->getFiliereCycles()->count()
+                    ]));
+                    return $this->redirectToRoute('app_filiere_index');
+                }
+
                 $entityManager->remove($filiere);
                 $entityManager->flush();
 
@@ -161,5 +170,14 @@ final class FiliereController extends AbstractController
         }
 
         return $this->redirectToRoute('app_filiere_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/check-dependencies', name: 'app_filiere_check_dependencies', methods: ['GET'])]
+    public function checkDependencies(Filiere $filiere): Response
+    {
+        return $this->json([
+            'hasDependencies' => !$filiere->getFiliereCycles()->isEmpty(),
+            'count' => $filiere->getFiliereCycles()->count()
+        ]);
     }
 }

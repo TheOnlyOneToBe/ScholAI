@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Filiere{% endblock %}
-
+{% block title %}{{ 'form.filiere.title.edit'|trans }}{% endblock %}
 {% block body %}
-    <h1>Edit Filiere</h1>
-
-    {{ include('filiere/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_filiere_index') }}">back to list</a>
-
-    {{ include('filiere/_delete_form.html.twig') }}
+    <div class="flex flex-col lg:ml-4 transition-all duration-300">
+        <div class="container p-4">
+            <div class="max-w-lg mx-auto lg:mx-0">
+                <div class="bg-white shadow-lg rounded-lg p-6">
+                    <div class="flex items-center justify-between space-x-3 mb-6 pb-4 border-b border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-graduation-cap text-2xl text-indigo-600"></i>
+                            <h1 class="text-2xl font-bold text-gray-900">
+                                {{ 'form.filiere.title.edit'|trans }}
+                            </h1>
+                        </div>
+                        {{ include('filiere/_delete_form.html.twig') }}
+                    </div>
+                    {{ include('filiere/_form.html.twig', {'button_label': 'form.button.update'|trans}) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
+

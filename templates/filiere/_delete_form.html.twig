@@ -1,4 +1,38 @@
-<form method="post" action="{{ path('app_filiere_delete', {'id': filiere.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+<form method="post" action="{{ path('app_filiere_delete', {'id': filiere.id}) }}" id="delete-form" class="inline-block">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ filiere.id) }}">
-    <button class="btn">Delete</button>
+    <button type="button" onclick="confirmDelete()" 
+            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
+        <i class="fas fa-trash-alt mr-2"></i>
+        Supprimer
+    </button>
 </form>
+
+<script>
+async function confirmDelete() {
+    // Première confirmation
+    if (!confirm('Êtes-vous sûr de vouloir supprimer la filière "{{ filiere.nomFiliere }}" ?')) {
+        return;
+    }
+
+    try {
+        // Vérifier les dépendances
+        const response = await fetch('{{ path('app_filiere_check_dependencies', {'id': filiere.id}) }}');
+        const data = await response.json();
+
+        if (data.hasDependencies) {
+            // Deuxième confirmation si des dépendances existent
+            const message = `Cette filière contient ${data.count} cycle(s) associé(s). La suppression entrainera également la suppression de ces données.\n\nÊtes-vous vraiment sûr de vouloir continuer ?`;
+            
+            if (!confirm(message)) {
+                return;
+            }
+        }
+
+        // Si toutes les confirmations sont passées, soumettre le formulaire
+        document.getElementById('delete-form').submit();
+    } catch (error) {
+        console.error('Erreur lors de la vérification des dépendances:', error);
+        alert('Une erreur est survenue lors de la vérification des dépendances.');
+    }
+}
+</script>

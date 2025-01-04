@@ -18,6 +18,14 @@
             </a>
         </div>
 
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-md {{ label == 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}">
+                    {{ message|raw }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <div class="bg-white">
             <table id="data-tables" class="w-full">
                 <thead>
@@ -43,18 +51,17 @@
                                 </a>
                                 <form method="post" action="{{ path('app_filiere_delete', {'id': filiere.id}) }}" 
                                       class="inline-block" 
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">
+                                      id="delete-form-{{ filiere.id }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ filiere.id) }}">
-                                    <button type="submit" class="text-red-600 hover:text-red-900" title="Supprimer">
+                                    <button type="button" 
+                                            onclick="confirmDelete({{ filiere.id }}, '{{ filiere.nomFiliere }}')"
+                                            class="text-red-600 hover:text-red-900" 
+                                            title="Supprimer">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
                             </div>
                         </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="2" class="py-2 text-center text-gray-500">Aucune filière enregistrée</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -67,8 +74,45 @@
     {{ parent() }}
     {% include 'core/js/datatables.js.twig' %}
     <script>
+        async function confirmDelete(id, nomFiliere) {
+            // Première confirmation
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer la filière "${nomFiliere}" ?`)) {
+                return;
+            }
+
+            try {
+                // Vérifier les dépendances
+                const response = await fetch(`{{ path('app_filiere_check_dependencies', {'id': 'ID'}) }}`.replace('ID', id));
+                const data = await response.json();
+
+                if (data.hasDependencies) {
+                    // Deuxième confirmation si des dépendances existent
+                    const message = `Cette filière contient ${data.count} cycle(s) associé(s). La suppression entrainera également la suppression de ces données.\n\nÊtes-vous vraiment sûr de vouloir continuer ?`;
+                    
+                    if (!confirm(message)) {
+                        return;
+                    }
+                }
+
+                // Si toutes les confirmations sont passées, soumettre le formulaire
+                document.getElementById(`delete-form-${id}`).submit();
+            } catch (error) {
+                console.error('Erreur lors de la vérification des dépendances:', error);
+                alert('Une erreur est survenue lors de la vérification des dépendances.');
+            }
+        }
+
         $(document).ready(function() {
-            {% include 'core/js/datables.js.twig' %}
+            $('#data-tables').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+                },
+                order: [[0, 'asc']],
+                pageLength: 10,
+                columnDefs: [
+                    { orderable: false, targets: -1 }
+                ]
+            });
         });
     </script>
 {% endblock %}
