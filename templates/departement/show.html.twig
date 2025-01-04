@@ -142,74 +142,147 @@
             </div>
         </div>
 
-        {# Chefs de département #}
-        <div class="content-card">
-            <div class="content-header flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Chefs de département</h2>
-                    <p class="mt-1 text-sm text-gray-500">Liste des chefs de département et leurs mandats</p>
-                </div>
-                <div>
-                    <button class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors duration-200">
-                        <i class="fas fa-plus mr-2"></i>Ajouter
-                    </button>
+        {# Section Chefs de département et Inscriptions #}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {# Chefs de département #}
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Chefs de département</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="bg-gray-50 text-left">
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Date début mandat</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                {% for chef in departement.chefDepartements %}
+                                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ chef.professeur.nom }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ chef.professeur.prenom }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ chef.dateDebutMandat|date('d/m/Y') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right">
+                                            <a href="{{ path('app_chef_departement_show', {'id': chef.id}) }}" class="text-indigo-600 hover:text-indigo-900" title="Voir les détails">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                            Aucun chef de département enregistré
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="p-6">
-                <div class="overflow-x-auto">
-                    <table class="data-table">
-                        <thead>
-                            <tr class="bg-gray-50 text-left">
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Date début mandat</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            {% for chef in departement.chefDepartements %}
-                                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ chef.professeur.nom }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ chef.professeur.prenom }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ chef.dateDebutMandat|date('d/m/Y') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">
-                                        <div class="flex justify-end space-x-3">
-                                            <button class="text-indigo-600 hover:text-indigo-900" title="Voir les détails">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="text-blue-600 hover:text-blue-900" title="Modifier">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-900" title="Supprimer">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+
+            {# Inscriptions par année #}
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Inscriptions par année</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="bg-gray-50 text-left">
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Année</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">En attente</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Validées</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Rejetées</th>
+                                    <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Total</th>
                                 </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                                        Aucun chef de département enregistré
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                {% set inscriptionsByYear = {} %}
+                                {% for filiereCycle in departement.filiereCycles %}
+                                    {% for inscription in filiereCycle.inscriptions %}
+                                        {% set year = inscription.annee.YearStart|date('Y') ~ '-' ~ inscription.annee.YearEnd|date('Y') %}
+                                        {% if year not in inscriptionsByYear|keys %}
+                                            {% set inscriptionsByYear = inscriptionsByYear|merge({
+                                                (year): {
+                                                    'pending': 0,
+                                                    'validated': 0,
+                                                    'rejected': 0,
+                                                    'total': 0
+                                                }
+                                            }) %}
+                                        {% endif %}
+
+                                        {% if inscription.statut == constant('App\\Enum\\StatutInscription::EN_ATTENTE') %}
+                                            {% set inscriptionsByYear = inscriptionsByYear|merge({
+                                                (year): inscriptionsByYear[year]|merge({
+                                                    'pending': inscriptionsByYear[year].pending + 1,
+                                                    'total': inscriptionsByYear[year].total + 1
+                                                })
+                                            }) %}
+                                        {% elseif inscription.statut == constant('App\\Enum\\StatutInscription::VALIDE') %}
+                                            {% set inscriptionsByYear = inscriptionsByYear|merge({
+                                                (year): inscriptionsByYear[year]|merge({
+                                                    'validated': inscriptionsByYear[year].validated + 1,
+                                                    'total': inscriptionsByYear[year].total + 1
+                                                })
+                                            }) %}
+                                        {% elseif inscription.statut == constant('App\\Enum\\StatutInscription::REJETE') %}
+                                            {% set inscriptionsByYear = inscriptionsByYear|merge({
+                                                (year): inscriptionsByYear[year]|merge({
+                                                    'rejected': inscriptionsByYear[year].rejected + 1,
+                                                    'total': inscriptionsByYear[year].total + 1
+                                                })
+                                            }) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                                {% for year, stats in inscriptionsByYear|sort|reverse %}
+                                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ year }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                                            <span class="bg-yellow-50 text-yellow-700 py-1 px-2 rounded-full text-xs font-medium">
+                                                {{ stats.pending }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                                            <span class="bg-green-50 text-green-700 py-1 px-2 rounded-full text-xs font-medium">
+                                                {{ stats.validated }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                                            <span class="bg-red-50 text-red-700 py-1 px-2 rounded-full text-xs font-medium">
+                                                {{ stats.rejected }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                                            <span class="bg-indigo-50 text-indigo-700 py-1 px-2 rounded-full text-xs font-medium">
+                                                {{ stats.total }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                            Aucune inscription enregistrée
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {# Spécialités #}
+        {# Section Spécialités #}
         <div class="content-card">
-            <div class="content-header flex justify-between items-center">
+            <div class="content-header">
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800">Spécialités</h2>
                     <p class="mt-1 text-sm text-gray-500">Liste des spécialités du département</p>
-                </div>
-                <div>
-                    <button class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors duration-200">
-                        <i class="fas fa-plus mr-2"></i>Ajouter
-                    </button>
                 </div>
             </div>
             <div class="p-6">
@@ -217,143 +290,32 @@
                     <table class="data-table">
                         <thead>
                             <tr class="bg-gray-50 text-left">
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Filière</th>
                                 <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Cycle</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Frais d'inscription</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Inscrits</th>
+                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Filière</th>
+                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Inscrits</th>
+                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            {% for filiere in departement.filiereCycles %}
+                            {% for filiereCycle in departement.filiereCycles %}
                                 <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                        {{ filiere.filiere.nomFiliere }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        {{ filiere.cycle.nomCycle }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        {{ filiere.fraisInscription|number_format(0, ',', ' ') }} FCFA
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{ filiereCycle.cycle.nomCycle }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ filiereCycle.filiere.nomFiliere }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                         <span class="bg-indigo-50 text-indigo-700 py-1 px-2 rounded-full text-xs font-medium">
-                                            {{ filiere.inscriptions|length }} étudiants
+                                            {{ filiereCycle.inscriptions|length }} étudiants
                                         </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right">
+                                        <a href="{{ path('app_filiere_cycle_show', {'id': filiereCycle.id}) }}" class="text-indigo-600 hover:text-indigo-900" title="Voir les détails">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             {% else %}
                                 <tr>
                                     <td colspan="4" class="px-6 py-4 text-center text-gray-500">
                                         Aucune spécialité enregistrée
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        {# Inscriptions #}
-        <div class="content-card">
-            <div class="content-header flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Inscriptions par année</h2>
-                    <p class="mt-1 text-sm text-gray-500">Répartition des inscriptions par année académique</p>
-                </div>
-                <div>
-                    <button class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors duration-200">
-                        <i class="fas fa-download mr-2"></i>Exporter
-                    </button>
-                </div>
-            </div>
-            <div class="p-6">
-                <div class="overflow-x-auto">
-                    <table class="data-table">
-                        <thead>
-                            <tr class="bg-gray-50 text-left">
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Année académique</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Nombre</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            {% set inscriptions = {} %}
-                            {% set statuts = [
-                                constant('App\\Enum\\StatutInscription::EN_ATTENTE'),
-                                constant('App\\Enum\\StatutInscription::VALIDE'),
-                                constant('App\\Enum\\StatutInscription::REJETE'),
-                                constant('App\\Enum\\StatutInscription::TERMINE')
-                            ] %}
-                            
-                            {% for filiereCycle in departement.filiereCycles %}
-                                {% for inscription in filiereCycle.inscriptions %}
-                                    {% set annee = inscription.annee.YearStart|date('Y') ~ '-' ~ inscription.annee.YearEnd|date('Y') %}
-                                    {% if inscriptions[annee] is not defined %}
-                                        {% set inscriptions = inscriptions|merge({
-                                            (annee): {
-                                                'periode': inscription.annee,
-                                                'stats': {
-                                                    (constant('App\\Enum\\StatutInscription::EN_ATTENTE').value): 0,
-                                                    (constant('App\\Enum\\StatutInscription::VALIDE').value): 0,
-                                                    (constant('App\\Enum\\StatutInscription::REJETE').value): 0,
-                                                    (constant('App\\Enum\\StatutInscription::TERMINE').value): 0
-                                                }
-                                            }
-                                        }) %}
-                                    {% endif %}
-                                    
-                                    {% set currentStats = inscriptions[annee].stats %}
-                                    {% set currentStats = currentStats|merge({
-                                        (inscription.statut.value): currentStats[inscription.statut.value] + 1
-                                    }) %}
-                                    
-                                    {% set inscriptions = inscriptions|merge({
-                                        (annee): {
-                                            'periode': inscription.annee,
-                                            'stats': currentStats
-                                        }
-                                    }) %}
-                                {% endfor %}
-                            {% endfor %}
-
-                            {% for annee, data in inscriptions %}
-                                {% for statut in statuts %}
-                                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                        {% if loop.first %}
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium border-r" rowspan="{{ statuts|length }}">
-                                                {{ annee }}
-                                                {% if data.periode.isCurrent %}
-                                                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                                                        En cours
-                                                    </span>
-                                                {% endif %}
-                                            </td>
-                                        {% endif %}
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                {% if statut.value == constant('App\\Enum\\StatutInscription::EN_ATTENTE').value %}
-                                                    bg-yellow-50 text-yellow-700
-                                                {% elseif statut.value == constant('App\\Enum\\StatutInscription::VALIDE').value %}
-                                                    bg-green-50 text-green-700
-                                                {% elseif statut.value == constant('App\\Enum\\StatutInscription::REJETE').value %}
-                                                    bg-red-50 text-red-700
-                                                {% else %}
-                                                    bg-blue-50 text-blue-700
-                                                {% endif %}
-                                            ">
-                                                {{ statut.value|trans }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-right">
-                                            {{ data.stats[statut.value] }}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="3" class="px-6 py-4 text-center text-gray-500">
-                                        Aucune inscription enregistrée
                                     </td>
                                 </tr>
                             {% endfor %}
